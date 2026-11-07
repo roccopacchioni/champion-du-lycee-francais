@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0A1633">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" href="favicon.png">
+<title>Foot & Maths — La carrière de Carlo</title>
+<style>
+:root{
+  --navy:#0A1633; --navy2:#0E1E45; --blue:#143C87; --blue-lt:#1E5BC6;
+  --red:#E30613; --white:#FFFFFF; --gold:#FFC531; --gold-dk:#E5A700;
+  --grass:#2FBF71; --grass-dk:#1E9E58; --ink:#0A1633;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --r:22px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  font-family:'Trebuchet MS','Segoe UI',system-ui,-apple-system,sans-serif;
+  color:var(--white);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #16306e 0%, transparent 60%),
+    radial-gradient(900px 500px at 15% 0%, rgba(227,6,19,.25) 0%, transparent 55%),
+    linear-gradient(180deg,#0c1a44 0%, var(--navy) 55%, #070f2a 100%);
+  min-height:100%;
+  overflow-x:hidden;
+  user-select:none; -webkit-user-select:none;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+/* floodlight glow */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(600px 300px at 20% -5%, rgba(255,255,255,.10), transparent 70%),
+    radial-gradient(600px 300px at 80% -5%, rgba(255,255,255,.10), transparent 70%);
+}
+#app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:14px 16px 30px;}
+button{font-family:inherit;cursor:pointer;border:none;}
+.hidden{display:none !important;}
+
+/* ---------- Top status bar ---------- */
+.topbar{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;padding:10px 12px;margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.crest{width:44px;height:44px;border-radius:12px;flex:0 0 auto;
+  background:var(--navy);position:relative;display:grid;place-items:center;
+  border:2px solid var(--gold);font-size:24px;}
+.who{flex:1;min-width:0;}
+.who .name{font-weight:800;font-size:16px;line-height:1;letter-spacing:.3px;}
+.who .rank{font-size:12px;color:var(--gold);font-weight:700;margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:15px;
+  background:rgba(0,0,0,.25);padding:6px 10px;border-radius:12px;}
+.stat small{font-weight:700;opacity:.8;font-size:11px;}
+.sound-btn{background:rgba(0,0,0,.25);border-radius:12px;width:40px;height:40px;
+  font-size:18px;color:var(--white);display:grid;place-items:center;}
+
+/* progress bar to next rank */
+.xpwrap{margin:-4px 0 16px;}
+.xpbar{height:12px;background:rgba(0,0,0,.35);border-radius:20px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);}
+.xpfill{height:100%;width:0;border-radius:20px;
+  background:linear-gradient(90deg,var(--gold),#ffe27a);transition:width .6s cubic-bezier(.2,.9,.3,1);}
+.xplabel{font-size:11px;opacity:.85;margin-top:5px;text-align:right;font-weight:700;}
+
+/* ---------- Home hero ---------- */
+.hero{
+  border-radius:var(--r);overflow:hidden;position:relative;margin-bottom:16px;
+  box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.12);
+}
+.pitch{
+  position:relative;height:170px;
+  background:
+    repeating-linear-gradient(90deg,var(--grass) 0 34px,var(--grass-dk) 34px 68px);
+}
+.pitch::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120px 120px at 50% 120%, rgba(255,255,255,.25), transparent 70%);}
+.pitch .line{position:absolute;background:rgba(255,255,255,.65);}
+.pitch .circle{position:absolute;left:50%;top:50%;width:96px;height:96px;
+  transform:translate(-50%,-50%);border:3px solid rgba(255,255,255,.65);border-radius:50%;}
+.pitch .mid{left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);}
+.playercard{
+  position:absolute;left:16px;bottom:14px;right:16px;display:flex;align-items:flex-end;
+  gap:12px;
+}
+.avatar{
+  width:74px;height:74px;border-radius:16px;background:linear-gradient(180deg,#fff,#dfe7ff);
+  display:grid;place-items:center;font-size:42px;border:3px solid var(--gold);
+  box-shadow:0 6px 16px rgba(0,0,0,.4);flex:0 0 auto;position:relative;overflow:hidden;}
+.avatar .jersey{position:absolute;inset:0;display:grid;place-items:center;font-size:44px;}
+.hero-txt{padding-bottom:4px;}
+.hero-txt .lvl{font-size:12px;font-weight:800;color:#fff;background:var(--red);
+  display:inline-block;padding:3px 9px;border-radius:20px;letter-spacing:.4px;}
+.hero-txt h1{margin:6px 0 0;font-size:22px;line-height:1.05;text-shadow:0 2px 8px rgba(0,0,0,.5);}
+.hero-txt .sub{font-size:12.5px;opacity:.92;margin-top:2px;}
+
+/* ---------- Menu grid ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.tile{
+  border-radius:20px;padding:16px 14px;text-align:left;color:#fff;
+  background:linear-gradient(160deg,var(--blue),#0f2a63);
+  border:1px solid rgba(255,255,255,.16);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:6px;min-height:104px;position:relative;
+  transition:transform .12s ease, filter .12s ease;
+}
+.tile:active{transform:scale(.96);}
+.tile .ic{font-size:30px;line-height:1;}
+.tile .t{font-weight:800;font-size:16px;}
+.tile .d{font-size:12px;opacity:.85;line-height:1.25;}
+.tile.big{grid-column:1 / -1;min-height:auto;flex-direction:row;align-items:center;gap:14px;
+  background:linear-gradient(120deg,var(--red),#a5040f);}
+.tile.big .ic{font-size:40px;}
+.tile.big .t{font-size:20px;}
+.tile.gold{background:linear-gradient(160deg,var(--gold-dk),#8a6400);}
+.tile.green{background:linear-gradient(160deg,var(--grass-dk),#146b3c);}
+.tile.locked{filter:grayscale(.7) brightness(.7);}
+.tile .lockbadge{position:absolute;top:10px;right:12px;font-size:16px;}
+
+.section-title{font-weight:800;font-size:14px;letter-spacing:.5px;opacity:.85;
+  text-transform:uppercase;margin:22px 4px 10px;}
+
+/* ---------- Screen containers ---------- */
+.screen{animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+  color:#fff;font-weight:800;border-radius:14px;padding:10px 14px;font-size:14px;
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;}
+
+/* ---------- Game / Match ---------- */
+.scoreboard{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:linear-gradient(180deg,#06102e,#0b1a44);border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:10px 14px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.team{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.team .badge{font-size:26px;}
+.team .nm{font-size:11px;font-weight:800;opacity:.9;text-align:center;line-height:1;}
+.score{font-size:34px;font-weight:900;letter-spacing:2px;font-variant-numeric:tabular-nums;
+  min-width:96px;text-align:center;}
+.score .vs{opacity:.5;font-size:20px;padding:0 4px;}
+
+.ballrow{display:flex;justify-content:center;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
+.ballrow .b{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.25);}
+.ballrow .b.goal{background:radial-gradient(circle at 35% 30%,#fff,#cdd6ea);border-color:#fff;}
+.ballrow .b.miss{background:var(--red);border-color:#ff6b73;}
+.ballrow .b.cur{box-shadow:0 0 0 3px var(--gold);}
+
+.combo{text-align:center;height:24px;font-weight:900;color:var(--gold);
+  font-size:16px;letter-spacing:.5px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,.5);}
+
+.qcard{
+  background:linear-gradient(180deg,#fff,#eef2ff);color:var(--ink);
+  border-radius:22px;padding:22px 18px;text-align:center;box-shadow:var(--shadow);
+  margin-bottom:14px;border:1px solid rgba(255,255,255,.6);
+}
+.qtag{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;
+  letter-spacing:.6px;}
+.qtext{font-size:30px;font-weight:900;margin:10px 0 4px;line-height:1.15;}
+.qtext.small{font-size:20px;font-weight:800;line-height:1.35;}
+.qhint{font-size:13px;color:#5b668a;font-weight:600;}
+
+/* answer options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.opt{
+  background:linear-gradient(160deg,var(--blue-lt),var(--blue));color:#fff;
+  border-radius:18px;padding:20px;font-size:26px;font-weight:900;
+  border:2px solid rgba(255,255,255,.2);box-shadow:var(--shadow);
+  transition:transform .1s;position:relative;overflow:hidden;
+}
+.opt:active{transform:scale(.95);}
+.opt.good{background:linear-gradient(160deg,#2fbf71,#1c8f52) !important;border-color:#8ff0b8;}
+.opt.bad{background:linear-gradient(160deg,#e34b52,#b21620) !important;border-color:#ffb3b7;}
+.opt.cmp{font-size:34px;}
+
+/* number pad */
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
+.answerbox{
+  background:#fff;color:var(--ink);border-radius:16px;min-height:56px;
+  display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;
+  letter-spacing:2px;margin-bottom:12px;border:3px solid var(--blue);
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.06);
+}
+.answerbox.empty{color:#b8c0da;}
+.key{background:linear-gradient(180deg,#20428f,#132a5f);color:#fff;border-radius:14px;
+  padding:16px 0;font-size:24px;font-weight:900;border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 4px 0 rgba(0,0,0,.3);}
+.key:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.3);}
+.key.act{background:linear-gradient(180deg,var(--gold),var(--gold-dk));color:#3a2a00;}
+.key.del{background:linear-gradient(180deg,#c0303a,#8f1620);}
+
+/* feedback overlay */
+.overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+  background:rgba(5,10,28,.55);backdrop-filter:blur(3px);animation:fade .2s;padding:24px;}
+.pop{background:linear-gradient(180deg,#122a63,#0b1a44);border:2px solid var(--gold);
+  border-radius:24px;padding:26px 22px;text-align:center;max-width:340px;width:100%;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);animation:pop .35s cubic-bezier(.2,1.3,.4,1);}
+@keyframes pop{from{transform:scale(.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.pop .em{font-size:64px;line-height:1;}
+.pop h2{margin:8px 0 4px;font-size:26px;}
+.pop p{margin:0 0 16px;opacity:.9;font-size:15px;line-height:1.4;}
+.pop .correctline{font-weight:800;color:var(--gold);font-size:18px;margin-bottom:14px;}
+
+/* result screen */
+.result-hero{text-align:center;padding:10px 0 4px;}
+.result-hero .em{font-size:76px;}
+.result-hero h2{font-size:28px;margin:6px 0 2px;}
+.stars{font-size:40px;letter-spacing:6px;margin:8px 0;}
+.result-stats{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap;}
+.rs{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:12px 16px;min-width:88px;}
+.rs .n{font-size:26px;font-weight:900;color:var(--gold);}
+.rs .l{font-size:11px;opacity:.85;font-weight:700;text-transform:uppercase;}
+.reward{background:linear-gradient(160deg,var(--gold-dk),#8a6400);border-radius:18px;
+  padding:14px;text-align:center;margin:10px 0;font-weight:800;border:1px solid var(--gold);
+  animation:pop .5s;}
+
+/* big CTA */
+.cta{
+  width:100%;background:linear-gradient(160deg,var(--red),#b3040f);color:#fff;
+  font-weight:900;font-size:19px;border-radius:18px;padding:18px;margin-top:6px;
+  box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.2);letter-spacing:.5px;
+}
+.cta:active{transform:scale(.97);}
+.cta.gold{background:linear-gradient(160deg,var(--gold),var(--gold-dk));color:#3a2a00;}
+.cta.ghost{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);}
+
+/* trophies / career */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.trophy{background:linear-gradient(160deg,#122a63,#0b1a44);border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;padding:16px 12px;text-align:center;}
+.trophy .em{font-size:40px;}
+.trophy.locked{filter:grayscale(1) brightness(.55);}
+.trophy .nm{font-weight:800;font-size:13px;margin-top:6px;}
+.trophy .dz{font-size:11px;opacity:.8;margin-top:2px;}
+
+.kit{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px;margin-bottom:10px;}
+.kit .sw{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:26px;flex:0 0 auto;}
+.kit .info{flex:1;}
+.kit .info .t{font-weight:800;}
+.kit .info .d{font-size:12px;opacity:.8;}
+.kit .pick{background:var(--blue-lt);color:#fff;border-radius:12px;padding:8px 12px;font-weight:800;font-size:13px;}
+.kit .pick.on{background:var(--grass-dk);}
+.kit .pick.lock{background:rgba(255,255,255,.12);}
+.kit.locked{filter:grayscale(.5) brightness(.8);}
+
+/* rank map */
+.ranklist{display:flex;flex-direction:column;gap:8px;}
+.rankrow{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:11px 14px;}
+.rankrow.done{border-color:var(--grass);}
+.rankrow.cur{border-color:var(--gold);background:rgba(255,197,49,.12);}
+.rankrow .em{font-size:24px;}
+.rankrow .info{flex:1;}
+.rankrow .nm{font-weight:800;font-size:15px;}
+.rankrow .dz{font-size:11px;opacity:.8;}
+.rankrow .chk{font-size:20px;}
+
+/* confetti canvas */
+/* crest + scoreboard badges hold SVGs now */
+.crest svg,.team .badge svg{display:block;}
+.team .badge{display:grid;place-items:center;height:38px;}
+
+/* player cards */
+.cardgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (min-width:440px){.cardgrid{grid-template-columns:1fr 1fr 1fr;}}
+.pcard{border-radius:18px;padding:12px 12px 10px;min-height:150px;position:relative;
+  border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow);display:flex;
+  flex-direction:column;gap:2px;overflow:hidden;}
+.pcard.locked{background:linear-gradient(160deg,#16224a,#0c1633);align-items:center;
+  justify-content:center;text-align:center;filter:grayscale(.3);}
+.pcard.rar-bronze{background:linear-gradient(160deg,#6b4a2b,#3d2a17);}
+.pcard.rar-argent{background:linear-gradient(160deg,#8a94a6,#4a5262);}
+.pcard.rar-or{background:linear-gradient(160deg,#E9C24A,#A9791A);color:#2a1e00;}
+.pcard.rar-speciale{background:linear-gradient(160deg,#1E5BC6,#E30613);}
+.pc-top{display:flex;align-items:center;justify-content:space-between;}
+.pc-num{font-size:28px;font-weight:900;line-height:1;opacity:.9;}
+.pc-badge{width:26px;}
+.pc-pos{font-size:12px;font-weight:800;opacity:.85;margin-top:6px;letter-spacing:.5px;}
+.pc-name{font-size:15px;font-weight:900;line-height:1.05;margin-top:2px;}
+.pc-team{font-size:11px;font-weight:700;opacity:.8;margin-top:2px;}
+.pc-rar{position:absolute;bottom:8px;right:10px;font-size:10px;font-weight:900;
+  text-transform:uppercase;letter-spacing:.6px;opacity:.85;
+  background:rgba(0,0,0,.25);padding:2px 7px;border-radius:20px;}
+.pc-lock{font-size:34px;}
+.pcard.locked .pc-name{font-size:14px;margin-top:8px;}
+
+/* scène d'animation du but */
+#goal-scene{position:fixed;inset:0;z-index:70;display:grid;place-items:center;
+  background:rgba(4,9,26,.72);backdrop-filter:blur(2px);animation:fade .15s;padding:14px;}
+#goal-scene svg{width:min(94vw,520px);height:auto;filter:drop-shadow(0 16px 40px rgba(0,0,0,.5));}
+#gs-leg,#gs-player,#gs-keeper,#gs-ballrot{transition:none;}
+#gs-ballrot{transform-box:fill-box;transform-origin:center;}
+
+.sw.shirt{background:transparent;}
+.sw svg{display:block;}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:80;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001s !important;transition-duration:.001s !important;}
+}
+@media (max-width:360px){
+  .qtext{font-size:26px;} .score{font-size:28px;min-width:80px;}
+}
+footer{text-align:center;opacity:.55;font-size:11px;margin-top:26px;}
+</style>
+<script src="../../assets/catalogue.js"></script>
+<script src="../../assets/commun.js"></script>
+<script src="../../assets/module-bridge.js" data-module="foot-maths"></script>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div id="app">
+
+  <!-- TOP BAR (always visible) -->
+  <div class="topbar">
+    <div class="crest">⚽</div>
+    <div class="who">
+      <div class="name" id="tb-name">Carlo</div>
+      <div class="rank" id="tb-rank">★ Débutant</div>
+    </div>
+    <div class="stat"><span>⚽</span><span id="tb-goals">0</span></div>
+    <div class="stat"><span>🏆</span><span id="tb-cups">0</span></div>
+    <button class="sound-btn" id="tb-sound" title="Son">🔊</button>
+  </div>
+  <div class="xpwrap">
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="xplabel" id="xplabel"></div>
+  </div>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen">
+    <div class="hero">
+      <div class="pitch">
+        <div class="line mid"></div>
+        <div class="circle"></div>
+        <div class="playercard">
+          <div class="avatar"><span class="jersey" id="home-jersey">👕</span></div>
+          <div class="hero-txt">
+            <span class="lvl" id="home-lvl">NIVEAU 1</span>
+            <h1 id="home-title">Salut Carlo !</h1>
+            <div class="sub" id="home-sub">Prêt à marquer des buts&nbsp;?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <button class="tile big" data-go="match">
+        <span class="ic">🥅</span>
+        <div>
+          <div class="t">Jouer un match</div>
+          <div class="d">10 tirs au but — marque un maximum de buts en maths&nbsp;!</div>
+        </div>
+      </button>
+
+      <button class="tile" data-go="penalty">
+        <span class="ic">🎯</span>
+        <div class="t">Tirs au but</div>
+        <div class="d">Calcul mental ultra-rapide</div>
+      </button>
+
+      <button class="tile green" data-go="training">
+        <span class="ic">🏃</span>
+        <div class="t">Entraînement</div>
+        <div class="d">Choisis ce que tu veux travailler</div>
+      </button>
+
+      <button class="tile gold" data-go="career">
+        <span class="ic">🏆</span>
+        <div class="t">Ma carrière</div>
+        <div class="d">Trophées &amp; progression</div>
+      </button>
+
+      <button class="tile" data-go="equipe">
+        <span class="ic">🃏</span>
+        <div class="t">Mon équipe</div>
+        <div class="d">Cartes de joueurs à collectionner</div>
+      </button>
+
+      <button class="tile" data-go="locker">
+        <span class="ic">👕</span>
+        <div class="t">Mon vestiaire</div>
+        <div class="d">Maillots à débloquer</div>
+      </button>
+    </div>
+    <footer>⚽ Foot &amp; Maths — la carrière de Carlo · fonctionne sans internet</footer>
+  </div>
+
+  <!-- TRAINING PICKER -->
+  <div id="screen-training" class="screen hidden">
+    <button class="back" data-go="home">‹ Retour</button>
+    <div class="section-title">🏃 Choisis ton entraînement</div>
+    <div class="grid" id="training-grid"></div>
+    <footer>Chaque entraînement = 8 questions. Réussis-les pour gagner des buts&nbsp;!</footer>
+  </div>
+
+  <!-- GAME -->
+  <div id="screen-game" class="screen hidden">
+    <div class="scoreboard">
+      <div class="team">
+        <div class="badge" id="g-badge-home">⚽</div>
+        <div class="nm" id="g-name-home">CARLO</div>
+      </div>
+      <div class="score"><span id="g-score-home">0</span><span class="vs">–</span><span id="g-score-away">0</span></div>
+      <div class="team">
+        <div class="badge" id="g-badge-away">🛡️</div>
+        <div class="nm" id="g-name-away">RIVAUX</div>
+      </div>
+    </div>
+    <div class="ballrow" id="ballrow"></div>
+    <div class="combo" id="combo"></div>
+
+    <div class="qcard">
+      <div class="qtag" id="q-tag">Addition</div>
+      <div class="qtext" id="q-text">12 + 7</div>
+      <div class="qhint" id="q-hint"></div>
+    </div>
+
+    <!-- multiple choice -->
+    <div class="opts" id="opts"></div>
+
+    <!-- number pad input -->
+    <div id="padwrap" class="hidden">
+      <div class="answerbox empty" id="answerbox">?</div>
+      <div class="pad" id="pad"></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen hidden">
+    <div class="result-hero">
+      <div class="em" id="r-em">🏆</div>
+      <h2 id="r-title">Victoire !</h2>
+      <div class="stars" id="r-stars">★★★</div>
+      <div id="r-sub" style="opacity:.9;font-size:15px;"></div>
+    </div>
+    <div class="result-stats">
+      <div class="rs"><div class="n" id="r-goals">0</div><div class="l">Buts</div></div>
+      <div class="rs"><div class="n" id="r-acc">0%</div><div class="l">Réussite</div></div>
+      <div class="rs"><div class="n" id="r-streak">0</div><div class="l">Meilleure série</div></div>
+    </div>
+    <div id="r-rewards"></div>
+    <button class="cta" id="r-again">↻ Rejouer</button>
+    <button class="cta ghost" data-go="home" style="margin-top:10px;">Retour à l'accueil</button>
+  </div>
+
+  <!-- CAREER -->
+  <div id="screen-career" class="screen hidden">
+    <button class="back" data-go="home">‹ Retour</button>
+    <div class="section-title">📈 Ma progression</div>
+    <div class="ranklist" id="ranklist"></div>
+    <div class="section-title">🏆 Mes coupes</div>
+    <div class="tgrid" id="cgrid"></div>
+    <div class="section-title">🎖️ Mes distinctions</div>
+    <div class="tgrid" id="tgrid"></div>
+    <div class="section-title">📊 Mes stats</div>
+    <div class="result-stats" style="justify-content:flex-start;">
+      <div class="rs"><div class="n" id="c-matches">0</div><div class="l">Matchs</div></div>
+      <div class="rs"><div class="n" id="c-goals">0</div><div class="l">Buts totaux</div></div>
+      <div class="rs"><div class="n" id="c-best">0</div><div class="l">Record série</div></div>
+    </div>
+    <button class="cta ghost" id="reset-btn" style="margin-top:20px;">↺ Recommencer la carrière</button>
+  </div>
+
+  <!-- LOCKER -->
+  <div id="screen-locker" class="screen hidden">
+    <button class="back" data-go="home">‹ Retour</button>
+    <div class="section-title">👕 Mon vestiaire</div>
+    <div id="kitlist"></div>
+    <footer>Marque des buts pour débloquer de nouveaux maillots&nbsp;!</footer>
+  </div>
+
+  <!-- MON ÉQUIPE (cartes) -->
+  <div id="screen-equipe" class="screen hidden">
+    <button class="back" data-go="home">‹ Retour</button>
+    <div class="section-title">🃏 Mes cartes de joueurs</div>
+    <div id="cardcount" style="margin:0 4px 12px;font-weight:800;opacity:.85;font-size:13px;"></div>
+    <div class="cardgrid" id="cardgrid"></div>
+    <footer>Marque des buts pour débloquer les cartes des joueurs du PSG et des Bleus&nbsp;!</footer>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+/* =========================================================================
+   FOOT & MATHS — La carrière de Carlo
+   App de révision maths CE1 → CE2, thème football (PSG / France).
+   100% hors-ligne, données sauvegardées dans le navigateur.
+   ========================================================================= */
+
+/* ---------------- Données de progression ---------------- */
+const RANGS = [
+  {nom:"Débutant",        seuil:0,    em:"🔰"},
+  {nom:"Jeune pousse",    seuil:10,   em:"🌱"},
+  {nom:"Espoir",          seuil:25,   em:"⭐"},
+  {nom:"Titulaire",       seuil:50,   em:"👟"},
+  {nom:"Buteur",          seuil:85,   em:"🎯"},
+  {nom:"Star",            seuil:130,  em:"🌟"},
+  {nom:"Capitaine",       seuil:190,  em:"🎽"},
+  {nom:"Légende",         seuil:270,  em:"🔥"},
+  {nom:"Ballon d'Or",     seuil:370,  em:"🥇"},
+  {nom:"Champion du Monde",seuil:500, em:"🏆"},
+];
+
+const TROPHEES = [
+  {id:"premier_but", nom:"Premier but", em:"⚽", dz:"Marque ton 1er but", test:s=>s.buts>=1},
+  {id:"triple",      nom:"Coup du chapeau", em:"🎩", dz:"3 bonnes réponses de suite", test:s=>s.meilleureSerie>=3},
+  {id:"but10",       nom:"Petit prodige", em:"🌱", dz:"10 buts au total", test:s=>s.buts>=10},
+  {id:"match5",      nom:"Habitué", em:"📋", dz:"Joue 5 matchs", test:s=>s.matchsJoues>=5},
+  {id:"serie5",      nom:"En feu", em:"🔥", dz:"5 bonnes réponses de suite", test:s=>s.meilleureSerie>=5},
+  {id:"but75",       nom:"Buteur en série", em:"🎯", dz:"75 buts au total", test:s=>s.buts>=75},
+  {id:"serie8",      nom:"Machine à buts", em:"🤖", dz:"8 bonnes réponses de suite", test:s=>s.meilleureSerie>=8},
+  {id:"match20",     nom:"Vétéran", em:"🎖️", dz:"Joue 20 matchs", test:s=>s.matchsJoues>=20},
+  {id:"serie12",     nom:"Ballon d'Or", em:"🥇", dz:"12 bonnes réponses de suite", test:s=>s.meilleureSerie>=12},
+  {id:"but250",      nom:"Légende vivante", em:"👑", dz:"250 buts au total", test:s=>s.buts>=250},
+];
+
+const MAILLOTS = [
+  {id:"psg_dom", nom:"PSG Domicile",    side:"psg",    dz:"Bleu, bande rouge centrale", seuil:0},
+  {id:"fra_dom", nom:"France Domicile", side:"france", dz:"Le maillot des Bleus", seuil:15},
+  {id:"psg_ext", nom:"PSG Extérieur",   side:"psg",    dz:"Blanc, liseré rouge & bleu", seuil:45},
+  {id:"fra_ext", nom:"France Extérieur",side:"france", dz:"Blanc, col tricolore", seuil:80},
+  {id:"legende", nom:"Édition Légende", side:"psg",    dz:"Maillot doré collector", seuil:160, special:true},
+];
+function kitById(id){ return MAILLOTS.find(m=>m.id===id) || MAILLOTS[0]; }
+
+/* Couleurs officielles (identité visuelle) de chaque maillot */
+function kitColors(id){
+  switch(id){
+    case "psg_dom": return {base:"#1F3F9E", sleeve:"#1F3F9E", stripe:"#E30613", stripeEdge:"#ffffff", collar:"#0A1633", stars:0, num:"#ffffff"};
+    case "psg_ext": return {base:"#F4F5F8", sleeve:"#F4F5F8", stripe:"#E30613", stripeEdge:"#1F3F9E", collar:"#1F3F9E", stars:0, num:"#1F3F9E"};
+    case "fra_dom": return {base:"#1B3A8B", sleeve:"#16307a", stripe:null, collar:"#E30613", trim:"#ffffff", stars:2, num:"#ffffff"};
+    case "fra_ext": return {base:"#F4F5F8", sleeve:"#eef0f5", stripe:null, collar:"#1B3A8B", trim:"#E30613", stars:2, num:"#1B3A8B"};
+    case "legende": return {base:"#E9C24A", sleeve:"#D9AE2E", stripe:"#0A1633", stripeEdge:"#ffffff", collar:"#0A1633", stars:0, num:"#0A1633"};
+    default: return {base:"#1F3F9E", sleeve:"#1F3F9E", stripe:"#E30613", stripeEdge:"#ffffff", collar:"#0A1633", stars:0, num:"#ffffff"};
+  }
+}
+/* SVG d'un maillot de foot, dessiné aux bonnes couleurs (œuvre originale) */
+function shirtSVG(id, size, num){
+  size = size||64; const c = kitColors(id);
+  const num_c = c.num;
+  const clip = "sh"+id;
+  const body = `M32 20 L20 14 L6 30 L20 40 L22 44 L22 92 L78 92 L78 44 L80 40 L94 30 L80 14 L68 20 Q50 30 32 20 Z`;
+  let stripes = "";
+  if(c.stripe){
+    stripes = `<g clip-path="url(#${clip})">
+      <rect x="42" y="14" width="16" height="80" fill="${c.stripeEdge}"/>
+      <rect x="45" y="14" width="10" height="80" fill="${c.stripe}"/>
+    </g>`;
+  }
+  let stars = "";
+  if(c.stars){
+    const sx = c.stars===2 ? [43,57] : [50];
+    stars = sx.map(x=>`<polygon points="${x},30 ${x+2.1},35 ${x+7},35 ${x+3},38.5 ${x+4.6},43.5 ${x},40.5 ${x-4.6},43.5 ${x-3},38.5 ${x-7},35 ${x-2.1},35" fill="#FFC531"/>`).join("");
+  }
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
+    <defs><clipPath id="${clip}"><path d="${body}"/></clipPath></defs>
+    <path d="${body}" fill="${c.base}" stroke="rgba(0,0,0,.25)" stroke-width="1.5"/>
+    <path d="M20 14 L6 30 L20 40 L24 34 Z" fill="${c.sleeve}"/>
+    <path d="M80 14 L94 30 L80 40 L76 34 Z" fill="${c.sleeve}"/>
+    ${stripes}
+    <path d="M32 20 Q50 30 68 20 L64 24 Q50 33 36 24 Z" fill="${c.collar}"/>
+    ${stars}
+    ${num? `<text x="50" y="76" text-anchor="middle" font-size="26" font-weight="900" fill="${num_c}" font-family="Trebuchet MS,Arial">${num}</text>`:""}
+  </svg>`;
+}
+function sideActif(){ return kitById(S.maillotActif).side; }
+
+/* Adversaires selon l'équipe de Carlo */
+const RIVAUX_PSG = [
+  {nm:"OM", em:"⚪"},{nm:"LYON", em:"🦁"},{nm:"MONACO", em:"🔴"},{nm:"LILLE", em:"🐕"},
+  {nm:"RENNES", em:"🔺"},{nm:"NICE", em:"🦅"},{nm:"LENS", em:"🟡"},{nm:"BREST", em:"⚓"},
+];
+const RIVAUX_FRANCE = [
+  {nm:"ESPAGNE", em:"🇪🇸"},{nm:"ANGLETERRE", em:"🏴󠁧󠁢󠁥󠁮󠁧󠁿"},{nm:"BRÉSIL", em:"🇧🇷"},{nm:"ARGENTINE", em:"🇦🇷"},
+  {nm:"PORTUGAL", em:"🇵🇹"},{nm:"ALLEMAGNE", em:"🇩🇪"},{nm:"BELGIQUE", em:"🇧🇪"},{nm:"MAROC", em:"🇲🇦"},
+];
+
+/* Équipe de Carlo selon le maillot porté */
+function sideActif(){ return S.maillotActif==="france" ? "france" : "psg"; }
+function nomEquipe(){ return sideActif()==="france" ? "FRANCE" : "PARIS"; }
+function rivauxActifs(){ return sideActif()==="france" ? RIVAUX_FRANCE : RIVAUX_PSG; }
+
+/* ---- Écussons dessinés (créations originales, pas les logos officiels) ---- */
+function badgePSG(size){size=size||44;return `<svg viewBox="0 0 100 116" width="${size}" height="${size*1.16}" aria-hidden="true">
+<path d="M4 6 H96 V64 C96 92 74 108 50 114 C26 108 4 92 4 64 Z" fill="#0A1633" stroke="#FFC531" stroke-width="4"/>
+<rect x="40" y="6" width="20" height="94" fill="#E30613"/>
+<g fill="#fff"><path d="M50 30 L44 84 H56 Z" opacity="0"/>
+<path d="M50 34 l7 46 h-4 l-1.5-10 h-3 L47 80 h-4 Z M49 62 h2 l-.6-8 h-.8 Z"/></g>
+<polygon points="50,16 52.5,22 59,22 53.8,26 55.8,32 50,28.3 44.2,32 46.2,26 41,22 47.5,22" fill="#FFC531"/>
+</svg>`;}
+function badgeFRANCE(size){size=size||44;return `<svg viewBox="0 0 100 116" width="${size}" height="${size*1.16}" aria-hidden="true">
+<path d="M4 6 H96 V64 C96 92 74 108 50 114 C26 108 4 92 4 64 Z" fill="#1A3A8F" stroke="#FFC531" stroke-width="4"/>
+<rect x="12" y="6" width="24" height="40" fill="#1E5BC6"/><rect x="64" y="6" width="24" height="40" fill="#E30613"/>
+<polygon points="34,58 36.5,64 43,64 37.8,68 39.8,74 34,70.3 28.2,74 30.2,68 25,64 31.5,64" fill="#FFC531"/>
+<polygon points="66,58 68.5,64 75,64 69.8,68 71.8,74 66,70.3 60.2,74 62.2,68 57,64 63.5,64" fill="#FFC531"/>
+<path d="M50 80 q-8 0 -8 8 q0 10 8 14 q8 -4 8 -14 q0 -8 -8 -8 Z" fill="#fff"/>
+<circle cx="47" cy="88" r="1.6" fill="#0A1633"/>
+</svg>`;}
+function badgeSide(side,size){ return side==="france"?badgeFRANCE(size):badgePSG(size); }
+
+/* ---- Cartes de joueurs à collectionner (effectifs 2026) ---- */
+/* Usage nominatif et factuel (nom, poste, n°) — aucune donnée inventée. */
+const CARTES = [
+  {n:"Ousmane Dembélé", num:10, pos:"ATT", side:"psg",    seuil:0},
+  {n:"Kylian Mbappé",   num:10, pos:"ATT", side:"france", seuil:6},
+  {n:"Vitinha",         num:17, pos:"MIL", side:"psg",    seuil:14},
+  {n:"Bradley Barcola", num:29, pos:"ATT", side:"psg",    seuil:24},
+  {n:"William Saliba",  num:17, pos:"DÉF", side:"france", seuil:36},
+  {n:"Achraf Hakimi",   num:2,  pos:"DÉF", side:"psg",    seuil:50},
+  {n:"Désiré Doué",     num:14, pos:"MIL", side:"psg",    seuil:66},
+  {n:"A. Tchouaméni",   num:8,  pos:"MIL", side:"france", seuil:85},
+  {n:"K. Kvaratskhelia",num:7,  pos:"ATT", side:"psg",    seuil:105},
+  {n:"Marquinhos",      num:5,  pos:"DÉF", side:"psg",    seuil:128},
+  {n:"Michael Olise",   num:11, pos:"ATT", side:"france", seuil:155},
+  {n:"Nuno Mendes",     num:25, pos:"DÉF", side:"psg",    seuil:185},
+  {n:"Marcus Thuram",   num:9,  pos:"ATT", side:"france", seuil:218},
+  {n:"João Neves",      num:87, pos:"MIL", side:"psg",    seuil:255},
+  {n:"D. Upamecano",    num:4,  pos:"DÉF", side:"france", seuil:300},
+  {n:"W. Zaïre-Emery",  num:33, pos:"MIL", side:"psg",    seuil:360},
+];
+function rareteCarte(seuil){ return seuil>=250?"Spéciale":seuil>=120?"Or":seuil>=40?"Argent":"Bronze"; }
+
+/* ---- Coupes réelles à soulever dans la carrière de Carlo ---- */
+/* Compétitions authentiques, gagnées ici en atteignant des paliers de buts. */
+const COUPES = [
+  {id:"champ_fr",  nom:"Championnat de France", em:"🇫🇷", dz:"Atteins 20 buts",  seuil:20},
+  {id:"coupe_fr",  nom:"Coupe de France",       em:"🏵️", dz:"Atteins 60 buts",  seuil:60},
+  {id:"trophee",   nom:"Trophée des Champions", em:"🛡️", dz:"Atteins 110 buts", seuil:110},
+  {id:"ldc",       nom:"Ligue des Champions",   em:"🏆", dz:"Atteins 170 buts", seuil:170},
+  {id:"nations",   nom:"Ligue des Nations",     em:"🎖️", dz:"Atteins 240 buts", seuil:240},
+  {id:"euro",      nom:"Championnat d'Europe",  em:"⭐", dz:"Atteins 320 buts", seuil:320},
+  {id:"mondial",   nom:"Coupe du Monde",        em:"🌍", dz:"Atteins 420 buts", seuil:420},
+];
+
+/* ---------------- Thèmes d'entraînement ---------------- */
+const THEMES = {
+  addition:   {nom:"Additions",     em:"➕", tag:"Addition"},
+  soustraction:{nom:"Soustractions",em:"➖", tag:"Soustraction"},
+  tables:     {nom:"Multiplications",em:"✖️", tag:"Table de multiplication"},
+  doubles:    {nom:"Doubles & moitiés",em:"🔀", tag:"Double / Moitié"},
+  complements:{nom:"Compléments",   em:"🧩", tag:"Complément"},
+  comparaison:{nom:"Comparaisons",  em:"⚖️", tag:"Comparaison"},
+  numeration: {nom:"Les nombres",   em:"🔢", tag:"Numération"},
+  problemes:  {nom:"Problèmes",     em:"🧠", tag:"Problème"},
+};
+
+/* ---------------- État ---------------- */
+const SAVE_KEY = "foot_maths_carlo_v2";
+const DEFAULT = {
+  buts:0, matchsJoues:0, meilleureSerie:0, rangVu:0,
+  maillotActif:"psg_dom", son:true,
+  trophees:[], maillots:["psg_dom"], etoiles:{}, cartes:[], coupes:[],
+};
+let S = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(raw){
+      const st = Object.assign({}, DEFAULT, JSON.parse(raw));
+      const ids = MAILLOTS.map(m=>m.id);
+      if(!ids.includes(st.maillotActif)) st.maillotActif = "psg_dom";
+      st.maillots = (st.maillots||[]).filter(x=>ids.includes(x));
+      if(!st.maillots.includes("psg_dom")) st.maillots.unshift("psg_dom");
+      return st;
+    }
+  }catch(e){}
+  return Object.assign({}, DEFAULT);
+}
+function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ---------------- Utilitaires ---------------- */
+const $ = sel => document.querySelector(sel);
+const rnd = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function rangIndex(buts){
+  let idx=0;
+  for(let i=0;i<RANGS.length;i++){ if(buts>=RANGS[i].seuil) idx=i; }
+  return idx;
+}
+function niveauDifficulte(){
+  // 1 → 6, en fonction du rang
+  return Math.min(6, 1 + Math.floor(rangIndex(S.buts)/1.6));
+}
+
+/* ============================================================
+   GÉNÉRATEURS DE QUESTIONS  (CE1 → CE2)
+   Chaque générateur renvoie :
+   { tag, texte, reponse, type:'choix'|'saisie'|'compare', petit?:bool }
+   ============================================================ */
+
+function genAddition(niv){
+  let a,b;
+  if(niv<=1){ a=rnd(2,9); b=rnd(2,9); }
+  else if(niv<=2){ a=rnd(10,29); b=rnd(2,9); }
+  else if(niv<=3){ a=rnd(11,49); b=rnd(11,49); }
+  else if(niv<=4){ a=rnd(20,89); b=rnd(11,79); }
+  else { a=rnd(100,499); b=rnd(20,299); }
+  return {tag:"Addition", texte:`${a} + ${b}`, reponse:a+b, type: (a+b<=20?'choix':'saisie')};
+}
+
+function genSoustraction(niv){
+  let a,b;
+  if(niv<=1){ a=rnd(5,10); b=rnd(1,a); }
+  else if(niv<=2){ a=rnd(11,20); b=rnd(1,9); }
+  else if(niv<=3){ a=rnd(20,60); b=rnd(5,20); }
+  else if(niv<=4){ a=rnd(40,99); b=rnd(11,39); }
+  else { a=rnd(120,600); b=rnd(30,110); }
+  if(b>a){ [a,b]=[b,a]; }
+  return {tag:"Soustraction", texte:`${a} − ${b}`, reponse:a-b, type:(a-b<=20?'choix':'saisie')};
+}
+
+function genTables(niv){
+  const maxTable = niv<=2 ? 5 : (niv<=4 ? 8 : 10);
+  const tables = niv<=1 ? [2,5,10] : (niv<=3 ? [2,3,4,5,10] : [2,3,4,5,6,7,8,9,10]);
+  const t = pick(tables);
+  const n = rnd(1, maxTable);
+  return {tag:`Table de ${t}`, texte:`${t} × ${n}`, reponse:t*n, type:'choix'};
+}
+
+function genDoubles(niv){
+  if(Math.random()<0.5){
+    // double
+    const n = niv<=2 ? rnd(1,10) : (niv<=4? rnd(5,25): rnd(10,50));
+    return {tag:"Le double", texte:`Le double de ${n}`, reponse:n*2, type:(n*2<=20?'choix':'saisie')};
+  } else {
+    // moitié (nombre pair)
+    const half = niv<=2 ? rnd(1,10) : (niv<=4? rnd(4,20): rnd(10,40));
+    return {tag:"La moitié", texte:`La moitié de ${half*2}`, reponse:half, type:(half<=20?'choix':'saisie')};
+  }
+}
+
+function genComplements(niv){
+  const base = niv<=2 ? 10 : (niv<=4 ? 100 : pick([100,100,1000]));
+  let a;
+  if(base===10) a=rnd(1,9);
+  else if(base===100) a=rnd(5,95);
+  else a=rnd(100,900);
+  const rep = base - a;
+  return {tag:`Complément à ${base}`, texte:`${a} + ? = ${base}`, reponse:rep, type:(rep<=20?'choix':'saisie')};
+}
+
+function genComparaison(niv){
+  const max = niv<=2?20 : (niv<=4?100:1000);
+  let a=rnd(0,max), b=rnd(0,max);
+  if(Math.random()<0.2) b=a; // parfois égal
+  const rep = a<b ? "<" : (a>b ? ">" : "=");
+  return {tag:"Comparaison", texte:`${a} ___ ${b}`, reponse:rep, type:'compare'};
+}
+
+function genNumeration(niv){
+  const kind = pick(["place","suivant","precedent","dizaines"]);
+  if(kind==="place"){
+    const n = niv<=3? rnd(10,99): rnd(100,999);
+    const digits = String(n).split("").map(Number);
+    if(n<100){
+      const q = pick([["chiffre des dizaines", digits[0]],["chiffre des unités", digits[1]]]);
+      return {tag:"Numération", texte:`Dans ${n}, quel est le ${q[0]} ?`, reponse:q[1], type:'choix', petit:true};
+    } else {
+      const q = pick([["chiffre des centaines", digits[0]],["chiffre des dizaines", digits[1]],["chiffre des unités", digits[2]]]);
+      return {tag:"Numération", texte:`Dans ${n}, quel est le ${q[0]} ?`, reponse:q[1], type:'choix', petit:true};
+    }
+  }
+  if(kind==="suivant"){
+    const n = niv<=3? rnd(10,98): rnd(100,998);
+    return {tag:"Numération", texte:`Quel nombre vient juste après ${n} ?`, reponse:n+1, type:(n+1<=20?'choix':'saisie'), petit:true};
+  }
+  if(kind==="precedent"){
+    const n = niv<=3? rnd(11,99): rnd(101,999);
+    return {tag:"Numération", texte:`Quel nombre vient juste avant ${n} ?`, reponse:n-1, type:(n-1<=20?'choix':'saisie'), petit:true};
+  }
+  // dizaines
+  const d = rnd(2,9), n=d*10;
+  return {tag:"Numération", texte:`Combien de dizaines dans ${n} ?`, reponse:d, type:'choix', petit:true};
+}
+
+/* prénoms de joueurs de l'équipe active, pour des problèmes vivants */
+function nomsJoueurs(k){
+  const side=sideActif();
+  const noms = CARTES.filter(c=>c.side===side).map(c=>c.n.split(" ").slice(-1)[0]); // nom de famille
+  const shuf = shuffle(noms);
+  return shuf.slice(0, k||1);
+}
+function genProblemes(niv){
+  const [j1,j2] = nomsJoueurs(2);
+  const P = [
+    ()=>{const a=rnd(2,6),b=rnd(2,6);return{t:`Une équipe a ${a} joueurs sur le terrain et ${b} remplaçants. Combien de joueurs en tout&nbsp;?`,r:a+b};},
+    ()=>{const g=rnd(2,5),m=rnd(2,4);return{t:`${j1} marque ${g} buts par match. En ${m} matchs, combien de buts en tout&nbsp;?`,r:g*m};},
+    ()=>{const t=rnd(11,22),s=rnd(3,9);return{t:`Il y a ${t} ballons dans le vestiaire. Le coach en sort ${s}. Combien en reste-t-il&nbsp;?`,r:t-s};},
+    ()=>{const e=rnd(2,4);return{t:`Chaque équipe a 11 joueurs. Combien de joueurs pour ${e} équipes&nbsp;?`,r:11*e};},
+    ()=>{const p=rnd(2,6),c=rnd(2,5);return{t:`Un paquet contient ${p} cartes de foot. Carlo achète ${c} paquets. Combien de cartes&nbsp;?`,r:p*c};},
+    ()=>{const a=rnd(15,40),b=rnd(10,25);return{t:`Le stade compte ${a} supporters, puis ${b} arrivent. Combien de supporters en tout&nbsp;?`,r:a+b};},
+    ()=>{const pr=rnd(3,9),n=rnd(2,4);return{t:`Un billet coûte ${pr} €. Combien coûtent ${n} billets&nbsp;?`,r:pr*n, euro:true};},
+    ()=>{const a=rnd(1,4),b=rnd(1,4);return{t:`${j1} marque ${a} buts et ${j2} en marque ${b}. Combien de buts à eux deux&nbsp;?`,r:a+b};},
+    ()=>{const a=rnd(2,5),b=rnd(1,4);return{t:`${j1} fait ${a} passes décisives, ${j2} en fait ${b} de plus. Combien de passes pour ${j2}&nbsp;?`,r:a+b};},
+    ()=>{const tot=rnd(18,30),d=rnd(6,12);return{t:`L'entraînement dure ${tot} minutes. ${j1} en a déjà fait ${d}. Combien reste-t-il&nbsp;?`,r:tot-d};},
+  ];
+  let bank = P;
+  if(niv<=2){ bank = [P[0],P[2],P[5],P[7],P[9]]; }
+  const q = pick(bank)();
+  return {tag:"Problème", texte:q.t, reponse:q.r, type:(q.r<=20 && !q.euro?'choix':'saisie'), petit:true};
+}
+
+const GENERATORS = {
+  addition:genAddition, soustraction:genSoustraction, tables:genTables,
+  doubles:genDoubles, complements:genComplements, comparaison:genComparaison,
+  numeration:genNumeration, problemes:genProblemes,
+};
+
+/* Choisit une question mixte pour un match, adaptée au niveau */
+function questionMixte(niv){
+  let pool = ["addition","soustraction","tables","doubles"];
+  if(niv>=2) pool.push("complements","numeration");
+  if(niv>=3) pool.push("comparaison","problemes");
+  if(niv>=4) pool.push("tables","problemes"); // plus fréquents
+  return GENERATORS[pick(pool)](niv);
+}
+
+/* Génère les propositions (choix multiples) autour de la bonne réponse */
+function propositions(q){
+  if(q.type==='compare'){ return shuffle(["<",">","="]); }
+  const correct = q.reponse;
+  const set = new Set([correct]);
+  let tries=0;
+  while(set.size<4 && tries<40){
+    tries++;
+    let delta = pick([1,2,3,4,5,10,-1,-2,-3,-5,-10]);
+    let cand = correct + delta;
+    if(cand>=0 && cand!==correct) set.add(cand);
+  }
+  while(set.size<4){ set.add(correct + set.size); }
+  return shuffle([...set]);
+}
+
+/* ============================================================
+   SON  (Web Audio — aucun fichier requis, marche hors-ligne)
+   ============================================================ */
+let AC=null;
+function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+function beep(freq, dur, type="sine", vol=0.2, when=0){
+  if(!S.son) return; const a=ac(); if(!a) return;
+  const t=a.currentTime+when;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vol,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+0.02);
+}
+function sndGoal(){
+  if(!S.son) return; const a=ac(); if(!a) return;
+  // petite fanfare montante
+  [523,659,784,1047].forEach((f,i)=>beep(f,0.18,"triangle",0.22,i*0.09));
+  // "foule" : bruit filtré qui monte
+  try{
+    const dur=0.9, sr=a.sampleRate, buf=a.createBuffer(1,sr*dur,sr), d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*0.5; }
+    const src=a.createBufferSource(); src.buffer=buf;
+    const bp=a.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=900; bp.Q.value=0.6;
+    const g=a.createGain(); const t=a.currentTime;
+    g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.25,t+0.25);
+    g.gain.linearRampToValueAtTime(0.0001,t+dur);
+    src.connect(bp); bp.connect(g); g.connect(a.destination); src.start(t); src.stop(t+dur);
+  }catch(e){}
+}
+function sndMiss(){ beep(220,0.18,"sine",0.16); beep(160,0.22,"sine",0.16,0.12); }
+function sndWhistle(){ beep(2000,0.12,"square",0.12); beep(2100,0.10,"square",0.12,0.13); }
+function sndTap(){ beep(600,0.05,"square",0.08); }
+function sndTrophy(){ [659,784,988,1319].forEach((f,i)=>beep(f,0.22,"triangle",0.22,i*0.11)); }
+
+/* ============================================================
+   NAVIGATION ENTRE ÉCRANS
+   ============================================================ */
+const SCREENS = ["home","training","game","result","career","locker","equipe"];
+function show(name){
+  SCREENS.forEach(s=>$("#screen-"+s).classList.toggle("hidden", s!==name));
+  window.scrollTo(0,0);
+  if(name==="training") buildTraining();
+  if(name==="career") buildCareer();
+  if(name==="locker") buildLocker();
+  if(name==="equipe") buildEquipe();
+  if(name==="home") renderHome();
+}
+document.addEventListener("click", e=>{
+  const go = e.target.closest("[data-go]");
+  if(go){ const dest=go.getAttribute("data-go"); route(dest); }
+});
+function route(dest){
+  sndTap();
+  if(dest==="match"){ startGame("match"); }
+  else if(dest==="penalty"){ startGame("penalty"); }
+  else if(SCREENS.includes(dest)){ show(dest); }
+}
+
+/* ============================================================
+   RENDU BARRE DU HAUT + ACCUEIL
+   ============================================================ */
+function renderTop(){
+  const ri = rangIndex(S.buts);
+  $("#tb-name").textContent = "Carlo";
+  $("#tb-rank").textContent = RANGS[ri].em+" "+RANGS[ri].nom;
+  $("#tb-goals").textContent = S.buts;
+  $("#tb-cups").textContent = (S.coupes?S.coupes.length:0) + S.trophees.length;
+  $("#tb-sound").textContent = S.son ? "🔊" : "🔇";
+  const crest=document.querySelector(".crest");
+  if(crest) crest.innerHTML = badgeSide(sideActif(), 30);
+  // barre xp vers le rang suivant
+  const cur = RANGS[ri].seuil;
+  const next = RANGS[ri+1] ? RANGS[ri+1].seuil : cur;
+  const pct = RANGS[ri+1] ? Math.min(100, Math.round((S.buts-cur)/(next-cur)*100)) : 100;
+  $("#xpfill").style.width = pct+"%";
+  $("#xplabel").textContent = RANGS[ri+1]
+    ? `${S.buts} / ${next} buts → ${RANGS[ri+1].nom}`
+    : `Rang maximum atteint ! 🏆`;
+}
+function renderHome(){
+  const ri = rangIndex(S.buts);
+  const av=document.querySelector(".avatar"); if(av) av.innerHTML = shirtSVG(S.maillotActif, 60);
+  $("#home-lvl").textContent = "NIVEAU "+niveauDifficulte();
+  $("#home-title").textContent = ri===0 ? "Salut Carlo !" : RANGS[ri].nom+" Carlo !";
+  $("#home-sub").textContent = ri===0 ? "Prêt à marquer des buts ?"
+    : `Tu as marqué ${S.buts} buts. Continue !`;
+  renderTop();
+}
+
+/* ============================================================
+   ENTRAÎNEMENT
+   ============================================================ */
+function buildTraining(){
+  const g = $("#training-grid"); g.innerHTML="";
+  Object.keys(THEMES).forEach(k=>{
+    const th=THEMES[k];
+    const b=document.createElement("button");
+    b.className="tile";
+    b.innerHTML=`<span class="ic">${th.em}</span><div class="t">${th.nom}</div>
+      <div class="d">S'entraîner</div>`;
+    b.onclick=()=>{ sndTap(); startGame("training", k); };
+    g.appendChild(b);
+  });
+}
+
+/* ============================================================
+   MOTEUR DE JEU
+   ============================================================ */
+let G = null; // état du match en cours
+
+function startGame(mode, theme){
+  const niv = niveauDifficulte();
+  const nb = mode==="penalty" ? 5 : (mode==="training" ? 8 : 10);
+  const rival = pick(rivauxActifs());
+  G = {
+    mode, theme, niv, nb, idx:0,
+    buts:0, adverse:0, serie:0, meilleure:0, justes:0,
+    rival, locked:false,
+  };
+  // scoreboard
+  $("#g-name-home").textContent = nomEquipe();
+  $("#g-badge-home").innerHTML = badgeSide(sideActif(), 30);
+  $("#g-name-away").textContent = mode==="penalty" ? "GARDIEN" : rival.nm;
+  $("#g-badge-away").textContent = mode==="penalty" ? "🧤" : rival.em;
+  show("game");
+  buildBallrow();
+  nextQuestion();
+}
+
+function buildBallrow(){
+  const row=$("#ballrow"); row.innerHTML="";
+  for(let i=0;i<G.nb;i++){
+    const b=document.createElement("div"); b.className="b"; b.dataset.i=i;
+    row.appendChild(b);
+  }
+  updateBallrow();
+}
+function updateBallrow(){
+  document.querySelectorAll("#ballrow .b").forEach(b=>{
+    b.classList.toggle("cur", +b.dataset.i===G.idx);
+  });
+}
+function updateScore(){
+  $("#g-score-home").textContent=G.buts;
+  $("#g-score-away").textContent=G.adverse;
+}
+
+function nextQuestion(){
+  if(G.idx>=G.nb){ endGame(); return; }
+  G.locked=false;
+  updateBallrow(); updateScore();
+  $("#combo").textContent = G.serie>=2 ? comboText(G.serie) : "";
+
+  // génère la question
+  let q;
+  if(G.mode==="training"){ q = GENERATORS[G.theme](G.niv); }
+  else if(G.mode==="penalty"){
+    // calcul mental rapide : add/sous/tables/doubles
+    q = GENERATORS[pick(["addition","soustraction","tables","doubles"])](Math.max(1,G.niv-1));
+  } else { q = questionMixte(G.niv); }
+  G.q = q;
+
+  $("#q-tag").textContent = q.tag;
+  const qt=$("#q-text");
+  qt.innerHTML = q.texte;
+  qt.classList.toggle("small", !!q.petit);
+  $("#q-hint").textContent = q.type==='compare' ? "Choisis le bon signe" :
+      (q.type==='saisie' ? "Tape ta réponse puis valide" : "Touche la bonne réponse");
+
+  if(q.type==='saisie'){ setupPad(q); }
+  else { setupChoices(q); }
+}
+
+function comboText(n){
+  if(n>=6) return "🔥 SÉRIE DE "+n+" !";
+  if(n>=5) return "🔥 EN FEU ! ×"+n;
+  if(n>=4) return "💥 QUADRUPLÉ !";
+  if(n>=3) return "🎩 COUP DU CHAPEAU !";
+  if(n>=2) return "⚡ DOUBLÉ !";
+  return "";
+}
+
+/* --- choix multiples --- */
+function setupChoices(q){
+  $("#padwrap").classList.add("hidden");
+  const box=$("#opts"); box.classList.remove("hidden"); box.innerHTML="";
+  const props=propositions(q);
+  props.forEach(v=>{
+    const btn=document.createElement("button");
+    btn.className="opt"+(q.type==='compare'?" cmp":"");
+    btn.textContent=v;
+    btn.onclick=()=>answer(v, btn);
+    box.appendChild(btn);
+  });
+}
+
+/* --- pavé numérique --- */
+let padVal="";
+function setupPad(q){
+  $("#opts").classList.add("hidden");
+  const pw=$("#padwrap"); pw.classList.remove("hidden");
+  padVal="";
+  renderPadVal();
+  const pad=$("#pad"); pad.innerHTML="";
+  const keys=["1","2","3","4","5","6","7","8","9","⌫","0","✓"];
+  keys.forEach(k=>{
+    const b=document.createElement("button");
+    b.className="key"+(k==="✓"?" act":"")+(k==="⌫"?" del":"");
+    b.textContent=k;
+    b.onclick=()=>{
+      if(G.locked) return;
+      if(k==="⌫"){ padVal=padVal.slice(0,-1); sndTap(); renderPadVal(); }
+      else if(k==="✓"){ if(padVal!==""){ answer(parseInt(padVal,10), null); } }
+      else { if(padVal.length<4){ padVal+=k; sndTap(); renderPadVal(); } }
+    };
+    pad.appendChild(b);
+  });
+}
+function renderPadVal(){
+  const box=$("#answerbox");
+  box.textContent = padVal===""?"?":padVal;
+  box.classList.toggle("empty", padVal==="");
+}
+
+/* --- traitement de la réponse --- */
+function answer(val, btn){
+  if(G.locked) return; G.locked=true;
+  const correct = (val === G.q.reponse) || (String(val)===String(G.q.reponse));
+  if(correct){
+    G.buts++; G.serie++; G.justes++;
+    if(G.serie>G.meilleure) G.meilleure=G.serie;
+    markBall(G.idx,"goal");
+    if(btn) btn.classList.add("good");
+    updateScore();
+    flashFeedback(true);
+  } else {
+    G.serie=0;
+    // l'adversaire marque parfois (donne un enjeu, sans punir)
+    if(Math.random()<0.5) G.adverse++;
+    markBall(G.idx,"miss");
+    if(btn){ btn.classList.add("bad");
+      // montre la bonne
+      [...document.querySelectorAll("#opts .opt")].forEach(o=>{
+        if(String(o.textContent)===String(G.q.reponse)) o.classList.add("good");
+      });
+    }
+    sndMiss();
+    updateScore();
+    flashFeedback(false);
+  }
+}
+function markBall(i,cls){
+  const b=document.querySelector(`#ballrow .b[data-i="${i}"]`);
+  if(b) b.classList.add(cls);
+}
+
+/* --- feedback : but animé si bonne réponse, arrêt du gardien sinon --- */
+function prefersReduced(){ return matchMedia("(prefers-reduced-motion: reduce)").matches; }
+
+function flashFeedback(good){
+  const combo = G.serie;
+  if(good){
+    if(prefersReduced()){
+      // version sobre (sans animation)
+      sndGoal();
+      const ov=document.createElement("div"); ov.className="overlay";
+      const titre = combo>=3 ? "BUUUT !" : pick(["BUUUT !","GOAL !","Superbe !","Filet !"]);
+      const msg = combo>=3 ? comboText(combo) : "Belle frappe, Carlo !";
+      ov.innerHTML=`<div class="pop"><div class="em">⚽</div><h2>${titre}</h2><p>${msg}</p></div>`;
+      document.body.appendChild(ov);
+      setTimeout(()=>{ ov.remove(); G.idx++; nextQuestion(); }, 700);
+    } else {
+      playGoal(pickShot(), combo, ()=>{ G.idx++; nextQuestion(); });
+    }
+    return;
+  }
+  // mauvaise réponse : arrêt du gardien (encourageant)
+  const ov=document.createElement("div"); ov.className="overlay";
+  const em=pick(["🧤","😮","💪"]);
+  const extra=`<div class="correctline">Bonne réponse : ${G.q.reponse}</div>`;
+  ov.innerHTML=`<div class="pop"><div class="em">${em}</div>
+     <h2>Presque !</h2>${extra}<p>Le gardien a arrêté. Réessaie&nbsp;!</p></div>`;
+  document.body.appendChild(ov);
+  setTimeout(()=>{ ov.remove(); G.idx++; nextQuestion(); }, 1300);
+}
+
+/* ============================================================
+   ANIMATION DU BUT — variantes de frappes
+   ============================================================ */
+const SHOTS = [
+  {label:"Lucarne !",     to:[228,54], arc:-46, keeper:"l",     spin:900,  dur:640, pose:"kick"},
+  {label:"Lucarne !",     to:[92,54],  arc:-46, keeper:"r",     spin:-900, dur:640, pose:"kick"},
+  {label:"Petit filet !", to:[224,98], arc:-16, keeper:"l",     spin:760,  dur:560, pose:"kick"},
+  {label:"Petit filet !", to:[96,98],  arc:-16, keeper:"r",     spin:-760, dur:560, pose:"kick"},
+  {label:"Missile !",     to:[160,64], arc:-6,  keeper:"stay",  spin:1200, dur:470, pose:"kick"},
+  {label:"Panenka !",     to:[160,62], arc:-78, keeper:"lr",    spin:180,  dur:940, pose:"chip"},
+  {label:"Volée !",       to:[212,74], arc:-26, keeper:"l",     spin:1000, dur:580, pose:"volley"},
+  {label:"Coup franc !",  to:[100,58], arc:-52, keeper:"r",     spin:-1250,dur:700, pose:"kick", from:[150,196]},
+  {label:"Retourné !",    to:[150,58], arc:-34, keeper:"stay",  spin:1500, dur:720, pose:"bike",  from:[152,178]},
+  {label:"Coup de tête !",to:[122,66], arc:-30, keeper:"r",     spin:360,  dur:640, pose:"header",from:[158,150]},
+];
+let lastShotIdx = -1;
+function pickShot(){
+  let i; do{ i=rnd(0,SHOTS.length-1); }while(i===lastShotIdx && SHOTS.length>1);
+  lastShotIdx=i; return SHOTS[i];
+}
+
+function ballSVG(){
+  return `<g id="gs-ballrot">
+    <circle r="9" fill="#fff" stroke="#0A1633" stroke-width="1.2"/>
+    <polygon points="0,-4 3.8,-1.2 2.4,3.2 -2.4,3.2 -3.8,-1.2" fill="#0A1633"/>
+    <path d="M0 -9 L0 -4 M8.6 -3 L3.8 -1.2 M5.3 7 L2.4 3.2 M-5.3 7 L-2.4 3.2 M-8.6 -3 L-3.8 -1.2" stroke="#0A1633" stroke-width="1"/>
+  </g>`;
+}
+function playerSVG(){
+  const c = kitColors(S.maillotActif);
+  const shorts = (S.maillotActif==="fra_dom")?"#ffffff":(S.maillotActif==="psg_ext"||S.maillotActif==="fra_ext"?"#1B3A8B":"#0A1633");
+  return `<g id="gs-player">
+    <ellipse cx="0" cy="60" rx="16" ry="4" fill="rgba(0,0,0,.28)"/>
+    <g id="gs-legstand"><rect x="-8" y="30" width="6" height="26" rx="3" fill="${shorts}"/><rect x="-8" y="52" width="7" height="5" rx="2" fill="#111"/></g>
+    <g id="gs-leg" style="transform-origin:2px 32px"><rect x="0" y="30" width="6" height="26" rx="3" fill="${shorts}"/><rect x="0" y="52" width="8" height="5" rx="2" fill="#111"/></g>
+    <rect x="-11" y="4" width="22" height="30" rx="6" fill="${c.base}"/>
+    ${c.stripe?`<rect x="-3.5" y="4" width="7" height="30" fill="${c.stripeEdge}"/><rect x="-2" y="4" width="4" height="30" fill="${c.stripe}"/>`:""}
+    ${c.stars?`<circle cx="0" cy="12" r="1.6" fill="#FFC531"/>`:""}
+    <rect x="-18" y="6" width="8" height="20" rx="4" fill="${c.sleeve}" transform="rotate(18 -14 16)"/>
+    <rect x="10" y="6" width="8" height="20" rx="4" fill="${c.sleeve}" transform="rotate(-18 14 16)"/>
+    <circle cx="0" cy="-6" r="8" fill="#E8B98A"/>
+    <path d="M-8 -8 a8 7 0 0 1 16 0 Z" fill="#3a2a20"/>
+  </g>`;
+}
+function keeperSVG(){
+  return `<g id="gs-keeper">
+    <g id="gs-armL"><rect x="-20" y="-2" width="7" height="16" rx="3.5" fill="#0f7a3d" transform="rotate(20 -16 6)"/></g>
+    <g id="gs-armR"><rect x="13" y="-2" width="7" height="16" rx="3.5" fill="#0f7a3d" transform="rotate(-20 16 6)"/></g>
+    <rect x="-10" y="-2" width="20" height="24" rx="5" fill="#12a04f"/>
+    <rect x="-8" y="20" width="6" height="16" rx="3" fill="#0a1633"/>
+    <rect x="2" y="20" width="6" height="16" rx="3" fill="#0a1633"/>
+    <circle cx="0" cy="-10" r="7" fill="#E8B98A"/>
+  </g>`;
+}
+function buildScene(){
+  return `<svg id="gs-svg" viewBox="0 0 320 240" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <pattern id="gs-net" width="9" height="9" patternUnits="userSpaceOnUse">
+        <path d="M0 0 L9 9 M9 0 L0 9" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
+      </pattern>
+      <linearGradient id="gs-sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#12285f"/><stop offset="1" stop-color="#0a1738"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="320" height="150" fill="url(#gs-sky)"/>
+    <!-- pelouse -->
+    <g>
+      <rect x="0" y="140" width="320" height="100" fill="#2FBF71"/>
+      <rect x="0" y="140" width="320" height="14" fill="#28a962"/>
+      <rect x="0" y="168" width="320" height="14" fill="#28a962"/>
+      <rect x="0" y="196" width="320" height="14" fill="#28a962"/>
+      <rect x="0" y="224" width="320" height="14" fill="#28a962"/>
+    </g>
+    <!-- but -->
+    <rect x="72" y="44" width="176" height="66" fill="url(#gs-net)"/>
+    <g id="gs-goalframe" stroke="#f2f4ff" stroke-width="5" stroke-linecap="round" fill="none">
+      <line x1="70" y1="44" x2="70" y2="112"/>
+      <line x1="250" y1="44" x2="250" y2="112"/>
+      <line x1="67" y1="44" x2="253" y2="44"/>
+    </g>
+    ${'<g transform="translate(160,86)">'+keeperSVG()+'</g>'}
+    <g id="gs-flash" opacity="0"><rect x="72" y="44" width="176" height="66" fill="#fff"/></g>
+    ${'<g transform="translate(150,150)">'+playerSVG()+'</g>'}
+    <g id="gs-ball" transform="translate(150,196)">${ballSVG()}</g>
+    <text id="gs-label" x="160" y="30" text-anchor="middle" font-size="22" font-weight="900"
+      fill="#FFC531" opacity="0" style="paint-order:stroke;stroke:#0A1633;stroke-width:4px;">BUT !</text>
+  </svg>`;
+}
+
+function playGoal(cfg, combo, onDone){
+  const scene=document.createElement("div"); scene.id="goal-scene";
+  scene.innerHTML=buildScene();
+  document.body.appendChild(scene);
+  const svg=scene.querySelector("#gs-svg");
+  const ball=svg.querySelector("#gs-ball");
+  const ballrot=svg.querySelector("#gs-ballrot");
+  const leg=svg.querySelector("#gs-leg");
+  const player=svg.querySelector("#gs-player");
+  const keeper=svg.querySelector("#gs-keeper");
+  const flash=svg.querySelector("#gs-flash");
+  const label=svg.querySelector("#gs-label");
+  const frame=svg.querySelector("#gs-goalframe");
+
+  const from = cfg.from || [150,196];
+  const to = cfg.to;
+  const ctrl = [(from[0]+to[0])/2, Math.min(from[1],to[1]) + cfg.arc];
+  const windup = 150, flight = cfg.dur, total = windup+flight;
+  const t0 = performance.now();
+  ball.setAttribute("transform", `translate(${from[0]},${from[1]})`);
+
+  // dive du gardien (translation + rotation, coords locales du gardien)
+  const dive = cfg.keeper==="l" ? [-42,24,-58] :
+               cfg.keeper==="r" ? [42,24,58] :
+               cfg.keeper==="lr" ? (Math.random()<.5?[-42,24,-58]:[42,24,58]) : null;
+
+  sndWhistle();
+  let impacted=false;
+  function frameStep(now){
+    const e = now - t0;
+    if(e < windup){
+      const w = e/windup;
+      if(cfg.pose==="bike"){ player.setAttribute("transform",`rotate(${ -18*w } 0 22)`); }
+      else if(cfg.pose==="header"){ player.setAttribute("transform",`translate(0 ${ -10*w })`); }
+      else { leg.setAttribute("transform",`rotate(${ -62*w } 3 30)`); }
+    } else {
+      const t = Math.min(1, (e-windup)/flight);
+      if(cfg.pose==="bike"){ player.setAttribute("transform",`rotate(${ -18 + t*(-150) } 0 22)`); }
+      else if(cfg.pose==="header"){ player.setAttribute("transform",`translate(0 ${ -10 + t*7 })`); }
+      else { leg.setAttribute("transform",`rotate(${ -62 + t*132 } 3 30)`); }
+      const mt=1-t;
+      const x = mt*mt*from[0] + 2*mt*t*ctrl[0] + t*t*to[0];
+      const y = mt*mt*from[1] + 2*mt*t*ctrl[1] + t*t*to[1];
+      ball.setAttribute("transform", `translate(${x},${y})`);
+      ballrot.setAttribute("transform", `rotate(${ t*cfg.spin })`);
+      if(dive){ const k=Math.min(1,t/0.6); keeper.setAttribute("transform",`translate(${dive[0]*k},${dive[1]*k}) rotate(${dive[2]*k})`); }
+      if(t>=1 && !impacted){
+        impacted=true;
+        sndGoal();
+        flash.animate([{opacity:.9},{opacity:0}],{duration:280,easing:"ease-out"});
+        label.setAttribute("opacity","1");
+        label.textContent = combo>=3 ? comboText(combo).replace(/^[^ ]+ /,"") : cfg.label;
+        label.animate([{transform:"translateY(6px)",opacity:0},{transform:"translateY(0)",opacity:1}],{duration:280,easing:"ease-out"});
+        burstConfetti();
+      }
+    }
+    if(e < total + 520){ requestAnimationFrame(frameStep); }
+    else { scene.remove(); onDone(); }
+  }
+  requestAnimationFrame(frameStep);
+}
+
+/* ============================================================
+   FIN DE MATCH + RÉCOMPENSES
+   ============================================================ */
+function endGame(){
+  sndWhistle();
+  const acc = Math.round(G.justes/G.nb*100);
+  const stars = acc>=90?3 : acc>=60?2 : acc>=30?1:0;
+
+  // maj de l'état global
+  const avant = { buts:S.buts, trophees:S.trophees.slice(), maillots:S.maillots.slice(), rang:rangIndex(S.buts) };
+  S.buts += G.buts;
+  S.matchsJoues += 1;
+  if(G.meilleure > S.meilleureSerie) S.meilleureSerie = G.meilleure;
+  const key = (G.mode==="training"? "t_"+G.theme : G.mode);
+  S.etoiles[key] = Math.max(S.etoiles[key]||0, stars);
+
+  // nouveaux trophées
+  const nouveauxTrophees=[];
+  TROPHEES.forEach(t=>{ if(!S.trophees.includes(t.id) && t.test(S)){ S.trophees.push(t.id); nouveauxTrophees.push(t); } });
+  // nouveaux maillots
+  const nouveauxMaillots=[];
+  MAILLOTS.forEach(m=>{ if(!S.maillots.includes(m.id) && S.buts>=m.seuil){ S.maillots.push(m.id); nouveauxMaillots.push(m); } });
+  // nouvelles cartes de joueurs
+  const nouvellesCartes=[];
+  CARTES.forEach(c=>{ if(!S.cartes.includes(c.n) && S.buts>=c.seuil){ S.cartes.push(c.n); nouvellesCartes.push(c); } });
+  // nouvelles coupes
+  const nouvellesCoupes=[];
+  COUPES.forEach(c=>{ if(!S.coupes.includes(c.id) && S.buts>=c.seuil){ S.coupes.push(c.id); nouvellesCoupes.push(c); } });
+  // montée de rang ?
+  const apresRang = rangIndex(S.buts);
+  const montee = apresRang>avant.rang ? RANGS[apresRang] : null;
+
+  save();
+
+  // écran résultat
+  const win = G.buts>G.adverse;
+  const nul = G.buts===G.adverse;
+  $("#r-em").textContent = win?"🏆":(nul?"🤝":"💪");
+  $("#r-title").textContent = win?"Victoire !":(nul?"Match nul !":"Bien joué !");
+  $("#r-stars").textContent = "★★★☆☆☆".slice(3-stars,6-stars) ; // fallback
+  $("#r-stars").textContent = "★".repeat(stars)+"☆".repeat(3-stars);
+  $("#r-sub").textContent = G.mode==="penalty"
+      ? `Séance de tirs au but terminée`
+      : `${nomEquipe()} ${G.buts} – ${G.adverse} ${G.mode==="training"?"Entraînement":G.rival.nm}`;
+  $("#r-goals").textContent = G.buts;
+  $("#r-acc").textContent = acc+"%";
+  $("#r-streak").textContent = G.meilleure;
+
+  // récompenses
+  const rw=$("#r-rewards"); rw.innerHTML="";
+  if(montee){ rw.innerHTML += `<div class="reward">${montee.em} Nouveau rang débloqué : <b>${montee.nom}</b> !</div>`; }
+  nouvellesCoupes.forEach(c=> rw.innerHTML += `<div class="reward">${c.em} Coupe remportée : <b>${c.nom}</b></div>`);
+  nouvellesCartes.forEach(c=> rw.innerHTML += `<div class="reward">🃏 Carte débloquée : <b>${c.n}</b></div>`);
+  nouveauxTrophees.forEach(t=> rw.innerHTML += `<div class="reward">${t.em} Distinction : <b>${t.nom}</b></div>`);
+  nouveauxMaillots.forEach(m=> rw.innerHTML += `<div class="reward">👕 Nouveau maillot : <b>${m.nom}</b></div>`);
+
+  const bigWin = win || stars>=2 || montee || nouveauxTrophees.length || nouvellesCoupes.length || nouvellesCartes.length;
+  if(bigWin) setTimeout(burstConfetti, 200);
+  if(nouveauxTrophees.length || montee || nouvellesCoupes.length) setTimeout(sndTrophy, 350);
+
+  $("#r-again").onclick=()=>{ sndTap(); startGame(G.mode, G.theme); };
+  show("result");
+  renderTop();
+}
+
+/* ============================================================
+   CARRIÈRE
+   ============================================================ */
+function buildCareer(){
+  const ri=rangIndex(S.buts);
+  // progression des rangs
+  const rl=$("#ranklist"); rl.innerHTML="";
+  RANGS.forEach((r,i)=>{
+    const done=i<ri, cur=i===ri;
+    const div=document.createElement("div");
+    div.className="rankrow"+(done?" done":"")+(cur?" cur":"");
+    div.innerHTML=`<span class="em">${r.em}</span>
+      <div class="info"><div class="nm">${r.nom}</div>
+      <div class="dz">${r.seuil} buts</div></div>
+      <span class="chk">${done?"✅":(cur?"▶️":"🔒")}</span>`;
+    rl.appendChild(div);
+  });
+  // coupes remportées
+  const cg=$("#cgrid"); cg.innerHTML="";
+  COUPES.forEach(c=>{
+    const has=S.coupes.includes(c.id);
+    const div=document.createElement("div");
+    div.className="trophy"+(has?"":" locked");
+    div.innerHTML=`<div class="em">${has?c.em:"🔒"}</div>
+      <div class="nm">${c.nom}</div><div class="dz">${c.dz}</div>`;
+    cg.appendChild(div);
+  });
+  // distinctions
+  const tg=$("#tgrid"); tg.innerHTML="";
+  TROPHEES.forEach(t=>{
+    const has=S.trophees.includes(t.id);
+    const div=document.createElement("div");
+    div.className="trophy"+(has?"":" locked");
+    div.innerHTML=`<div class="em">${has?t.em:"🔒"}</div>
+      <div class="nm">${t.nom}</div><div class="dz">${t.dz}</div>`;
+    tg.appendChild(div);
+  });
+  $("#c-matches").textContent=S.matchsJoues;
+  $("#c-goals").textContent=S.buts;
+  $("#c-best").textContent=S.meilleureSerie;
+}
+
+/* ============================================================
+   VESTIAIRE (maillots)
+   ============================================================ */
+function buildLocker(){
+  const box=$("#kitlist"); box.innerHTML="";
+  MAILLOTS.forEach(m=>{
+    const unlocked=S.maillots.includes(m.id);
+    const active=S.maillotActif===m.id;
+    const div=document.createElement("div");
+    div.className="kit"+(unlocked?"":" locked");
+    let btn;
+    if(!unlocked) btn=`<span class="pick lock">🔒 ${m.seuil} buts</span>`;
+    else if(active) btn=`<span class="pick on">✓ Porté</span>`;
+    else btn=`<button class="pick" data-kit="${m.id}">Choisir</button>`;
+    div.innerHTML=`<div class="sw shirt">${unlocked?shirtSVG(m.id,44):"🔒"}</div>
+      <div class="info"><div class="t">${m.nom}</div><div class="d">${m.dz}</div></div>${btn}`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll("[data-kit]").forEach(b=>{
+    b.onclick=()=>{ sndTap(); S.maillotActif=b.getAttribute("data-kit"); save(); buildLocker(); renderTop(); };
+  });
+}
+
+/* ============================================================
+   MON ÉQUIPE — cartes de joueurs à collectionner
+   ============================================================ */
+function buildEquipe(){
+  const dejaTriees = CARTES.slice().sort((a,b)=>a.seuil-b.seuil);
+  const nb = S.cartes.length, tot = CARTES.length;
+  $("#cardcount").textContent = `Collection : ${nb} / ${tot} cartes débloquées`;
+  const grid=$("#cardgrid"); grid.innerHTML="";
+  dejaTriees.forEach(c=>{
+    const has=S.cartes.includes(c.n);
+    const rar=rareteCarte(c.seuil);
+    const div=document.createElement("div");
+    div.className="pcard "+(has?("rar-"+rar.toLowerCase().replace("é","e")):"locked");
+    if(has){
+      div.innerHTML=`
+        <div class="pc-top">
+          <div class="pc-num">${c.num||""}</div>
+          <div class="pc-badge">${badgeSide(c.side,26)}</div>
+        </div>
+        <div class="pc-pos">${c.pos}</div>
+        <div class="pc-name">${c.n}</div>
+        <div class="pc-team">${c.side==="france"?"Les Bleus":"Paris SG"}</div>
+        <div class="pc-rar">${rar}</div>`;
+    } else {
+      div.innerHTML=`
+        <div class="pc-lock">🔒</div>
+        <div class="pc-name">Carte mystère</div>
+        <div class="pc-team">${c.seuil} buts pour débloquer</div>`;
+    }
+    grid.appendChild(div);
+  });
+}
+
+/* ============================================================
+   CONFETTIS (canvas)
+   ============================================================ */
+const cv=$("#confetti"), cx=cv.getContext("2d");
+let confettiParts=[], confettiRAF=null;
+function sizeCanvas(){ cv.width=innerWidth; cv.height=innerHeight; }
+sizeCanvas(); addEventListener("resize", sizeCanvas);
+function burstConfetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cols=["#FFC531","#E30613","#1E5BC6","#FFFFFF","#2FBF71"];
+  for(let i=0;i<90;i++){
+    confettiParts.push({
+      x:innerWidth/2+rnd(-60,60), y:innerHeight/3,
+      vx:(Math.random()-0.5)*9, vy:Math.random()*-11-4,
+      g:0.35+Math.random()*0.2, s:rnd(6,11), col:pick(cols),
+      rot:Math.random()*6, vr:(Math.random()-0.5)*0.4, life:0
+    });
+  }
+  if(!confettiRAF) confettiLoop();
+}
+function confettiLoop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  confettiParts.forEach(p=>{
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life++;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.rot);
+    cx.fillStyle=p.col; cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); cx.restore();
+  });
+  confettiParts=confettiParts.filter(p=>p.y<cv.height+40 && p.life<220);
+  if(confettiParts.length){ confettiRAF=requestAnimationFrame(confettiLoop); }
+  else { cx.clearRect(0,0,cv.width,cv.height); confettiRAF=null; }
+}
+
+/* ============================================================
+   DIVERS
+   ============================================================ */
+$("#tb-sound").onclick=()=>{ S.son=!S.son; save(); renderTop(); if(S.son){ ac(); sndTap(); } };
+
+$("#reset-btn").onclick=()=>{
+  if(confirm("Recommencer toute la carrière de Carlo ? Les buts et trophées seront remis à zéro.")){
+    S=Object.assign({},DEFAULT); save(); buildCareer(); renderTop(); show("home");
+  }
+};
+
+// débloque l'audio au 1er contact (politique navigateurs)
+document.addEventListener("pointerdown", ()=>{ const a=ac(); if(a && a.state==="suspended") a.resume(); }, {once:true});
+
+/* service worker (hors-ligne) — ignoré en file:// */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  /* mode hors ligne : géré par le site */
+}
+
+/* démarrage */
+renderTop();
+renderHome();
+show("home");
+</script>
+</body>
+</html>

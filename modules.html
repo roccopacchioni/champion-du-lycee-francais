@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tous les modules · Champion du Lycée Français</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#1D3B8F">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&family=Playwrite+FR+Trad:wght@300;400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/catalogue.js"></script>
+<script src="assets/commun.js"></script>
+</head>
+<body>
+<div class="page tous" id="page">
+  <header class="entete">
+    <a class="marque" href="./" aria-label="Champion du Lycée Français, accueil">
+      <svg viewBox="0 0 44 50" aria-hidden="true">
+        <path d="M22 2 L41 8 V24 C41 37 32 45 22 48 C12 45 3 37 3 24 V8 Z" fill="#1D3B8F" stroke="#C98E0E" stroke-width="2.5"/>
+        <path d="M3 17 H41" stroke="#FFFFFF" stroke-width="2" opacity=".35"/>
+        <path d="M22 13.5 l3.2 6.6 7.2.9 -5.3 5 1.4 7.2 -6.5-3.6 -6.5 3.6 1.4-7.2 -5.3-5 7.2-.9z" fill="#F2C14E"/>
+      </svg>
+      <span><b>Champion du Lycée Français</b><small>Retour à l'accueil</small></span>
+    </a>
+    <nav class="nav" aria-label="Navigation du site">
+      <a class="nav-lien" href="modules.html" aria-current="page">Tous les modules</a>
+    </nav>
+  </header>
+
+  <div class="ancien" id="ancien" hidden>Ce navigateur est trop ancien pour les jeux. Ouvrez le site avec Edge, Chrome, Safari ou Firefox (Internet Explorer n'est plus pris en charge).</div>
+
+  <section class="intro">
+    <h1>Tous les modules</h1>
+    <p>Chaque jeu créé, rangé par classe puis par matière, avec les compétences du programme qu'il fait travailler. Les archives sont les premiers jeux, gardés dans leur format d'origine.</p>
+    <div class="resume" id="resume"></div>
+  </section>
+
+  <div class="bloc" id="liste"></div>
+
+  <footer class="pied-site">
+    <p>Site personnel de révision créé par des parents d'élèves, indépendant de l'établissement.</p>
+    <p><a href="./">Retour à l'accueil</a></p>
+  </footer>
+</div>
+<script nomodule>document.getElementById("ancien").hidden = false;</script>
+<script src="assets/tous.js" defer></script>
+</body>
+</html>

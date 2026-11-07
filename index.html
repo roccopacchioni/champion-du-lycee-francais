@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Champion du Lycée Français</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Jeux de révision gamifiés pour les élèves du lycée français, conformes aux programmes de l'école élémentaire.">
+<meta name="theme-color" content="#1D3B8F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Champion LF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&family=Playwrite+FR+Trad:wght@300;400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/catalogue.js"></script>
+<script src="assets/commun.js"></script>
+</head>
+<body>
+<div class="page" id="page">
+  <header class="entete">
+    <a class="marque" href="./" aria-label="Champion du Lycée Français, accueil">
+      <svg viewBox="0 0 44 50" aria-hidden="true">
+        <path d="M22 2 L41 8 V24 C41 37 32 45 22 48 C12 45 3 37 3 24 V8 Z" fill="#1D3B8F" stroke="#C98E0E" stroke-width="2.5"/>
+        <path d="M3 17 H41" stroke="#FFFFFF" stroke-width="2" opacity=".35"/>
+        <path d="M22 13.5 l3.2 6.6 7.2.9 -5.3 5 1.4 7.2 -6.5-3.6 -6.5 3.6 1.4-7.2 -5.3-5 7.2-.9z" fill="#F2C14E"/>
+      </svg>
+      <span><b>Champion du Lycée Français</b><small>Jeux de révision · programmes de l'école française</small></span>
+    </a>
+    <nav class="nav" aria-label="Navigation du site">
+      <a class="nav-lien" href="modules.html">Tous les modules</a>
+      <a class="btn-parents" id="btn-parents" href="parents.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2" fill="currentColor"/><circle cx="16.5" cy="10" r="2.5" fill="currentColor"/><path fill="currentColor" d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6zM14.5 20c0-2-.6-3.6-1.7-4.8a4.5 4.5 0 0 1 8.2 2.8V20z"/></svg>
+      Espace parents<i></i>
+      </a>
+    </nav>
+    <p class="aide-parents" id="aide-parents" aria-live="polite"></p>
+  </header>
+
+  <div class="ancien" id="ancien" hidden>Ce navigateur est trop ancien pour les jeux. Ouvrez le site avec Edge, Chrome, Safari ou Firefox (Internet Explorer n'est plus pris en charge).</div>
+
+  <section class="cahier" id="cahier" aria-labelledby="bonjour">
+    <p class="date" id="date"></p>
+    <h1 class="bonjour" id="bonjour">Bonjour !</h1>
+    <div class="rang" id="rang"></div>
+    <div class="mission-jour" id="mission-jour"></div>
+  </section>
+
+  <section class="bloc" aria-labelledby="titre-vitrine">
+    <div class="bloc-titre"><h2 id="titre-vitrine">Ma vitrine</h2><p>Une médaille par module : bronze au tiers, argent aux deux tiers, or quand tout est réussi.</p></div>
+    <div class="vitrine" id="vitrine"></div>
+  </section>
+
+  <section class="bloc" aria-labelledby="titre-modules">
+    <div class="bloc-titre"><h2 id="titre-modules">Mes cahiers de révision</h2><p id="compte-modules"></p></div>
+    <div class="filtres">
+      <div class="puces" id="filtre-niveau" role="group" aria-label="Choisir la classe"></div>
+      <div class="puces" id="filtre-domaine" role="group" aria-label="Choisir la matière"></div>
+    </div>
+    <div id="liste-modules"></div>
+    <div class="lien-tous" id="lien-tous"></div>
+  </section>
+
+  <footer class="pied-site">
+    <p>Site personnel de révision créé par des parents d'élèves, indépendant de l'établissement. Les modules suivent les programmes de l'école élémentaire française (cycle 2 : CP, CE1, CE2 ; cycle 3 : CM1, CM2).</p>
+    <p>Aucune donnée ne quitte cet appareil : les progrès sont enregistrés dans le navigateur. Le site fonctionne aussi sans connexion une fois ouvert.</p>
+  </footer>
+</div>
+
+<div class="voile" id="voile-prenom" hidden>
+  <form class="fenetre" id="form-prenom" role="dialog" aria-modal="true" aria-labelledby="titre-prenom">
+    <h2 id="titre-prenom">Qui va jouer ?</h2>
+    <p>Écris ton prénom. Il apparaîtra dans tous les jeux.</p>
+    <label class="visuellement-cache" for="champ-prenom">Prénom</label>
+    <input class="champ" id="champ-prenom" name="prenom" maxlength="20" autocomplete="given-name" autocapitalize="words" spellcheck="false">
+    <div class="rangee">
+      <button class="btn" type="submit">C'est parti</button>
+      <button class="btn discret" type="button" id="prenom-plus-tard">Plus tard</button>
+    </div>
+  </form>
+</div>
+
+<script nomodule>document.getElementById("ancien").hidden = false;</script>
+<script src="assets/accueil.js" defer></script>
+</body>
+</html>

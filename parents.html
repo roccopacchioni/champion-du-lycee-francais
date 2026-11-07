@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Espace parents · Champion du Lycée Français</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#1D3B8F">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&family=Playwrite+FR+Trad:wght@300;400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/catalogue.js"></script>
+<script src="assets/commun.js"></script>
+</head>
+<body>
+<div class="page parents" id="page">
+  <header class="entete">
+    <a class="marque" href="./" aria-label="Retour à l'accueil">
+      <svg viewBox="0 0 44 50" aria-hidden="true">
+        <path d="M22 2 L41 8 V24 C41 37 32 45 22 48 C12 45 3 37 3 24 V8 Z" fill="#1D3B8F" stroke="#C98E0E" stroke-width="2.5"/>
+        <path d="M3 17 H41" stroke="#FFFFFF" stroke-width="2" opacity=".35"/>
+        <path d="M22 13.5 l3.2 6.6 7.2.9 -5.3 5 1.4 7.2 -6.5-3.6 -6.5 3.6 1.4-7.2 -5.3-5 7.2-.9z" fill="#F2C14E"/>
+      </svg>
+      <span><b>Champion du Lycée Français</b><small>Retour aux cahiers de révision</small></span>
+    </a>
+    <nav class="nav" aria-label="Navigation du site">
+      <a class="nav-lien" href="modules.html">Tous les modules</a>
+    </nav>
+  </header>
+
+  <div class="ancien" id="ancien" hidden>Ce navigateur est trop ancien pour les jeux. Ouvrez le site avec Edge, Chrome, Safari ou Firefox (Internet Explorer n'est plus pris en charge).</div>
+
+  <section class="intro">
+    <h1>Espace parents</h1>
+    <p>Les progrès de votre enfant, la façon d'organiser une séance quand l'attention est fragile, et les réglages communs à tous les jeux.</p>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-reglages">
+    <h2 id="t-reglages">Réglages</h2>
+    <div class="reglage">
+      <label for="r-prenom">Prénom affiché dans les jeux</label>
+      <input class="champ" id="r-prenom" maxlength="20" autocomplete="off" autocapitalize="words" spellcheck="false">
+    </div>
+    <div class="reglage">
+      <label for="r-seance">Rappel de fin de séance</label>
+      <select class="champ" id="r-seance">
+        <option value="15">15 minutes</option>
+        <option value="20">20 minutes (conseillé)</option>
+        <option value="30">30 minutes</option>
+        <option value="0">Pas de rappel</option>
+      </select>
+      <p class="aide" style="font-size:14px;color:var(--doux)">Un message propose à l'enfant de finir sa mission puis de s'arrêter. Il ne coupe jamais le jeu.</p>
+    </div>
+    <p class="message" id="r-message" aria-live="polite"></p>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-progres">
+    <h2 id="t-progres">Les progrès</h2>
+    <div class="kpis" id="kpis"></div>
+    <h3>Minutes de révision, 7 derniers jours</h3>
+    <div class="barres" id="barres" role="img" aria-label="Minutes de révision par jour"></div>
+    <h3>Par cahier</h3>
+    <div class="tableau"><table>
+      <thead><tr><th>Cahier</th><th>Classe</th><th>Missions</th><th></th><th>Épreuve finale</th><th>Dernière partie</th></tr></thead>
+      <tbody id="tab-modules"></tbody>
+    </table></div>
+    <p style="font-size:14px;color:var(--doux)">Le détail par objectif du programme (acquis, en progrès, à retravailler) se trouve dans l'espace parents de chaque jeu.</p>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-seance">
+    <h2 id="t-seance">Une séance type, quand l'attention est fragile</h2>
+    <p>Pour un enfant qui a du mal à rester concentré, la régularité compte plus que la durée : 15 minutes chaque jour valent mieux qu'une heure le dimanche. Voici l'enchaînement qui fonctionne le mieux avec ces jeux.</p>
+    <div class="conseils">
+      <div class="conseil"><span class="num">1</span><div><b>Préparer le terrain</b><p>Même moment chaque jour, après un temps de mouvement. Écran posé sur la table, autres écrans éteints. Annoncez le programme avant de commencer : « deux missions, la pause, et on arrête ».</p></div></div>
+      <div class="conseil"><span class="num">2</span><div><b>Première mission, environ 4 minutes</b><p>L'enfant appuie lui-même sur « Jouer ». Le site choisit la mission du jour : il n'a rien à décider, ce qui évite la dispersion du début.</p></div></div>
+      <div class="conseil"><span class="num">3</span><div><b>Pause cerveau, 30 secondes debout</b><p>Elle n'est pas facultative. Bouger relance l'attention pour la mission suivante. Faites-la avec lui si besoin.</p></div></div>
+      <div class="conseil"><span class="num">4</span><div><b>Deuxième mission ou mission revanche</b><p>La mission revanche reprend uniquement les questions ratées : c'est elle qui fixe les notions.</p></div></div>
+      <div class="conseil"><span class="num">5</span><div><b>Finir sur une réussite</b><p>Arrêtez après une bonne réponse, jamais après un échec. Demandez « comment tu as trouvé ? » : dire la règle à voix haute l'ancre bien mieux que la relire.</p></div></div>
+    </div>
+    <h3>Ce qui aide au quotidien</h3>
+    <ul>
+      <li><b>Félicitez l'effort, pas le score.</b> « Tu as réessayé et tu as trouvé » motive plus durablement que « 3 étoiles ». Une erreur revient en fin de mission : c'est prévu, ce n'est pas un échec.</li>
+      <li><b>Une consigne à la fois.</b> Laissez la voix lire la question, puis reformulez si besoin. Évitez de parler pendant qu'il répond.</li>
+      <li><b>Repérez la saturation.</b> Réponses au hasard, soupirs, enfant qui se lève : arrêtez, pause, reprise plus tard. Prolonger une séance qui décroche abîme l'envie du lendemain.</li>
+      <li><b>Revenez au papier avant l'évaluation.</b> En classe, la dictée et les exercices se font au stylo. La veille, refaites cinq items à l'écrit, en écriture attachée.</li>
+      <li><b>Récompense réelle : modeste et différée.</b> Étoiles et médailles suffisent souvent. Si vous ajoutez une récompense, liez-la à la régularité de la semaine plutôt qu'au résultat.</li>
+      <li><b>Parlez-en à l'enseignant.</b> Si votre enfant bénéficie d'aménagements (PAP, temps majoré, consignes lues), ces jeux suivent la même logique et peuvent servir de point d'échange.</li>
+    </ul>
+  </section>
+
+  <section class="panneau charte" aria-labelledby="t-charte">
+    <h2 id="t-charte">Ce que garantit chaque module</h2>
+    <p>Tous les cahiers du site sont construits sur le même modèle, pour que l'enfant retrouve ses repères d'un jeu à l'autre.</p>
+    <dl>
+      <div><dt>Le programme officiel</dt><dd>Chaque module part des leçons et des évaluations de la classe, et nomme ses objectifs comme le programme de l'école française.</dd></div>
+      <div><dt>Des missions courtes</dt><dd>6 questions, environ 4 minutes, placées sur un chemin visuel. La prochaine mission est toujours mise en avant.</dd></div>
+      <div><dt>Tout est lu à voix haute</dt><dd>Voix française, indice à la demande, explication de la règle juste après chaque réponse.</dd></div>
+      <div><dt>L'erreur donne une deuxième chance</dt><dd>La question ratée revient en fin de mission, puis dans la mission revanche.</dd></div>
+      <div><dt>Une récompense à chaque étape</dt><dd>Étoiles, séries de bonnes réponses, objets à collectionner dans un album, épreuve finale au format de l'évaluation.</dd></div>
+      <div><dt>Le corps a sa place</dt><dd>Une pause cerveau de 30 secondes, avec un mouvement, après chaque mission.</dd></div>
+      <div><dt>Le temps est un repère, pas une menace</dt><dd>Compte à rebours jusqu'à l'évaluation et plan jour par jour. Le chronomètre n'existe qu'en défi choisi.</dd></div>
+      <div><dt>Rien ne sort de l'appareil</dt><dd>Pas de compte, pas de publicité, aucune donnée envoyée. Les progrès restent dans le navigateur.</dd></div>
+    </dl>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-installer">
+    <h2 id="t-installer">Installer le site et jouer sans connexion</h2>
+    <ul>
+      <li><b>iPhone et iPad (Safari) :</b> bouton Partager, puis « Sur l'écran d'accueil ».</li>
+      <li><b>Android (Chrome) :</b> menu ⋮, puis « Installer l'application » ou « Ajouter à l'écran d'accueil ».</li>
+      <li><b>Ordinateur (Chrome ou Edge) :</b> icône d'installation à droite de la barre d'adresse.</li>
+    </ul>
+    <p>Une fois le site ouvert avec une connexion, tous les jeux restent jouables hors ligne. Navigateurs pris en charge : Safari, Chrome, Edge et Firefox récents. Internet Explorer n'est plus maintenu par Microsoft et ne peut pas lancer les jeux.</p>
+    <p class="message" id="etat-horsligne" aria-live="polite"></p>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-sauvegarde">
+    <h2 id="t-sauvegarde">Changer d'appareil</h2>
+    <p>Les progrès sont enregistrés sur cet appareil seulement. Pour passer du téléphone à la tablette, téléchargez la sauvegarde ici, puis ouvrez-la depuis l'espace parents de l'autre appareil.</p>
+    <div class="rangee">
+      <button class="btn" type="button" id="b-exporter">Télécharger la sauvegarde</button>
+      <label class="btn discret" for="f-importer" style="cursor:pointer">Ouvrir une sauvegarde</label>
+      <input type="file" id="f-importer" accept="application/json,.json" class="visuellement-cache">
+    </div>
+    <p class="message" id="s-message" aria-live="polite"></p>
+  </section>
+
+  <section class="panneau" aria-labelledby="t-effacer">
+    <h2 id="t-effacer">Recommencer à zéro</h2>
+    <p>Efface le prénom, le temps de jeu et la progression de tous les jeux sur cet appareil.</p>
+    <div id="zone-effacer"><button class="btn discret" type="button" id="b-effacer">Effacer toute la progression</button></div>
+  </section>
+
+  <footer class="pied-site">
+    <p>Site personnel de révision créé par des parents d'élèves, indépendant de l'établissement.</p>
+    <p><a href="./">Retour aux cahiers de révision</a></p>
+  </footer>
+</div>
+<script nomodule>document.getElementById("ancien").hidden = false;</script>
+<script src="assets/parents.js" defer></script>
+</body>
+</html>

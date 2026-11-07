@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>L'Écureuil Agile · Champion du Lycée Français</title>
+<meta name="theme-color" content="#246B4C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&display=swap">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!-- Lien avec le site : prénom, retour aux cahiers, temps de jeu, hors ligne -->
+<script src="../../assets/catalogue.js"></script>
+<script src="../../assets/commun.js"></script>
+<script src="../../assets/module-bridge.js" data-module="ecureuil-agile"></script>
+</head>
+<body>
+<script nomodule>window.onload=function(){document.body.innerHTML='<p style="font:18px sans-serif;margin:24px">Ce navigateur est trop ancien pour ce jeu. Ouvrez le site avec Edge, Chrome, Safari ou Firefox.</p>';};</script>
+<style>
+/* Mise en page : une colonne type application mobile ; le chemin des provisions monte du sol jusqu'au creux du chêne. */
+:root{
+  --bg:#EDF1E8; --surface:#FFFFFF; --surface-2:#E1E9DC; --ink:#1D2A21; --muted:#56685B; --line:#C9D5C3;
+  --forest:#246B4C; --on-forest:#FFFFFF; --rousse:#C9561A; --rousse-soft:#FBE1CF; --nut:#8C5A2B;
+  --good:#1F8556; --good-soft:#DCF2E5; --bad:#C2432E; --bad-soft:#FADFD8;
+  --plate:#FBF5EA; --plate-line:#E6D8BE;
+  --s-dic:#C9561A; --s-aa:#2C68B0; --s-conj:#7647AE;
+  --f-display:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;
+  --f-body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111A14; --surface:#1A261E; --surface-2:#243328; --ink:#EAF2EC; --muted:#A5B8AA; --line:#33463A;
+    --forest:#5FC796; --on-forest:#0C1A12; --rousse:#F28D4B; --rousse-soft:#3D2718; --nut:#D9A56C;
+    --good:#4DCB8C; --good-soft:#153A2B; --bad:#FF7D66; --bad-soft:#43221C;
+    --plate:#F4ECDC; --plate-line:#CDBE9F;
+    --s-dic:#F28D4B; --s-aa:#7FB0F0; --s-conj:#B795EE; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111A14; --surface:#1A261E; --surface-2:#243328; --ink:#EAF2EC; --muted:#A5B8AA; --line:#33463A;
+  --forest:#5FC796; --on-forest:#0C1A12; --rousse:#F28D4B; --rousse-soft:#3D2718; --nut:#D9A56C;
+  --good:#4DCB8C; --good-soft:#153A2B; --bad:#FF7D66; --bad-soft:#43221C;
+  --plate:#F4ECDC; --plate-line:#CDBE9F;
+  --s-dic:#F28D4B; --s-aa:#7FB0F0; --s-conj:#B795EE; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;
+  -webkit-tap-highlight-color:transparent}
+.app{max-width:560px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,label:focus-within{outline:3px solid var(--forest);outline-offset:2px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* Boutons */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:12px 20px;border-radius:16px;border:0;
+  font-family:var(--f-display);font-size:20px;background:var(--forest);color:var(--on-forest);box-shadow:0 4px 0 rgba(0,0,0,.22);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.rousse{background:var(--rousse);color:#fff}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;border:2px solid var(--line);background:var(--surface);flex:none}
+.icon-btn svg{width:22px;height:22px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.chip svg{width:20px;height:20px}
+.subj{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:2px solid currentColor}
+.subj.dic{color:var(--s-dic)} .subj.aa{color:var(--s-aa)} .subj.conj{color:var(--s-conj)}
+
+/* Accueil */
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hello{margin:6px 0 2px}
+.hello .eyebrow{font-size:14px;color:var(--muted);font-weight:700}
+.hello .who{font-family:var(--f-display);font-size:34px;line-height:1.05}
+.hello .who span{color:var(--rousse)}
+.countdown{display:flex;gap:12px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:12px 0}
+.countdown .big{font-family:var(--f-display);font-size:34px;color:var(--rousse);font-variant-numeric:tabular-nums;min-width:64px;text-align:center;white-space:nowrap}
+.pantry{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:center;margin:8px 0 16px}
+.pantry svg{width:140px;height:auto}
+.pantry .nut-new{animation:drop .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes drop{from{transform:translateY(-60px);opacity:0}to{transform:none;opacity:1}}
+.today{background:var(--forest);color:var(--on-forest);border-radius:var(--r);padding:14px;display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;border:0;width:100%;text-align:left;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.today .lab{font-size:13px;text-transform:uppercase;letter-spacing:.08em;opacity:.85;font-weight:700}
+.today h3{font-size:22px}
+.plate{background:var(--plate);border:2px solid var(--plate-line);border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.plate svg{width:100%;height:100%;display:block}
+.plate.sm{width:60px;height:60px;padding:5px}
+.plate.md{width:76px;height:76px;padding:6px}
+.plate.big{width:min(200px,60vw);aspect-ratio:1;padding:12px;margin:0 auto;max-width:100%}
+.section-title{display:flex;align-items:baseline;gap:8px;margin:24px 0 10px;flex-wrap:wrap}
+.section-title h2{font-size:24px}
+.map{position:relative;display:grid;gap:12px;padding-left:34px}
+.map::before{content:"";position:absolute;left:12px;top:6px;bottom:6px;width:10px;border-radius:6px;background:linear-gradient(var(--nut),var(--forest))}
+.mission{position:relative;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;
+  background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.mission::before{content:"";position:absolute;left:-30px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--surface);border:4px solid var(--ink)}
+.mission.done::before{background:var(--rousse);border-color:var(--rousse)}
+.mission h3{font-size:19px;line-height:1.15;margin:2px 0}
+.mission .sub{font-size:14px;color:var(--muted)}
+.mission.next{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 25%,transparent)}
+.stars{display:flex;gap:2px}
+.stars svg{width:20px;height:20px}
+.extra{display:grid;gap:12px;margin-top:22px}
+.card-btn{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;text-align:left;width:100%;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:12px}
+.card-btn h3{font-size:20px}
+.card-btn .sub{font-size:14px;color:var(--muted)}
+.card-btn.boss{background:var(--rousse-soft);border-color:var(--rousse)}
+.ico{width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--surface-2)}
+.ico svg{width:40px;height:40px}
+.todo{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:6px 14px}
+.todo label{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:16px}
+.todo label:last-child{border-bottom:0}
+.todo input{width:24px;height:24px;accent-color:var(--forest)}
+.todo .due{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.todo label.ok span:first-of-type{text-decoration:line-through;color:var(--muted)}
+
+/* Jeu */
+.playbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dots{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+.dot{height:10px;flex:1;min-width:8px;border-radius:6px;background:var(--line)}
+.dot.ok{background:var(--good)} .dot.ko{background:var(--bad)} .dot.cur{background:var(--forest)}
+.combo{font-family:var(--f-display);color:var(--rousse);font-size:18px;white-space:nowrap}
+.combo.pop{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.prompt{font-family:var(--f-display);font-size:24px;line-height:1.25;margin:4px 0 12px;text-wrap:balance}
+.ctx{font-family:var(--f-body);font-weight:700;font-size:25px;line-height:1.35;background:var(--plate);color:#2A2418;border:2px solid var(--plate-line);border-radius:16px;padding:14px 16px;margin:10px 0 4px;text-wrap:pretty}
+.ctx b{color:#B44A12}
+.ctx .gap{display:inline-block;min-width:3.2em;border-bottom:3px solid #B44A12;color:#B44A12;text-align:center;line-height:1.1}
+.ctx .gap.cur{background:#FFE6C9;border-radius:6px 6px 0 0;padding:0 6px;min-width:4em}
+.ctx .gap.done{border-bottom-color:transparent;color:#1A6B45}
+.ctx .gap.todo-gap{color:#9C8F78;border-bottom-color:#C8B898}
+.ctx mark{background:#FFE08A;color:#2A2418;border-radius:5px;padding:0 3px}
+.caret{display:inline-block;width:2px;height:1em;background:#B44A12;vertical-align:-2px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.choices{display:grid;gap:10px}
+.choices.two{grid-template-columns:1fr 1fr}
+.choices.two .choice{justify-content:center;font-size:30px;min-height:72px;font-family:var(--f-body)}
+.choice{min-height:58px;padding:12px 16px;border-radius:16px;border:2px solid var(--line);background:var(--surface);text-align:left;font-size:21px;font-weight:700;display:flex;align-items:center;gap:10px}
+.choice:active{transform:scale(.99)}
+.choice.ok{background:var(--good-soft);border-color:var(--good)}
+.choice.ko{background:var(--bad-soft);border-color:var(--bad)}
+.choice:disabled{cursor:default}
+.hint-row{display:flex;gap:10px;margin-top:14px}
+.hint{margin-top:12px;background:var(--rousse-soft);border:2px dashed var(--rousse);border-radius:14px;padding:12px 14px;font-size:17px}
+.hint p{margin:4px 0}
+.chant{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 12px;font-size:16px;margin-top:6px;font-variant-numeric:tabular-nums}
+.chant b{color:var(--rousse)}
+
+/* Flash */
+.flashbar{height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden;margin:10px 0}
+.flashbar i{display:block;height:100%;background:var(--rousse);width:100%;transform-origin:left;animation:shrink linear forwards}
+@keyframes shrink{to{transform:scaleX(0)}}
+.flashword{font-size:38px;text-align:center;padding:22px 12px}
+.eyehint{display:flex;align-items:center;gap:8px;justify-content:center;font-weight:700;color:var(--muted);font-size:15px}
+
+/* Construction */
+.build-out{min-height:72px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;letter-spacing:.04em;
+  background:var(--plate);color:#2A2418;border:2px solid var(--plate-line);border-radius:16px;margin:10px 0 12px;padding:8px}
+.build-out.empty{font-size:16px;color:#7A6E55;font-weight:400;letter-spacing:0}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.tile{min-width:52px;min-height:52px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:24px}
+.tile:disabled{opacity:.22}
+
+/* Clavier */
+.typebox{min-height:66px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;background:var(--plate);color:#2A2418;border:2px solid var(--plate-line);border-radius:16px;margin:10px 0 12px;padding:8px;word-break:break-word;text-align:center}
+.kb{display:grid;gap:6px;user-select:none;-webkit-user-select:none}
+.kb .r{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.key{min-height:46px;border-radius:10px;border:0;background:var(--surface);box-shadow:0 2px 0 var(--line);font-size:20px;font-weight:700;padding:0;min-width:0;border:1px solid var(--line)}
+.key:active{background:var(--surface-2);transform:translateY(1px)}
+.key.acc{background:var(--rousse-soft);color:var(--ink)}
+.key.w2{grid-column:span 2} .key.w3{grid-column:span 3} .key.w5{grid-column:span 5}
+.key.go{background:var(--forest);color:var(--on-forest);font-family:var(--f-display);font-size:19px;font-weight:400;border:0}
+.key svg{width:22px;height:22px;vertical-align:middle}
+
+/* Feuille de réponse */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:4px solid var(--good);border-radius:22px 22px 0 0;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  box-shadow:0 -10px 30px rgba(0,0,0,.18);animation:up .22s ease-out;max-height:80vh;overflow:auto}
+.sheet.ko{border-top-color:var(--bad)}
+.sheet .in{max-width:560px;margin:0 auto;display:grid;gap:10px}
+.sheet h3{font-size:26px;color:var(--good)}
+.sheet.ko h3{color:var(--bad)}
+.sheet p{margin:0;font-size:17px}
+.sheet .fix{font-size:26px;font-weight:700;letter-spacing:.03em}
+.sheet .fix mark{background:var(--bad-soft);color:var(--bad);border-bottom:3px solid var(--bad);border-radius:3px;padding:0 1px}
+.sheet .yours{text-decoration:line-through;color:var(--muted);font-weight:700}
+.gain{font-family:var(--f-display);color:var(--rousse);font-size:20px}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.pad-bottom{height:260px}
+
+/* Résultats, pause, album */
+.center{text-align:center}
+.bigstars{display:flex;justify-content:center;gap:8px;margin:12px 0}
+.bigstars svg{width:62px;height:62px}
+.bigstars svg.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.result-card{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0;display:grid;gap:10px}
+.unlocked{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.unlocked .plate{animation:pop .5s .2s cubic-bezier(.3,1.6,.5,1) both}
+.objlist{display:grid;gap:8px;text-align:left}
+.objrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:15px}
+.ring{width:170px;height:170px;margin:10px auto;display:block}
+.album{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.acard{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:8px;text-align:left;display:grid;gap:6px;min-width:0}
+.acard .plate{width:100%;aspect-ratio:1;padding:12px}
+.acard.locked .plate svg{filter:grayscale(1) brightness(.2);opacity:.25}
+.acard h3{font-size:16px;line-height:1.15}
+.acard .when{font-size:13px;color:var(--muted)}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,20,14,.55);display:flex;align-items:flex-end;justify-content:center;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal .box{background:var(--surface);border-radius:22px;padding:18px;max-width:520px;width:100%;display:grid;gap:12px;max-height:90vh;overflow:auto;animation:up .22s ease-out}
+
+/* Parents */
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.panel h3{font-size:20px;margin-bottom:8px}
+.panel p{margin:8px 0;font-size:16px}
+.obj{display:grid;gap:4px;padding:8px 0;border-bottom:1px solid var(--line)}
+.obj:last-child{border-bottom:0}
+.obj .top2{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:15px}
+.bar{height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--good);border-radius:6px}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.a{background:var(--good-soft);color:var(--good)} .pill.b{background:var(--rousse-soft);color:var(--rousse)} .pill.c{background:var(--bad-soft);color:var(--bad)} .pill.n{background:var(--surface-2);color:var(--muted)}
+.plan{display:grid;gap:6px}
+.plan .d{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:15px}
+.plan .d.now{outline:3px solid var(--forest)}
+.plan .dt{font-weight:700;font-variant-numeric:tabular-nums}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;font-size:16px}
+.toggle input{width:24px;height:24px;accent-color:var(--forest)}
+.confirm{display:grid;gap:8px;margin-top:10px;background:var(--bad-soft);border-radius:12px;padding:10px;font-size:15px}
+.key-list{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;color:var(--s-aa)}
+</style>
+
+<div class="app">
+  <section id="home"></section>
+  <section id="play" hidden></section>
+  <section id="result" hidden></section>
+  <section id="pause" hidden></section>
+  <section id="album" hidden></section>
+  <section id="parent" hidden></section>
+</div>
+<div id="sheet" class="sheet" hidden></div>
+<div id="modal" hidden></div>
+
+<script>
+/* =========================================================
+   L'Écureuil Agile — devoirs du lundi 9 novembre 2026, CE2
+   Dictée « L'écureuil » · a / à · présent des verbes en -er
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const one = a => a[Math.floor(Math.random() * a.length)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const norm = s => String(s).replace(/[’`´]/g, "'").replace(/\s+/g, " ").trim().toLowerCase();
+
+/* ---------- Dessins ---------- */
+const V = (inner, vb = "0 0 100 100") => `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
+function pinScales() {
+  let s = ""; for (let y = 30; y <= 80; y += 9) { const w = 20 - Math.abs(y - 55) * 0.35; for (let x = 50 - w; x <= 50 + w - 8; x += 10) s += `<path d="M${x.toFixed(1)} ${y} q5 7 10 0" fill="none" stroke="#4A2C12" stroke-width="2.4" stroke-linecap="round"/>`; }
+  return s;
+}
+const NUT = (x, y, r, c = "#A9692F") => `<g><circle cx="${x}" cy="${y + 1}" r="${r}" fill="${c}"/><path d="M${x - r} ${y - r * .3} C${x - r * .7} ${y - r * 1.2} ${x + r * .7} ${y - r * 1.2} ${x + r} ${y - r * .3} C${x + r * .5} ${y - r * .55} ${x - r * .5} ${y - r * .55} ${x - r} ${y - r * .3}Z" fill="#7DA453"/></g>`;
+const ART = {
+  ecureuil: V(`<path d="M74 104 C104 104 116 72 108 48 C102 28 82 20 71 31 C62 40 70 54 82 51 C93 48 95 63 89 74 C83 85 72 88 68 98 Z" fill="#C9561A"/>
+    <path d="M82 51 C93 48 95 63 89 74" stroke="#E98A4E" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="54" cy="84" rx="21" ry="23" fill="#C9561A"/><ellipse cx="49" cy="88" rx="11" ry="15" fill="#FBE6CF"/>
+    <path d="M33 38 L35 20 L44 34 Z M47 34 L55 19 L58 37 Z" fill="#B44A12"/><path d="M35 20 l-2 -6 M35 20 l3 -6 M55 19 l-1 -6 M55 19 l3 -5" stroke="#6B2C0A" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="45" cy="50" r="17" fill="#C9561A"/><ellipse cx="36" cy="56" rx="9" ry="7" fill="#FBE6CF"/>
+    <circle cx="41" cy="47" r="4" fill="#24170D"/><circle cx="42.4" cy="45.6" r="1.4" fill="#fff"/><circle cx="29" cy="54" r="2.4" fill="#24170D"/>
+    <ellipse cx="40" cy="76" rx="6" ry="4" fill="#B44A12"/>${NUT(36, 70, 6)}
+    <ellipse cx="45" cy="106" rx="10" ry="4.5" fill="#B44A12"/><ellipse cx="64" cy="106" rx="9" ry="4.5" fill="#B44A12"/>`, "0 0 120 120"),
+  noisette: V(`${NUT(50, 56, 26)}<ellipse cx="42" cy="60" rx="6" ry="9" fill="#C98B4E" opacity=".7"/><path d="M50 32 L53 18" stroke="#5E7F3C" stroke-width="4" stroke-linecap="round"/>`),
+  gland: V(`<ellipse cx="50" cy="62" rx="19" ry="25" fill="#B9813F"/><ellipse cx="43" cy="62" rx="5" ry="12" fill="#D9A869" opacity=".7"/>
+    <path d="M26 48 C26 30 74 30 74 48 C74 53 26 53 26 48Z" fill="#6E4A25"/><g fill="#8E6538"><circle cx="38" cy="42" r="2"/><circle cx="48" cy="38" r="2"/><circle cx="58" cy="42" r="2"/><circle cx="66" cy="46" r="2"/><circle cx="33" cy="47" r="2"/><circle cx="50" cy="46" r="2"/></g>
+    <path d="M50 33 L51 21" stroke="#6E4A25" stroke-width="4" stroke-linecap="round"/>`),
+  pin: V(`<ellipse cx="50" cy="55" rx="23" ry="34" fill="#7A4D24"/>${pinScales()}<path d="M50 21 L50 12" stroke="#4A2C12" stroke-width="4" stroke-linecap="round"/>`),
+  champi: V(`<path d="M41 54 h18 v28 q-9 6 -18 0z" fill="#EFE2C6"/><path d="M41 62 h18" stroke="#D8C7A4" stroke-width="2"/><path d="M16 58 C16 26 84 26 84 58 Z" fill="#8C4B22"/><ellipse cx="38" cy="42" rx="9" ry="4" fill="#B06A3A" opacity=".8"/>`),
+  chataigne: V(`<path d="M50 18 C64 30 80 46 76 66 C72 82 28 82 24 66 C20 46 36 30 50 18Z" fill="#6E3A1D"/><path d="M25 67 C34 80 66 80 75 67 C66 74 34 74 25 67Z" fill="#D9B98A"/><ellipse cx="40" cy="46" rx="5" ry="11" fill="#9A5A33" opacity=".7"/><path d="M50 18 l0 -6" stroke="#6E3A1D" stroke-width="4" stroke-linecap="round"/>`),
+  noix: V(`<circle cx="50" cy="54" r="29" fill="#C59A62"/><path d="M50 25 C44 40 56 68 50 83" stroke="#8E6A3C" stroke-width="3" fill="none"/>
+    <path d="M30 44 q6 4 0 9 M33 62 q6 3 2 9 M68 42 q-6 5 0 10 M66 62 q-5 4 -1 9" stroke="#9E7745" stroke-width="2.5" fill="none" stroke-linecap="round"/>`),
+  faine: V(`<path d="M50 16 C58 34 70 56 74 72 C62 82 38 82 26 72 C30 56 42 34 50 16Z" fill="#9C6B3A"/><path d="M50 18 L50 78" stroke="#74491F" stroke-width="2.5"/><path d="M38 64 C44 60 46 50 50 40" stroke="#BB8A54" stroke-width="3" fill="none" stroke-linecap="round"/>`),
+  mure: V(`<path d="M50 30 C42 18 30 18 26 22 C34 22 42 26 50 32 C58 26 66 22 74 22 C70 18 58 18 50 30Z" fill="#5E8F3A"/><g fill="#3D2048">${[[42, 40], [58, 40], [34, 52], [50, 50], [66, 52], [40, 64], [58, 64], [48, 76], [30, 64], [68, 64]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9.5"/>`).join("")}</g><g fill="#8C5A9E">${[[39, 37], [55, 37], [31, 49], [47, 47], [63, 49], [37, 61], [55, 61], [45, 73]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.6"/>`).join("")}</g>`),
+  tournesol: V(`<g transform="rotate(-18 50 52)"><ellipse cx="50" cy="52" rx="17" ry="32" fill="#2E2A28"/><path d="M50 22 L50 82 M41 28 L40 76 M59 28 L60 76" stroke="#E9E4DA" stroke-width="2.6" stroke-linecap="round"/></g>`),
+  or: V(`${NUT(50, 58, 25, "#E2AE2E")}<ellipse cx="42" cy="62" rx="6" ry="9" fill="#F7D978" opacity=".9"/><path d="M50 34 L53 20" stroke="#5E7F3C" stroke-width="4" stroke-linecap="round"/>
+    <g fill="#E2AE2E"><path d="M18 26 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/><path d="M80 18 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/><path d="M84 70 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/></g>`)
+};
+const art = k => ART[k] || "";
+
+/* ---------- Icônes ---------- */
+const IC = {
+  nut: `<svg viewBox="0 0 24 24">${NUT(12, 13, 8).replace(/#A9692F/, "var(--nut)")}</svg>`,
+  star: on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="${on ? "var(--rousse)" : "var(--line)"}"/></svg>`,
+  speak: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>`,
+  close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  bulb: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>`,
+  eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`,
+  del: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M12 9l6 6M18 9l-6 6"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="currentColor" opacity=".25"/><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></svg>`,
+  retry: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>`,
+  album: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="8" height="16" rx="2" fill="currentColor" opacity=".25"/><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/></svg>`,
+  parent: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 20c0-2.5 1.2-4.5 4-4.5s3 1.5 3 4"/></svg>`
+};
+
+/* ---------- Objectifs ---------- */
+const OBJ = {
+  D1: "Reconnaître l'orthographe des mots de la dictée",
+  D2: "Lettres muettes, son [g] / [j], ss et tt",
+  D3: "Écrire les mots de la dictée de mémoire",
+  D4: "Écrire les mots dans une phrase (dictée)",
+  A1: "a ou à : le truc du « avait »",
+  C1: "Terminaisons du présent : e, es, e, ons, ez, ent",
+  C2: "Écrire un verbe en -er au présent"
+};
+const SUBJ = { dic: "Dictée", aa: "a / à", conj: "Conjugaison" };
+
+/* ---------- Mots de la dictée ---------- */
+const MOTS = [
+  { w: "chêne", ctx: "le long du grand {_}", d: ["chène", "chaine", "chéne"], tip: "Le chêne porte un petit chapeau : <b>ê</b>.", tiles: ["ch", "ê", "n", "e"], ex: ["è", "ai"] },
+  { w: "queue", ctx: "une belle {_} rousse", d: ["queu", "keue", "queux"], tip: "<b>qu</b> puis <b>eue</b> : un e devant le u, un e derrière, comme la queue derrière l'écureuil.", tiles: ["qu", "eu", "e"], ex: ["k", "eux"] },
+  { w: "rousse", ctx: "une belle queue {_}", d: ["rouse", "rouce", "roussse"], tip: "Entre deux voyelles, il faut <b>ss</b> pour faire [s]. Avec un seul s, on lirait « rouze ».", tiles: ["r", "ou", "ss", "e"], ex: ["s", "c"] },
+  { w: "moindre", ctx: "le {_} bruit", d: ["mouindre", "moaindre", "moindr"], tip: "<b>m-oin-dre</b> : oi puis n.", tiles: ["m", "oin", "d", "r", "e"], ex: ["ouin", "oi"] },
+  { w: "bruit", ctx: "le moindre {_}", d: ["brui", "bruie", "bruis"], tip: "<b>t</b> muet : pense à « brui<b>t</b>er », « brui<b>t</b>age ».", tiles: ["b", "r", "ui", "t"], ex: ["s", "d"] },
+  { w: "creux", ctx: "le {_} de l'arbre", d: ["creu", "creus", "crieux"], tip: "<b>x</b> muet à la fin, comme heureu<b>x</b>, joyeu<b>x</b>.", tiles: ["c", "r", "eu", "x"], ex: ["s", "e"] },
+  { w: "arbre", ctx: "le creux de l'{_}", d: ["arbe", "arbr", "harbre"], tip: "Deux r : <b>ar-bre</b>.", tiles: ["ar", "b", "r", "e"], ex: ["h"] },
+  { w: "animal", ctx: "le petit {_}", d: ["animale", "annimal", "animall"], tip: "<b>a-ni-mal</b> : un seul n, un seul l.", tiles: ["a", "n", "i", "m", "al"], ex: ["e", "n"] },
+  { w: "provisions", ctx: "ses {_}", d: ["provision", "provizions", "provissions"], tip: "Le <b>s</b> entre deux voyelles chante [z]. Et « <b>ses</b> » provisions : il y en a plusieurs, donc <b>s</b> à la fin.", tiles: ["pr", "o", "v", "i", "s", "i", "on", "s"], ex: ["z", "ss"] },
+  { w: "abri", ctx: "à l'{_} des regards", d: ["abrit", "abris", "habri"], tip: "<b>abri</b> finit par i, sans lettre muette. Et « <b>à</b> l'abri » : à avec accent.", tiles: ["a", "b", "r", "i"], ex: ["t", "h"] },
+  { w: "regards", ctx: "à l'abri des {_}", d: ["regars", "regard", "reguards"], tip: "<b>d</b> muet (rega<b>r</b><b>d</b>er) et <b>s</b> car « <b>des</b> » regards.", tiles: ["r", "e", "g", "ar", "d", "s"], ex: ["gu", "t"] },
+  { w: "noisettes", ctx: "des {_}", d: ["noisetes", "noizettes", "noisette"], tip: "<b>oi</b>, puis <b>tt</b>, puis <b>s</b> car « <b>des</b> » noisettes.", tiles: ["n", "oi", "s", "e", "tt", "e", "s"], ex: ["z", "t"] },
+  { w: "hiver", ctx: "pendant l'{_}", d: ["iver", "hivert", "hivère"], tip: "Le <b>h</b> ne s'entend pas mais il est là : <b>h-i-ver</b>.", tiles: ["h", "i", "v", "er"], ex: ["è", "re"] },
+  { w: "chaud", ctx: "au {_}", d: ["chau", "chaut", "cho"], tip: "<b>d</b> muet : pense à « chau<b>d</b>e ».", tiles: ["ch", "au", "d"], ex: ["o", "t"] },
+  { w: "agile", ctx: "un écureuil {_}", d: ["ajile", "aguile", "agille"], tip: "<b>g</b> devant <b>i</b> fait le son [j], comme dans girafe.", tiles: ["a", "g", "i", "l", "e"], ex: ["j", "gu"] },
+  { w: "vitesse", ctx: "à toute {_}", d: ["vitese", "vittesse", "vitèsse"], tip: "<b>ss</b> entre deux voyelles pour faire [s].", tiles: ["v", "i", "t", "e", "ss", "e"], ex: ["s", "c"] },
+  { w: "beaucoup", ctx: "il mange {_}", d: ["beaucou", "baucoup", "beaucoups"], tip: "<b>beau</b> + <b>coup</b>, avec un <b>p</b> muet au bout.", tiles: ["b", "eau", "c", "ou", "p"], ex: ["o", "au"] }
+];
+const MOT = w => MOTS.find(m => m.w === w);
+const GROUPES = [
+  ["le long du grand chêne", "chêne : ê comme un chapeau. grand : d muet (grande). long : g muet (longue)."],
+  ["une belle queue rousse", "belle : deux l. queue : qu + eue. rousse : ss."],
+  ["le moindre bruit", "moindre : m-oin-dre. bruit : t muet (bruiter)."],
+  ["le creux de l'arbre", "creux : x muet. l'arbre : apostrophe, deux r."],
+  ["le petit animal", "petit : t muet (petite). animal : un seul n, un seul l."],
+  ["ses provisions", "ses : plusieurs, donc provisions prend un s."],
+  ["à l'abri des regards", "à avec accent (on ne peut pas dire « avait »). regards : d muet et s."],
+  ["des noisettes", "des : plusieurs, donc s. noisettes : oi + tt."],
+  ["l'hiver", "h muet au début, puis l'apostrophe : l'hiver."],
+  ["au chaud", "chaud : au + d muet (chaude)."],
+  ["agile", "g devant i fait [j]."],
+  ["à toute vitesse", "à avec accent. vitesse : ss."],
+  ["beaucoup", "beau + coup, p muet."]
+];
+
+/* ---------- Banques a / à ---------- */
+const AA_A = ["L'écureuil {_} une belle queue rousse.", "Carlo {_} marqué un but.", "Le gardien {_} arrêté le ballon.", "Mon chien {_} faim.", "Elle {_} trois noisettes.", "Qui {_} gagné le match ?", "L'arbre {_} perdu ses feuilles.", "Papa {_} une voiture bleue."];
+const AA_ACC = ["Je vais {_} l'école.", "L'écureuil file {_} toute vitesse.", "Le match commence {_} 8 heures.", "J'aime la glace {_} la vanille.", "C'est {_} toi de jouer !", "Ce ballon est {_} moi.", "Nous allons {_} la piscine.", "Il cache ses noisettes {_} l'abri des regards."];
+const AA_HARD_A = ["Il n'{_} pas froid.", "On {_} vu un écureuil dans le parc.", "Le joueur {_} tiré sur le poteau.", "Le chat n'{_} peur de rien.", "Tom {_} faim depuis ce matin."];
+const AA_HARD_ACC = ["Tu as une brosse {_} dents ?", "Elle apprend {_} nager.", "Il pense {_} ses amis.", "Maman lave le linge dans la machine {_} laver.", "Il a mis un pull {_} rayures."];
+const AA_DOUBLE = [["Il {_} mal {_} la tête.", ["a", "à"]], ["Léo {_} donné son ballon {_} son frère.", ["a", "à"]], ["{_} midi, Tom {_} faim.", ["à", "a"]], ["Elle {_} rangé ses livres {_} leur place.", ["a", "à"]], ["{_} la récré, Carlo {_} couru vite.", ["à", "a"]], ["On {_} joué {_} cache-cache.", ["a", "à"]]];
+
+/* ---------- Conjugaison ---------- */
+const PRON = [["je", "e"], ["tu", "es"], ["il", "e"], ["elle", "e"], ["nous", "ons"], ["vous", "ez"], ["ils", "ent"], ["elles", "ent"]];
+const VERBES = [["grimp", "grimper", "à l'arbre"], ["cach", "cacher", "des noisettes"], ["pass", "passer", "la balle"], ["saut", "sauter", "très haut"], ["ramass", "ramasser", "des glands"], ["jou", "jouer", "au foot"], ["tir", "tirer", "au but"], ["regard", "regarder", "le match"], ["chant", "chanter", "fort"], ["dans", "danser", "dans la cour"]];
+const CONJ_TYPE = [
+  ["L'écureuil {_} le long du chêne.", "grimper", "grimpe", "L'écureuil, c'est <b>il</b> → <b>-e</b>."],
+  ["Au moindre bruit, il s'{_}.", "agiter", "agite", "<b>il</b> → <b>-e</b> : il s'agite.", ["s'agite"]],
+  ["Tu {_} tes noisettes.", "cacher", "caches", "<b>tu</b> → <b>-es</b>."],
+  ["Nous {_} l'hiver au chaud.", "passer", "passons", "<b>nous</b> → <b>-ons</b>."],
+  ["Vous {_} des glands.", "ramasser", "ramassez", "<b>vous</b> → <b>-ez</b>."],
+  ["Les écureuils {_} de branche en branche.", "sauter", "sautent", "Les écureuils, c'est <b>ils</b> → <b>-ent</b> (on ne l'entend pas, mais on l'écrit)."],
+  ["Je {_} au foot avec mes amis.", "jouer", "joue", "<b>je</b> → <b>-e</b>. Le e de jouer ne s'entend pas, mais il s'écrit."],
+  ["Le vent {_} les branches.", "secouer", "secoue", "Le vent, c'est <b>il</b> → <b>-e</b>. Le e ne s'entend pas, mais il s'écrit."],
+  ["Tu {_} la balle au gardien.", "passer", "passes", "<b>tu</b> → <b>-es</b>."],
+  ["Elles {_} leurs provisions.", "cacher", "cachent", "<b>elles</b> → <b>-ent</b>."],
+  ["L'attaquant {_} un but.", "marquer", "marque", "L'attaquant, c'est <b>il</b> → <b>-e</b>."],
+  ["Nous {_} le match à la télé.", "regarder", "regardons", "<b>nous</b> → <b>-ons</b>."],
+  ["Vous {_} au but.", "tirer", "tirez", "<b>vous</b> → <b>-ez</b>."],
+  ["Les joueurs {_} la partie.", "continuer", "continuent", "Les joueurs, c'est <b>ils</b> → <b>-ent</b>. Le u reste, puis -ent."],
+  ["Tu {_} ton copain.", "saluer", "salues", "<b>tu</b> → <b>-es</b>. Le e ne s'entend pas, mais il s'écrit."],
+  ["La maîtresse {_} une histoire.", "raconter", "raconte", "La maîtresse, c'est <b>elle</b> → <b>-e</b>."]
+];
+const CHANT = `<div class="chant"><span>je … <b>e</b></span><span>tu … <b>es</b></span><span>il, elle … <b>e</b></span><span>nous … <b>ons</b></span><span>vous … <b>ez</b></span><span>ils, elles … <b>ent</b></span></div>`;
+
+/* ---------- Générateurs de questions ---------- */
+const gap = (s, inner = "……") => s.replace("{_}", `<span class="gap">${inner}</span>`);
+const fill = (s, w) => s.replace("{_}", w);
+function mcq(o) { return Object.assign({ type: "mcq" }, o); }
+
+function genM1() {
+  return [MOTS.map(m => {
+    const opts = shuffle([m.w, ...m.d.slice(0, 3)]);
+    return mcq({ obj: "D1", prompt: "Quel mot est bien écrit ?", ctx: gap(m.ctx), choices: opts, answer: opts.indexOf(m.w), explain: m.tip, say: "Quel mot est bien écrit ? " + fill(m.ctx, m.w), correct: m.w });
+  })];
+}
+function genAA(list, accent) {
+  return list.map(s => {
+    const start = s.startsWith("{_}");
+    const a = accent ? (start ? "À" : "à") : "a";
+    const opts = start ? ["a", "À"] : ["a", "à"];
+    const test = fill(s, "avait").replace(/^avait/, "Avait");
+    return mcq({ obj: "A1", two: true, prompt: "a ou à ?", ctx: gap(s), choices: opts, answer: accent ? 1 : 0, correct: a,
+      avait: [test], say: fill(s, a),
+      explain: accent ? `On ne peut pas dire « ${test} » : ça ne veut rien dire. C'est le petit mot <b>à</b>, avec un accent.` : `On peut dire « ${test} » : c'est le verbe avoir. On écrit <b>a</b>, sans accent.` });
+  });
+}
+function genAADouble() {
+  return AA_DOUBLE.map(([s, ans]) => {
+    const start = s.startsWith("{_}");
+    const lab = (x, first) => first && start ? x.toUpperCase() : x;
+    const combos = [["a", "a"], ["a", "à"], ["à", "a"], ["à", "à"]];
+    const labels = combos.map(c => `${lab(c[0], true)} … ${c[1]}`);
+    const ai = combos.findIndex(c => c[0] === ans[0] && c[1] === ans[1]);
+    let html = s, sayS = s;
+    ans.forEach((x, i) => { html = html.replace("{_}", `<span class="gap">${i + 1}</span>`); sayS = sayS.replace("{_}", lab(x, i === 0)); });
+    const t1 = s.replace("{_}", "avait").replace("{_}", "…"), t2 = s.replace("{_}", "…").replace("{_}", "avait");
+    const why = (x, i) => x === "a" ? `trou ${i + 1} : on peut dire « avait » → <b>a</b>` : `trou ${i + 1} : « avait » ne va pas → <b>à</b>`;
+    return mcq({ obj: "A1", prompt: "Deux trous : a ou à ?", ctx: html, choices: labels, answer: ai, correct: labels[ai],
+      avait: [t1.replace(/^avait/, "Avait"), t2], say: sayS, explain: ans.map(why).join(" ; ") + "." });
+  });
+}
+function genM2() {
+  const SIL = [["le moindre ", "brui", "t", "bruiter"], ["au ", "chau", "d", "chaude"], ["le ", "gran", "d", "grande"], ["le ", "lon", "g", "longue"], ["le ", "peti", "t", "petite"], ["des ", "regar", "d", "regarder", "s"],
+    ["le ", "creu", "x", null, "", "Pas de mot de la famille ici : il faut le retenir. creu<b>x</b> finit par x, comme heureu<b>x</b> et joyeu<b>x</b>."],
+    ["", "beaucou", "p", null, "", "Pas de mot de la famille ici : il faut le retenir. beaucou<b>p</b> = beau + cou<b>p</b>, avec un p muet."]];
+  const silent = SIL.map(([pre, stem, a, fam, post = "", ex]) => {
+    const pool = shuffle(["t", "d", "x", "s", "p", "g"].filter(x => x !== a)).slice(0, 3);
+    const opts = shuffle([a, ...pool]);
+    const word = stem + a + post;
+    return mcq({ obj: "D2", prompt: "Quelle lettre muette manque ?", ctx: `${pre}<b>${stem}<span class="gap">?</span>${post}</b>`, choices: opts, answer: opts.indexOf(a), correct: a,
+      hintHtml: fam ? `Cherche un mot de la même famille : <b>${fam}</b>.` : "Ce mot se retient par cœur. Pense à heureux, joyeux… ou à « coup ».", say: "Quelle lettre muette manque dans " + pre + word,
+      explain: ex || `On écrit <b>${word}</b>. Le ${a} ne s'entend pas, mais on l'entend dans « ${fam} ».` });
+  });
+  const G = [["agile", "j"], ["s'agiter", "j"], ["grimper", "g"], ["regards", "g"], ["grand", "g"], ["rouge", "j"], ["une bougie", "j"], ["une gomme", "g"]];
+  const gq = G.map(([w, s]) => {
+    const opts = ["[g] comme dans gâteau", "[j] comme dans girafe"];
+    return mcq({ obj: "D2", prompt: "La lettre g fait quel son ?", ctx: `<b>${w}</b>`, choices: opts, answer: s === "g" ? 0 : 1, correct: opts[s === "g" ? 0 : 1], say: "Dans " + w + ", la lettre g fait quel son ?",
+      explain: "<b>g + e, i, y</b> → son [j] (agile, rouge). <b>g + a, o, u</b> ou une consonne → son [g] (grand, gomme, regards)." });
+  });
+  const SON = [["vite", "e", "ss", ["s", "ss", "c"], "Dans vitesse, le son [s] s'écrit…", "Entre deux voyelles, <b>ss</b> fait [s]. Un seul s ferait [z]."],
+    ["rou", "e", "ss", ["s", "ss", "c"], "Dans rousse, le son [s] s'écrit…", "Entre deux voyelles, <b>ss</b> fait [s]. « rouse » se lirait « rouze »."],
+    ["provi", "ions", "s", ["s", "z", "ss"], "Dans provisions, le son [z] s'écrit…", "Un seul <b>s</b> entre deux voyelles chante [z]."],
+    ["noise", "es", "tt", ["t", "tt", "th"], "Dans noisettes, le son [t] s'écrit…", "noi-se-<b>tt</b>es : deux t, comme dans chaussettes."],
+    ["b", "coup", "eau", ["o", "au", "eau"], "Dans beaucoup, le son [o] s'écrit…", "<b>beau</b> + coup."],
+    ["ch", "d", "au", ["o", "au", "eau"], "Dans chaud, le son [o] s'écrit…", "ch-<b>au</b>-d, comme dans au chaud."]];
+  const son = SON.map(([a, b, ans, opts, q, ex]) => mcq({ obj: "D2", prompt: q, ctx: `<b>${a}<span class="gap">?</span>${b}</b>`, choices: opts, answer: opts.indexOf(ans), correct: ans, say: q, explain: ex }));
+  return [silent, gq, son];
+}
+function genM3() {
+  const ws = ["chêne", "queue", "rousse", "bruit", "creux", "provisions", "regards", "noisettes", "hiver", "chaud", "vitesse", "beaucoup", "moindre", "agile"];
+  return [ws.map(w => { const m = MOT(w); return { type: "build", obj: "D3", prompt: "Construis le mot qui manque", ctx: gap(m.ctx), word: m.w, tiles: shuffle(m.tiles.concat(m.ex)), explain: m.tip, say: fill(m.ctx, m.w), correct: m.w }; })];
+}
+function genM5() {
+  const ends = ["e", "es", "ons", "ez", "ent"];
+  const g1 = [], g2 = [], g3 = [];
+  VERBES.forEach(([rad, inf, cpl]) => {
+    const [p, e] = one(PRON);
+    const opts = shuffle([e, ...shuffle(ends.filter(x => x !== e)).slice(0, 3)]);
+    g1.push(mcq({ obj: "C1", prompt: `Choisis la terminaison (${inf})`, ctx: `${cap(p)} <b>${rad}<span class="gap">?</span></b> ${cpl}.`, choices: opts.map(x => "-" + x), answer: opts.indexOf(e), correct: "-" + e, hintHtml: CHANT, say: `${p} ${rad}${e} ${cpl}`,
+      explain: `Avec <b>${p}</b>, la terminaison est <b>-${e}</b> : ${p} ${rad}<b>${e}</b>.` }));
+    const [p2, e2] = one(PRON.filter(x => !["il", "elle", "je", "elles"].includes(x[0])));
+    const pOpts = shuffle([p2, ...shuffle(["je", "tu", "nous", "vous", "ils"].filter(x => x !== p2 && PRON.find(y => y[0] === x)[1] !== e2)).slice(0, 3)]);
+    g2.push(mcq({ obj: "C1", prompt: "Quel pronom va avec ce verbe ?", ctx: `<span class="gap">?</span> <b>${rad}${e2}</b> ${cpl}.`, choices: pOpts.map(cap), answer: pOpts.indexOf(p2), correct: cap(p2), hintHtml: CHANT, say: `${p2} ${rad}${e2} ${cpl}`,
+      explain: `La terminaison <b>-${e2}</b> va avec <b>${p2}</b>${e2 === "ent" ? " (ou elles)" : ""}.` }));
+    const p3 = one(["il", "ils", "tu", "je", "elles"]); const e3 = PRON.find(x => x[0] === p3)[1];
+    const forms = ["e", "es", "ent"]; const f = forms.map(x => rad + x);
+    g3.push(mcq({ obj: "C1", prompt: "Le piège du son : quelle orthographe ?", ctx: `${cap(p3)} <span class="gap">?</span> ${cpl}. <span style="font-weight:400;color:#7A6E55">(${inf})</span>`, choices: f, answer: forms.indexOf(e3), correct: rad + e3, hintHtml: CHANT, say: `${p3} ${rad}${e3} ${cpl}`,
+      explain: `${rad}e, ${rad}es et ${rad}ent se prononcent pareil. C'est le pronom qui décide : <b>${p3}</b> → <b>-${e3}</b>.` }));
+  });
+  return [g1, g2, g3];
+}
+function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function genM6() {
+  return [CONJ_TYPE.map(([s, inf, ans, ex, alt]) => ({ type: "type", obj: "C2", prompt: `Écris le verbe <b>${inf}</b> au présent`, ctx: s, ctxAfter: ` <span style="font-weight:400;color:#7A6E55">(${inf})</span>`, answer: ans, alt: alt || [], hintHtml: "Trouve qui fait l'action, remplace-le par un pronom, puis choisis la terminaison :" + CHANT, explain: ex, say: fill(s, ans), correct: ans }))];
+}
+function genM7() {
+  return [genAA(AA_HARD_A, false), genAA(AA_HARD_ACC, true), genAADouble()];
+}
+function genM8() {
+  return [GROUPES.map(([g, tip]) => ({ type: "type", obj: "D3", prompt: "Regarde bien, puis écris de mémoire", flash: `<div class="flashword">${g}</div>`, flashMs: 2600 + g.length * 110, answer: g, explain: tip, say: g, correct: g }))];
+}
+const PHRASES = [
+  ["Le grand chêne perd ses feuilles en hiver.", ["chêne", "hiver"]],
+  ["L'écureuil grimpe à toute vitesse.", ["grimpe", "vitesse"]],
+  ["Il cache des noisettes dans le creux de l'arbre.", ["noisettes", "creux"]],
+  ["Au moindre bruit, le petit animal s'agite.", ["moindre", "bruit", "animal"]],
+  ["Ses provisions sont à l'abri des regards.", ["provisions", "regards", "abri"]],
+  ["Il dort au chaud tout l'hiver.", ["chaud", "hiver"]],
+  ["Cet animal agile mange beaucoup.", ["agile", "beaucoup"]],
+  ["Sa queue rousse lui sert de couverture.", ["queue", "rousse"]]
+];
+function genM9() {
+  return [PHRASES.map(([s, hs]) => {
+    const h = one(hs); const m = MOT(h);
+    const re = new RegExp(`(^|[^a-zà-ÿ])${h}(?=[^a-zà-ÿ]|$)`, "i");
+    const withMark = s.replace(re, (all, pre) => `${pre}<mark>${h}</mark>`);
+    const withGap = s.replace(re, (all, pre) => `${pre}{_}`);
+    return { type: "type", obj: "D4", prompt: "Lis la phrase, puis écris le mot qui disparaît", flash: `<div class="ctx" style="margin:0">${withMark}</div>`, flashMs: 4200, ctx: withGap, answer: h,
+      explain: m ? m.tip : (h === "grimpe" ? "L'écureuil grimpe : <b>il</b> → <b>-e</b>." : ""), say: s, correct: h };
+  })];
+}
+
+/* ---------- La Grande dictée ---------- */
+const DICTEE = [
+  ["L'écureuil ", ["grimpe", "C2"], " le long du grand ", ["chêne", "D4"], "."],
+  ["Il ", ["a", "A1"], " une belle ", ["queue", "D4"], " rousse."],
+  ["Au moindre ", ["bruit", "D4"], ", il s'", ["agite", "C2"], " et file ", ["à", "A1"], " toute ", ["vitesse", "D4"], "."],
+  ["Il cache ses ", ["provisions", "D4"], " dans le ", ["creux", "D4"], " de l'arbre, ", ["à", "A1"], " l'abri des ", ["regards", "D4"], "."],
+  ["Le petit animal agile dort au ", ["chaud", "D4"], " tout l'", ["hiver", "D4"], " avec ", ["beaucoup", "D4"], " de ", ["noisettes", "D4"], "."]
+];
+const BOSS_TOTAL = DICTEE.reduce((n, s) => n + s.filter(x => Array.isArray(x)).length, 0);
+function bossExplain(w, obj) {
+  if (obj === "A1") return w === "a" ? "On peut dire « Il avait une belle queue » → <b>a</b>." : "On ne peut pas dire « avait » ici → <b>à</b>.";
+  if (w === "grimpe") return "L'écureuil, c'est <b>il</b> → <b>-e</b> : il grimpe.";
+  if (w === "agite") return "il s'agite : <b>il</b> → <b>-e</b>.";
+  const m = MOT(w); return m ? m.tip : "";
+}
+function buildBoss() {
+  const q = [];
+  DICTEE.forEach((parts, si) => {
+    const full = parts.map(p => Array.isArray(p) ? p[0] : p).join("");
+    const blanks = parts.map((p, i) => Array.isArray(p) ? i : -1).filter(i => i >= 0);
+    blanks.forEach((bi, k) => {
+      let html = "";
+      parts.forEach((p, i) => {
+        if (!Array.isArray(p)) html += esc(p);
+        else if (i === bi) html += "{_}";
+        else if (blanks.indexOf(i) < k) html += `<span class="gap done">${p[0]}</span>`;
+        else html += `<span class="gap todo-gap">____</span>`;
+      });
+      const [w, obj] = parts[bi];
+      q.push({ type: "type", obj, boss: true, prompt: `Phrase ${si + 1} sur ${DICTEE.length} · écoute et écris le mot`, ctx: html, answer: w, alt: w === "agite" ? ["s'agite"] : [], say: full, peek: full, explain: bossExplain(w, obj), correct: w });
+    });
+  });
+  return q;
+}
+
+/* ---------- Missions ---------- */
+const MISSIONS = [
+  { id: "m1", subj: "dic", obj: "D1", title: "Le regard d'écureuil", sub: "Repère le mot bien écrit", art: "noisette", gen: genM1 },
+  { id: "m2", subj: "aa", obj: "A1", title: "Le truc du « avait »", sub: "a sans accent ou à avec accent ?", art: "gland", gen: () => [genAA(AA_A, false), genAA(AA_ACC, true)] },
+  { id: "m3", subj: "dic", obj: "D2", title: "Les pièges des mots", sub: "Lettres muettes, g, ss, tt", art: "pin", gen: genM2 },
+  { id: "m4", subj: "conj", obj: "C1", title: "La chanson des terminaisons", sub: "e, es, e, ons, ez, ent", art: "champi", gen: genM5 },
+  { id: "m5", subj: "dic", obj: "D3", title: "Le bâtisseur de mots", sub: "Assemble les sons dans l'ordre", art: "chataigne", gen: genM3 },
+  { id: "m6", subj: "conj", obj: "C2", title: "L'écureuil conjugue", sub: "Écris le verbe au présent", art: "noix", gen: genM6 },
+  { id: "m7", subj: "aa", obj: "A1", title: "Le chasseur de a / à", sub: "Phrases plus difficiles, deux trous", art: "faine", gen: genM7 },
+  { id: "m8", subj: "dic", obj: "D3", title: "Dictée flash", sub: "Photographie le mot, écris-le", art: "mure", gen: genM8 },
+  { id: "m9", subj: "dic", obj: "D4", title: "La phrase qui s'efface", sub: "Le mot disparaît : écris-le", art: "tournesol", gen: genM9 }
+];
+function fromGroups(groups, n) {
+  const gs = shuffle(groups.map(g => shuffle(g))); const out = []; let k = 0;
+  while (out.length < n && gs.some(g => g.length)) { const g = gs[k % gs.length]; if (g.length) out.push(g.pop()); k++; }
+  return out;
+}
+
+/* ---------- Cartes à collectionner ---------- */
+const CARDS = [
+  { k: "noisette", m: "m1", t: "La noisette", txt: "L'écureuil roux enterre des centaines de noisettes à l'automne, une par une, dans des cachettes différentes." },
+  { k: "gland", m: "m2", t: "Le gland", txt: "Le gland est le fruit du chêne. Quand l'écureuil oublie une cachette, le gland peut devenir un nouveau chêne." },
+  { k: "pin", m: "m3", t: "La pomme de pin", txt: "L'écureuil arrache les écailles une à une pour manger les graines cachées dessous. Il laisse un petit trognon." },
+  { k: "champi", m: "m4", t: "Le champignon", txt: "L'écureuil roux pose parfois des champignons sur les branches pour les faire sécher avant l'hiver." },
+  { k: "chataigne", m: "m5", t: "La châtaigne", txt: "La châtaigne est protégée par une bogue pleine de piquants. L'écureuil attend qu'elle tombe et s'ouvre." },
+  { k: "noix", m: "m6", t: "La noix", txt: "Une noix est très dure. L'écureuil la ronge avec ses dents de devant, qui poussent toute sa vie." },
+  { k: "faine", m: "m7", t: "La faîne", txt: "La faîne est le petit fruit du hêtre, en forme de triangle. Les écureuils et les oiseaux l'adorent." },
+  { k: "mure", m: "m8", t: "La mûre", txt: "En fin d'été, l'écureuil mange aussi des fruits : mûres, framboises et baies de la forêt." },
+  { k: "tournesol", m: "m9", t: "La graine de tournesol", txt: "Dans les jardins, l'écureuil vient parfois chiper les graines de tournesol des mangeoires à oiseaux." },
+  { k: "or", m: "boss", t: "La noisette d'or", txt: "Réservée aux champions de la Grande dictée. L'écureuil la garde tout au fond du creux de l'arbre." }
+];
+
+/* ---------- Pauses cerveau ---------- */
+const PAUSES = [
+  ["Saute comme un écureuil", "Fais 10 petits sauts sur place, les mains repliées devant toi comme des pattes d'écureuil."],
+  ["La queue en panache", "Lève les bras au-dessus de la tête et balance-les doucement à droite et à gauche, comme une queue rousse. 10 fois."],
+  ["Grimpe au chêne", "Fais semblant de grimper à un arbre : lève les genoux et tire avec les bras. 15 fois."],
+  ["Le moindre bruit", "Ferme les yeux et ne bouge plus. Écoute bien : combien de bruits différents entends-tu ?"],
+  ["Les joues pleines", "Respire comme si tes joues étaient pleines de noisettes : inspire en comptant jusqu'à 4, souffle doucement jusqu'à 4. Trois fois."],
+  ["La chanson des terminaisons", "Tape dans tes mains en chantant : e, es, e, ons, ez, ent. Deux fois, de plus en plus vite !"],
+  ["Les pompes du avait", "Fais 5 pompes contre le mur. À chaque pompe, dis : « a, c'est avait ! »"],
+  ["L'écureuil en équilibre", "Tiens-toi sur un pied pendant 10 secondes, comme sur une branche. Puis change de pied."]
+];
+
+/* ---------- Devoirs papier ---------- */
+const DEVOIRS = [
+  ["dictee", "Apprendre les mots de la dictée « L'écureuil »", "lundi"],
+  ["exo", "Exercices verbes en ER sur le brouillon", "lundi"],
+  ["c9", "Relire la leçon C9 du cahier bleu", "lundi"],
+  ["g10", "Relire la leçon G10 du cahier bleu", "lundi"],
+  ["poesie", "Choisir ma poésie", "agenda"],
+  ["colo", "Finir le coloriage a / à", "ven. 13/11"]
+];
+
+/* ---------- État (sauvegardé sur ce téléphone) ---------- */
+const KEY = "ecureuil-agile-carlo-v1";
+const fresh = () => ({ xp: 0, stars: {}, cards: [], missed: [], mastery: {}, boss: [], sound: true, voice: true, sessions: 0, todo: {}, todoPaid: {}, lastNut: 0 });
+let ST = fresh();
+try { const raw = localStorage.getItem(KEY); if (raw) ST = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) {} }
+
+/* ---------- Son et voix ---------- */
+let AC = null;
+function tone(seq) {
+  if (!ST.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    let t = AC.currentTime;
+    seq.forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "triangle"; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + 0.02); t += d * 0.85; });
+  } catch (e) {}
+}
+const sndOk = () => tone([[660, .12], [880, .12], [1175, .22]]);
+const sndKo = () => tone([[300, .18], [240, .26]]);
+const sndWin = () => tone([[523, .14], [659, .14], [784, .14], [1047, .35]]);
+const sndKey = () => tone([[1400, .03]]);
+function plain(html) { const d = document.createElement("div"); d.innerHTML = html; return d.textContent; }
+function say(html, rate = 0.85) {
+  try { if (!("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(plain(html)); u.lang = "fr-FR"; u.rate = rate; speechSynthesis.speak(u); } catch (e) {}
+}
+
+/* ---------- Navigation ---------- */
+const SCREENS = ["home", "play", "result", "pause", "album", "parent"];
+let flashTimer = null;
+function show(id) { SCREENS.forEach(s => $(s).hidden = s !== id); $("sheet").hidden = true; window.scrollTo(0, 0); try { speechSynthesis.cancel(); } catch (e) {} if (id !== "play") { clearTimeout(flashTimer); KB = null; } }
+
+/* ---------- Accueil ---------- */
+function isoToday() { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; }
+function daysToMonday() { const t = new Date(); t.setHours(0, 0, 0, 0); return Math.round((new Date(2026, 10, 9) - t) / 864e5); }
+function nextMission() { return MISSIONS.find(m => !ST.stars[m.id]); }
+function pantrySvg() {
+  const done = MISSIONS.filter(m => ST.stars[m.id]).length;
+  const pos = [[80, 130], [100, 130], [120, 130], [80, 150], [100, 150], [120, 150], [80, 170], [100, 170], [120, 170]];
+  const slots = pos.map(([x, y], i) => i < done
+    ? `<g class="${i === done - 1 && ST.lastNut === done ? "nut-new" : ""}">${NUT(x, y, 8.5)}</g>`
+    : `<circle cx="${x}" cy="${y + 1}" r="7.5" fill="none" stroke="#8C6440" stroke-width="2" stroke-dasharray="3 3"/>`).join("");
+  return `<svg viewBox="0 0 200 215" role="img" aria-label="${done} provisions sur 9 dans le creux de l'arbre">
+    <circle cx="100" cy="52" r="46" fill="#D9822B"/><circle cx="56" cy="74" r="32" fill="#5E9A4B"/><circle cx="146" cy="72" r="34" fill="#C9661F"/><circle cx="118" cy="30" r="24" fill="#E3A63A"/><circle cx="78" cy="34" r="22" fill="#7FAF4E"/>
+    <path d="M52 212 C64 170 62 120 70 84 L130 84 C138 120 136 170 148 212 Z" fill="#7A5230"/><path d="M84 92 C80 120 82 150 78 190" stroke="#5E3D20" stroke-width="3" fill="none" opacity=".6"/>
+    <ellipse cx="100" cy="150" rx="35" ry="38" fill="#3A2412"/><ellipse cx="100" cy="150" rx="35" ry="38" fill="none" stroke="#5E3D20" stroke-width="4"/>
+    ${slots}</svg>`;
+}
+const starsHtml = n => `<span class="stars" aria-label="${n} étoiles sur 3">${[1, 2, 3].map(i => IC.star(i <= n)).join("")}</span>`;
+function renderHome() {
+  const nm = nextMission(), d = daysToMonday(), done = MISSIONS.filter(m => ST.stars[m.id]).length;
+  const tgt = nm ? { id: nm.id, t: nm.title, s: nm.sub, a: nm.art }
+    : ST.missed.length ? { id: "revanche", t: "Mission revanche", s: `${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} à réussir`, a: "ecureuil" }
+    : { id: "boss", t: "La Grande dictée", s: `${BOSS_TOTAL} mots dans un vrai texte`, a: "or" };
+  const cd = d > 0 ? ["J-" + d, `avant <b>lundi 9 novembre</b> : dictée, verbes et a / à.`]
+    : d === 0 ? ["J", "C'est lundi ! Une Grande dictée avant l'école ?"]
+    : ["✓", "Les devoirs de lundi sont passés. Rejoue la Grande dictée jusqu'à la dictée en classe."];
+  const bestBoss = ST.boss.length ? Math.max(...ST.boss.map(b => b.score)) : null;
+  $("home").innerHTML = `
+    <div class="top"><span class="chip">${IC.nut}<span>${ST.xp} noisettes</span></span><span class="spacer"></span>
+      <button class="icon-btn" id="b-album" aria-label="Mes provisions">${IC.album}</button><button class="icon-btn" id="b-parent" aria-label="Espace parent">${IC.parent}</button></div>
+    <div class="hello"><div class="eyebrow">Dictée « L'écureuil » · a / à · verbes en -er</div><div class="who">Carlo et <span>l'écureuil agile</span></div></div>
+    <div class="countdown"><div class="big">${cd[0]}</div><div>${cd[1]}</div></div>
+    <div class="pantry">${pantrySvg()}<div><h2 style="font-size:22px">${done === 9 ? "Le garde-manger est plein !" : "Remplis le garde-manger avant l'hiver"}</h2>
+      <p class="muted" style="margin:6px 0 0;font-size:15px">Chaque mission réussie range une provision dans le creux de l'arbre. <b style="color:var(--ink)">${done} sur 9</b>.</p></div></div>
+    <button class="today" id="b-today"><div class="plate md">${art(tgt.a)}</div><div><div class="lab">À jouer maintenant</div><h3>${tgt.t}</h3><div style="font-size:15px;opacity:.9">${tgt.s}</div></div></button>
+    <div class="section-title"><h2>Le chemin des provisions</h2><span class="muted" style="font-size:14px">environ 4 minutes par mission</span></div>
+    <div class="map">${MISSIONS.map((m, i) => `<button class="mission ${ST.stars[m.id] ? "done" : ""} ${nm && nm.id === m.id ? "next" : ""}" data-m="${m.id}">
+      <div class="plate sm">${art(m.art)}</div><div style="min-width:0"><span class="subj ${m.subj}">${SUBJ[m.subj]}</span><h3>${i + 1}. ${m.title}</h3><div class="sub">${m.sub}</div></div>${starsHtml(ST.stars[m.id] || 0)}</button>`).join("")}</div>
+    <div class="extra">
+      <button class="card-btn boss" data-m="boss"><div class="ico">${art("or")}</div><div><span class="subj dic">Épreuve finale</span><h3>La Grande dictée</h3><div class="sub">Un vrai texte, ${BOSS_TOTAL} mots à écrire${bestBoss !== null ? ` · record ${bestBoss}/${BOSS_TOTAL}` : ""}</div></div></button>
+      <button class="card-btn" data-m="revanche" ${ST.missed.length ? "" : "disabled style=\"opacity:.55\""}><div class="ico" style="color:var(--bad)">${IC.retry}</div><div><h3>Mission revanche</h3><div class="sub">${ST.missed.length ? `${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} ratée${ST.missed.length > 1 ? "s" : ""} à réussir` : "Les questions ratées viendront ici"}</div></div></button>
+    </div>
+    <div class="section-title"><h2>Mes devoirs sur papier</h2><span class="muted" style="font-size:14px">+15 noisettes par case cochée</span></div>
+    <div class="todo">${DEVOIRS.map(([k, t, due]) => `<label class="${ST.todo[k] ? "ok" : ""}" for="td-${k}"><input type="checkbox" id="td-${k}" data-k="${k}" ${ST.todo[k] ? "checked" : ""}><span>${t}</span><span class="due">${due}</span></label>`).join("")}</div>`;
+  ST.lastNut = 0; save();
+  $("b-today").onclick = () => start(tgt.id);
+  $("b-album").onclick = renderAlbum; $("b-parent").onclick = renderParent;
+  $("home").querySelectorAll("[data-m]").forEach(b => b.onclick = () => start(b.dataset.m));
+  $("home").querySelectorAll(".todo input").forEach(c => c.onchange = () => {
+    const k = c.dataset.k; ST.todo[k] = c.checked;
+    if (c.checked && !ST.todoPaid[k]) { ST.todoPaid[k] = true; ST.xp += 15; sndOk(); }
+    save(); renderHome();
+  });
+  show("home");
+}
+
+/* ---------- Partie ---------- */
+let S = null, KB = null;
+function start(id) {
+  let queue, title;
+  if (id === "boss") { queue = buildBoss(); title = "La Grande dictée"; }
+  else if (id === "revanche") { if (!ST.missed.length) return; queue = shuffle(ST.missed).slice(0, 8).map(q => JSON.parse(JSON.stringify(q))); title = "Mission revanche"; }
+  else { const m = MISSIONS.find(x => x.id === id); queue = fromGroups(m.gen(), 6); title = m.title; }
+  queue.forEach(q => { delete q._retry; delete q._hint; q.key = q.key || keyOf(q); });
+  S = { id, title, queue, i: 0, errors: 0, gain: 0, combo: 0, res: [], dots: [] };
+  ST.sessions++; save();
+  showQ();
+}
+function keyOf(q) { return [q.type, q.prompt, q.ctx || "", q.answer, q.word || ""].join("#"); }
+function playbar() {
+  const total = S.queue.length;
+  const dots = Array.from({ length: total }, (_, i) => `<span class="dot ${S.dots[i] || (i === S.i ? "cur" : "")}"></span>`).join("");
+  return `<div class="playbar"><button class="icon-btn" id="p-quit" aria-label="Quitter la mission">${IC.close}</button><div class="dots">${dots}</div>${S.combo >= 2 ? `<span class="combo" id="combo">Série ×${S.combo}</span>` : ""}</div>`;
+}
+function head(q) {
+  const m = MISSIONS.find(x => x.id === S.id);
+  return `<div class="qhead"><span class="tag">${S.title}${q._retry ? " · deuxième chance" : ""}</span>${m ? `<span class="subj ${m.subj}">${SUBJ[m.subj]}</span>` : ""}</div>`;
+}
+function bindCommon(q) {
+  $("p-quit").onclick = () => { clearTimeout(flashTimer); renderHome(); };
+  const sp = $("q-say"); if (sp) sp.onclick = () => say(q.say || q.prompt);
+}
+function showQ() {
+  clearTimeout(flashTimer); KB = null;
+  const q = S.queue[S.i]; q._hint = false;
+  if (q.type === "type" && q.flash) return showFlash(q);
+  renderQ(q);
+}
+function renderQ(q) {
+  let body = "";
+  if (q.type === "mcq") {
+    body = `<div class="choices ${q.two ? "two" : ""}">${q.choices.map((c, i) => `<button class="choice" data-i="${i}">${c}</button>`).join("")}</div>`;
+  } else if (q.type === "build") {
+    body = `<div class="build-out empty" id="bo">Touche les morceaux dans l'ordre</div><div class="tiles">${q.tiles.map((t, i) => `<button class="tile" data-i="${i}">${t}</button>`).join("")}</div>
+      <div class="row"><button class="btn ghost" id="b-del" style="flex:1">Effacer</button><button class="btn" id="b-ok" style="flex:1.4" disabled>Valider</button></div>`;
+  } else if (q.type === "type") {
+    body = (q.ctx ? "" : `<div class="typebox" id="tb"><span id="typed"></span><span class="caret"></span></div>`) + kbHtml();
+  }
+  const ctx = q.ctx ? `<div class="ctx">${q.type === "type" ? q.ctx.replace("{_}", `<span class="gap cur"><span id="typed"></span><span class="caret"></span></span>`) + (q.ctxAfter || "") : q.ctx}</div>` : "";
+  const hintBtn = q.avait ? `<button class="btn ghost" id="q-hint" style="flex:1;min-height:48px;font-size:17px">${IC.bulb.replace("<svg", "<svg width=\"22\" height=\"22\"")} Teste avec « avait »</button>`
+    : q.hintHtml ? `<button class="btn ghost" id="q-hint" style="flex:1;min-height:48px;font-size:17px">${IC.bulb.replace("<svg", "<svg width=\"22\" height=\"22\"")} Un indice</button>`
+    : q.flash || q.peek ? `<button class="btn ghost" id="q-peek" style="flex:1;min-height:48px;font-size:17px">${IC.eye.replace("<svg", "<svg width=\"22\" height=\"22\"")} Revoir 2 secondes</button>` : "";
+  $("play").innerHTML = `${playbar()}${head(q)}<div class="prompt">${q.prompt}</div>${ctx}${body}
+    <div class="hint-row"><button class="icon-btn" id="q-say" aria-label="Écouter">${IC.speak}</button>${hintBtn}</div><div id="hint-box"></div><div class="pad-bottom"></div>`;
+  show("play"); bindCommon(q);
+  if (S.combo >= 3 && $("combo")) $("combo").classList.add("pop");
+  const hb = $("q-hint");
+  if (hb) hb.onclick = () => {
+    q._hint = true; hb.disabled = true;
+    $("hint-box").innerHTML = q.avait
+      ? `<div class="hint"><p>Remplace par <b>avait</b> et lis à voix haute :</p>${q.avait.map(t => `<p><b>« ${t} »</b></p>`).join("")}<p>Ça se dit ? → <b>a</b> (verbe avoir). Ça ne veut rien dire ? → <b>à</b>.</p></div>`
+      : `<div class="hint">${q.hintHtml}</div>`;
+  };
+  const pk = $("q-peek");
+  if (pk) pk.onclick = () => { q._hint = true; pk.disabled = true; peek(q); };
+  if (q.type === "mcq") $("play").querySelectorAll(".choice").forEach(b => b.onclick = () => answerMcq(q, +b.dataset.i));
+  if (q.type === "build") setupBuild(q);
+  if (q.type === "type") setupType(q);
+  if (ST.voice && !q.flash) say(q.say || q.prompt);
+}
+function showFlash(q) {
+  $("play").innerHTML = `${playbar()}${head(q)}<div class="prompt">${q.prompt}</div>
+    <div class="eyehint">${IC.eye.replace("<svg", "<svg width=\"22\" height=\"22\"")} Photographie avec tes yeux…</div>
+    <div class="flashbar"><i style="animation-duration:${q.flashMs}ms"></i></div>${q.flash}
+    <div class="hint-row"><button class="icon-btn" id="q-say" aria-label="Écouter">${IC.speak}</button></div>`;
+  show("play"); bindCommon(q);
+  if (ST.voice) say(q.say);
+  flashTimer = setTimeout(() => renderQ(q), q.flashMs);
+}
+function peek(q) {
+  const box = $("hint-box");
+  const content = q.flash || `<div class="ctx" style="margin:0">${q.peek}</div>`;
+  box.innerHTML = `<div class="hint">${content}</div>`;
+  clearTimeout(flashTimer); flashTimer = setTimeout(() => { if (box.isConnected) box.innerHTML = ""; }, 2000);
+}
+function lock() { $("play").querySelectorAll("button:not(#p-quit):not(#q-say)").forEach(b => b.disabled = true); KB = null; }
+function answerMcq(q, i) {
+  lock();
+  const btns = $("play").querySelectorAll(".choice"); const ok = i === q.answer;
+  btns[q.answer].classList.add("ok"); if (!ok) btns[i].classList.add("ko");
+  feedback(q, ok, `<b>${q.choices[q.answer]}</b>`);
+}
+
+/* Construction de mot */
+function setupBuild(q) {
+  const stack = []; const out = $("bo"), okb = $("b-ok");
+  const draw = () => { const s = stack.map(i => q.tiles[i]).join(""); out.textContent = s || "Touche les morceaux dans l'ordre"; out.classList.toggle("empty", !s); okb.disabled = !s; };
+  $("play").querySelectorAll(".tile").forEach(b => b.onclick = () => { stack.push(+b.dataset.i); b.disabled = true; sndKey(); draw(); });
+  $("b-del").onclick = () => { const i = stack.pop(); if (i !== undefined) $("play").querySelector(`.tile[data-i="${i}"]`).disabled = false; draw(); };
+  okb.onclick = () => { const s = stack.map(i => q.tiles[i]).join(""); lock(); feedback(q, norm(s) === norm(q.word), fixHtml(s, q.word), s); };
+}
+
+/* Clavier */
+function kbHtml() {
+  const r1 = "azertyuiop", r2 = "qsdfghjklm", r3 = "wxcvbn";
+  const k = (c, cls = "") => `<button class="key ${cls}" data-k="${c}">${c}</button>`;
+  return `<div class="kb" id="kb">
+    <div class="r">${[...r1].map(c => k(c)).join("")}</div>
+    <div class="r">${[...r2].map(c => k(c)).join("")}</div>
+    <div class="r">${[...r3].map(c => k(c)).join("")}${k("'")}<button class="key w3" data-k="DEL" aria-label="Effacer">${IC.del}</button></div>
+    <div class="r">${["é", "è", "ê", "à", "ù", "ç", "â", "î", "ô", "û"].map(c => k(c, "acc")).join("")}</div>
+    <div class="r"><button class="key w5" data-k=" ">espace</button><button class="key w5 go" data-k="OK" id="kb-ok">Valider</button></div></div>`;
+}
+function setupType(q) {
+  let val = "";
+  const out = $("typed");
+  const draw = () => { out.textContent = val; };
+  const press = c => {
+    if (!KB) return;
+    if (c === "OK") { if (!val.trim()) return; const v = val; lock(); const ok = [q.answer, ...(q.alt || [])].some(a => norm(a) === norm(v)); feedback(q, ok, fixHtml(v, q.answer), v); return; }
+    if (c === "DEL") val = val.slice(0, -1); else if (val.length < 40) val += c;
+    sndKey(); draw();
+  };
+  KB = press;
+  $("kb").querySelectorAll(".key").forEach(b => b.addEventListener("click", () => press(b.dataset.k)));
+}
+document.addEventListener("keydown", e => {
+  if (!KB || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Enter") { e.preventDefault(); KB("OK"); }
+  else if (e.key === "Backspace") { e.preventDefault(); KB("DEL"); }
+  else if (e.key.length === 1 && /[a-zà-ÿ' ’]/i.test(e.key)) { e.preventDefault(); KB(e.key === "’" ? "'" : e.key.toLowerCase()); }
+});
+
+/* Mise en évidence des lettres à corriger */
+function fixHtml(ans, correct) {
+  const a = norm(ans), b = correct; const bn = norm(b);
+  const n = a.length, m = bn.length; const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = a[i] === bn[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const keep = new Array(m).fill(false); let i = 0, j = 0;
+  while (i < n && j < m) { if (a[i] === bn[j]) { keep[j] = true; i++; j++; } else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++; }
+  return [...b].map((c, k) => keep[k] ? esc(c) : `<mark>${esc(c)}</mark>`).join("");
+}
+
+/* Réponse */
+function feedback(q, ok, correctHtml, yours) {
+  const first = !q._retry;
+  if (first) { S.res.push({ obj: q.obj, ok }); const m = ST.mastery[q.obj] || []; m.push(ok ? 1 : 0); ST.mastery[q.obj] = m.slice(-14); }
+  let gain = 0, extra = "";
+  if (ok) {
+    gain = q._retry ? 4 : q._hint ? 6 : 10; S.combo++;
+    if (S.combo % 3 === 0) { gain += 5; extra = `Série de ${S.combo} sans faute : +5 noisettes bonus !`; }
+    if (S.id === "revanche") ST.missed = ST.missed.filter(x => x.key !== q.key);
+    sndOk();
+  } else {
+    S.combo = 0; if (first) S.errors++;
+    if (first && S.id !== "boss") S.queue.push(Object.assign(JSON.parse(JSON.stringify(q)), { _retry: true }));
+    const clean = JSON.parse(JSON.stringify(q)); delete clean._retry; delete clean._hint;
+    if (!ST.missed.some(x => x.key === q.key)) ST.missed.push(clean);
+    ST.missed = ST.missed.slice(-30);
+    sndKo();
+  }
+  if (q.type === "type" && $("typed")) { const g = $("typed").parentElement; g.classList.remove("cur"); g.style.color = ok ? "#1A6B45" : "#B42A1A"; g.querySelector(".caret")?.remove(); }
+  S.dots[S.i] = ok ? "ok" : "ko";
+  S.gain += gain; ST.xp += gain; save();
+  const PRAISE = ["Bravo !", "Exact !", "Super !", "Bien joué !", "Parfait !", "Tu l'as !", "Agile comme un écureuil !"];
+  const showFix = q.type === "type" || q.type === "build";
+  const sh = $("sheet");
+  sh.className = "sheet" + (ok ? "" : " ko");
+  sh.innerHTML = `<div class="in">
+    <div class="row"><h3>${ok ? one(PRAISE) : "Presque…"}</h3><span class="spacer"></span>${gain ? `<span class="gain">+${gain} ${IC.nut.replace("<svg", "<svg width=\"20\" height=\"20\" style=\"vertical-align:-3px\"")}</span>` : ""}</div>
+    ${ok ? (showFix ? `<p class="fix">${esc(q.correct || q.answer)}</p>` : "") : showFix
+      ? `<p>Tu as écrit : <span class="yours">${esc(yours || "")}</span></p><p>On écrit : <span class="fix">${correctHtml}</span></p>`
+      : `<p><b>La bonne réponse :</b> ${correctHtml}</p>`}
+    ${q.explain ? `<p>${q.explain}</p>` : ""}${extra ? `<p class="gain" style="font-size:17px">${extra}</p>` : ""}
+    ${!ok && S.id !== "boss" && first ? `<p class="muted" style="font-size:15px">Pas grave : cette question reviendra à la fin pour une deuxième chance.</p>` : ""}
+    <div class="row"><button class="icon-btn" id="s-say" aria-label="Écouter l'explication">${IC.speak}</button><button class="btn" id="s-next" style="flex:1">Continuer</button></div></div>`;
+  sh.hidden = false;
+  $("s-say").onclick = () => say((ok ? "" : "On écrit : " + (q.correct || q.answer) + ". ") + (q.explain || ""));
+  $("s-next").onclick = next; $("s-next").focus({ preventScroll: true });
+}
+function next() { $("sheet").hidden = true; S.i++; if (S.i < S.queue.length) showQ(); else finish(); }
+document.addEventListener("keydown", e => { if (e.key === "Enter" && !$("sheet").hidden && !KB) { e.preventDefault(); $("s-next")?.click(); } });
+
+/* ---------- Fin de mission ---------- */
+function finish() {
+  const firstRes = S.res, score = firstRes.filter(r => r.ok).length, total = firstRes.length;
+  let stars;
+  if (S.id === "boss") stars = score >= BOSS_TOTAL - 1 ? 3 : score >= BOSS_TOTAL - 4 ? 2 : 1; else stars = S.errors === 0 ? 3 : S.errors <= 2 ? 2 : 1;
+  let newCards = [];
+  if (MISSIONS.some(m => m.id === S.id)) {
+    const before = MISSIONS.filter(m => ST.stars[m.id]).length;
+    ST.stars[S.id] = Math.max(ST.stars[S.id] || 0, stars);
+    const after = MISSIONS.filter(m => ST.stars[m.id]).length;
+    if (after > before) ST.lastNut = after;
+    newCards = CARDS.filter(c => c.m === S.id && !ST.cards.includes(c.k));
+  }
+  if (S.id === "boss") {
+    ST.boss.push({ date: isoToday(), score });
+    if (score >= BOSS_TOTAL - 1 && !ST.cards.includes("or")) newCards = CARDS.filter(c => c.k === "or");
+  }
+  newCards.forEach(c => ST.cards.push(c.k));
+  save(); sndWin();
+  let detail = "";
+  if (S.id === "boss") {
+    const by = {}; firstRes.forEach(r => { by[r.obj] = by[r.obj] || [0, 0]; by[r.obj][1]++; if (r.ok) by[r.obj][0]++; });
+    detail = `<div class="result-card"><h3 style="font-size:20px">Détail de ta dictée</h3><div class="objlist">${["D4", "C2", "A1"].map(k => { const v = by[k] || [0, 0]; const lab = { D4: "Les mots de la dictée", C2: "Les verbes (grimpe, agite)", A1: "a / à" }[k]; return `<div class="objrow"><span>${lab}</span><span class="pill ${v[0] === v[1] ? "a" : v[0] >= v[1] / 2 ? "b" : "c"}">${v[0]} / ${v[1]}</span></div>`; }).join("")}</div></div>`;
+  }
+  const msg = S.id === "boss" ? (score >= BOSS_TOTAL - 1 ? "Prêt pour la dictée !" : score >= BOSS_TOTAL - 4 ? "Presque prêt !" : "On continue l'entraînement !") : stars === 3 ? "Mission parfaite !" : stars === 2 ? "Très belle mission !" : "Mission accomplie !";
+  $("result").innerHTML = `<div class="center">
+    <div class="tag" style="margin-top:12px">${S.title}</div><h1 style="font-size:36px;margin-top:6px">${msg}</h1>
+    <div class="bigstars">${[1, 2, 3].map(i => IC.star(i <= stars).replace("<svg", `<svg class="pop" style="animation-delay:${i * .15}s"`)).join("")}</div>
+    <p style="font-size:19px;margin:0">${score} bonne${score > 1 ? "s" : ""} réponse${score > 1 ? "s" : ""} sur ${total} du premier coup · <span class="gain">+${S.gain} noisettes</span></p>
+    ${newCards.length ? `<div class="result-card"><h3 style="font-size:20px">Nouvelle provision pour l'hiver</h3><div class="unlocked">${newCards.map(c => `<div style="display:grid;gap:6px;justify-items:center"><div class="plate md">${art(c.k)}</div><b>${c.t}</b></div>`).join("")}</div></div>` : ""}
+    ${detail}
+    <div style="display:grid;gap:10px;margin-top:16px"><button class="btn rousse" id="r-pause">Pause cerveau (30 secondes)</button><button class="btn ghost" id="r-home">Retour au chemin</button></div></div>`;
+  $("r-pause").onclick = renderPause; $("r-home").onclick = renderHome;
+  show("result");
+}
+
+/* ---------- Pause cerveau ---------- */
+let pauseTimer = null;
+function renderPause() {
+  const [t, d] = one(PAUSES); let left = 30;
+  $("pause").innerHTML = `<div class="center"><div class="tag" style="margin-top:12px">Pause cerveau</div><div class="plate big" style="margin-top:10px">${art("ecureuil")}</div><h1 style="font-size:32px;margin-top:10px">${t}</h1>
+    <p style="font-size:20px;max-width:30ch;margin:10px auto">${d}</p>
+    <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="pr" cx="60" cy="60" r="50" fill="none" stroke="var(--rousse)" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="0" transform="rotate(-90 60 60)"/><text id="pt" x="60" y="72" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="36" fill="var(--ink)">30</text></svg>
+    <div style="display:grid;gap:10px"><button class="btn" id="pa-ok" disabled>J'ai fini !</button><button class="btn ghost" id="pa-say">${IC.speak.replace("<svg", "<svg width=\"22\" height=\"22\"")} Écouter</button></div></div>`;
+  $("pa-say").onclick = () => say(d);
+  $("pa-ok").onclick = () => { clearInterval(pauseTimer); renderHome(); };
+  clearInterval(pauseTimer);
+  pauseTimer = setInterval(() => {
+    left--; const pr = $("pr"), pt = $("pt"); if (!pr) { clearInterval(pauseTimer); return; }
+    pr.setAttribute("stroke-dashoffset", (314.2 * (30 - left) / 30).toFixed(1)); pt.textContent = Math.max(left, 0);
+    if (left <= 20) $("pa-ok").disabled = false;
+    if (left <= 0) { clearInterval(pauseTimer); tone([[784, .15], [1047, .3]]); }
+  }, 1000);
+  show("pause"); if (ST.voice) say(t + ". " + d);
+}
+
+/* ---------- Album ---------- */
+function renderAlbum() {
+  const n = CARDS.filter(c => ST.cards.includes(c.k)).length;
+  $("album").innerHTML = `<div class="top"><button class="icon-btn" id="al-back" aria-label="Retour">${IC.back}</button><h1 style="font-size:28px">Les provisions de l'hiver</h1></div>
+    <p class="muted" style="margin:0 0 14px">${n} provision${n > 1 ? "s" : ""} sur ${CARDS.length}. Chaque mission réussie en ajoute une. La noisette d'or se gagne à la Grande dictée.</p>
+    <div class="album">${CARDS.map(c => { const on = ST.cards.includes(c.k); const mi = MISSIONS.findIndex(m => m.id === c.m); return `<button class="acard ${on ? "" : "locked"}" data-k="${c.k}" ${on ? "" : "disabled"}><div class="plate">${art(c.k)}</div><h3>${on ? c.t : "Provision mystère"}</h3><div class="when">${mi >= 0 ? "Mission " + (mi + 1) : "Grande dictée"}</div></button>`; }).join("")}</div>`;
+  $("al-back").onclick = renderHome;
+  $("album").querySelectorAll(".acard:not(.locked)").forEach(b => b.onclick = () => openCard(CARDS.find(c => c.k === b.dataset.k)));
+  show("album");
+}
+function openCard(c) {
+  const m = $("modal");
+  m.innerHTML = `<div class="modal" id="mbg"><div class="box" role="dialog" aria-label="${c.t}"><div class="plate big">${art(c.k)}</div><h2 style="font-size:26px">${c.t}</h2><p style="margin:0;font-size:18px">${c.txt}</p>
+    <div class="row"><button class="icon-btn" id="m-say" aria-label="Écouter">${IC.speak}</button><button class="btn" id="m-close" style="flex:1">Fermer</button></div></div></div>`;
+  m.hidden = false;
+  $("m-say").onclick = () => say(c.t + ". " + c.txt);
+  $("m-close").onclick = () => { m.hidden = true; try { speechSynthesis.cancel(); } catch (e) {} };
+  $("mbg").onclick = e => { if (e.target.id === "mbg") m.hidden = true; };
+}
+
+/* ---------- Espace parent ---------- */
+const PLAN = [
+  ["2026-11-07", "Séance 1", ["m1", "m2"]], ["2026-11-07", "Séance 2", ["m3", "m4"]],
+  ["2026-11-08", "Séance 1", ["m5", "m6"]], ["2026-11-08", "Séance 2", ["m7", "m8"]],
+  ["2026-11-09", "Avant l'école", ["m9", "boss"]]
+];
+const JOURS = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+const fmtDay = iso => { const d = new Date(iso + "T12:00:00"); return `${JOURS[d.getDay()]} ${d.getDate()} nov.`; };
+const planLabel = id => id === "boss" ? "Grande dictée" : `${MISSIONS.findIndex(m => m.id === id) + 1}. ${MISSIONS.find(m => m.id === id).title}`;
+const isDone = id => id === "boss" ? ST.boss.length > 0 : !!ST.stars[id];
+const COLO_A_ACCENT = [3, 8, 9, 10, 13, 14, 17, 18, 28, 29, 31, 32, 36, 42, 45, 46];
+function renderParent() {
+  const today = isoToday();
+  const objRows = Object.keys(OBJ).map(k => {
+    const m = ST.mastery[k] || []; const pct = m.length ? Math.round(m.reduce((a, b) => a + b, 0) / m.length * 100) : 0;
+    const pill = m.length < 3 ? ["n", "Pas assez joué"] : pct >= 80 ? ["a", "Acquis"] : pct >= 55 ? ["b", "En progrès"] : ["c", "À retravailler"];
+    return `<div class="obj"><div class="top2"><span>${OBJ[k]}</span><span class="pill ${pill[0]}">${pill[1]}</span></div><div class="bar"><i style="width:${pct}%"></i></div><div class="muted" style="font-size:13px">${m.length ? `${pct} % de réussite du premier coup sur les ${m.length} dernières questions` : "Aucune question jouée"}</div></div>`;
+  }).join("");
+  const boss = ST.boss.length ? ST.boss.slice(-5).map(b => `${fmtDay(b.date)} : ${b.score}/${BOSS_TOTAL}`).join(" · ") : "Pas encore jouée";
+  $("parent").innerHTML = `<div class="top"><button class="icon-btn" id="pp-back" aria-label="Retour">${IC.back}</button><h1 style="font-size:28px">Espace parent</h1></div>
+    <div class="panel"><h3>Où en est Carlo</h3>${objRows}
+      <p class="muted" style="font-size:13px;margin:10px 0 0">Grande dictée : ${boss}. ${ST.sessions} séance${ST.sessions > 1 ? "s" : ""} lancée${ST.sessions > 1 ? "s" : ""} · ${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} en attente de revanche.</p></div>
+    <div class="panel"><h3>Plan jusqu'à lundi</h3><div class="plan">${PLAN.map(([d, s, ids]) => `<div class="d ${d === today ? "now" : ""}"><span class="dt">${fmtDay(d)}<br><span class="muted" style="font-weight:400;font-size:13px">${s}</span></span><span>${ids.map(planLabel).join("<br>")}</span><span>${ids.every(isDone) ? IC.star(true).replace("<svg", "<svg width=\"20\" height=\"20\"") : ""}</span></div>`).join("")}</div>
+      <p class="muted" style="font-size:13px;margin:10px 0 0">Deux missions par séance, puis la pause cerveau. Si une séance saute, l'accueil propose toujours la bonne mission. La date de la dictée en classe n'est pas indiquée : si elle a lieu plus tard dans la semaine, faites chaque soir la Grande dictée puis la revanche.</p></div>
+    <div class="panel"><h3>Les devoirs de la semaine</h3>
+      <p><b>Pour lundi 9/11 :</b> réviser la dictée (mots + exercices verbes en ER au brouillon), relire les leçons C9 et G10 du cahier bleu.</p>
+      <p><b>Pour vendredi 13/11 :</b> coloriage a / à.</p>
+      <p><b>Agenda :</b> « poésie choisie » est noté pour lundi ; à vérifier avec Carlo s'il doit en choisir une.</p>
+      <p class="muted" style="font-size:14px">Cases cochées par Carlo : ${DEVOIRS.filter(([k]) => ST.todo[k]).length} sur ${DEVOIRS.length}.</p></div>
+    <div class="panel"><h3>Points d'attention sur les fiches</h3>
+      <p><b>Exercice 1 (Associe) :</b> 6 pronoms pour 5 propositions. « lave le chien » se relie à la fois à Je et à Il. Carlo peut croire qu'il manque une ligne.</p>
+      <p><b>Exercice 2 (Conjugue) :</b> louer, nouer et remuer gardent un e qu'on n'entend pas (tu loues, il noue, tu remues). C'est le piège principal de la fiche ; la mission 6 l'entraîne avec jouer, secouer, saluer et continuer.</p>
+      <p><b>Dictée :</b> « agile » et « s'agiter » ont un g qui se prononce [j], alors que la leçon porte sur le son [g]. La mission 3 traite cette confusion.</p>
+      <p><b>Coloriage a / à :</b> 51 phrases, c'est long pour lui. Le faire en trois fois (phrases 2 à 18, 19 à 35, 36 à 51), en lisant chaque phrase avec « avait ».</p>
+      <button class="btn ghost" id="colo-btn" style="width:100%;min-height:46px;font-size:17px;margin-top:6px">Afficher le corrigé du coloriage</button><div id="colo"></div></div>
+    <div class="panel"><h3>Conseils pour un enfant qui a du mal à rester concentré</h3>
+      <p><b>Court et cadré :</b> deux missions (8 minutes), la pause cerveau, puis on arrête. Deux séances par jour au maximum, toujours au même moment. Finir sur une réussite.</p>
+      <p><b>La dictée d'abord :</b> 5 missions sur 9 et la Grande dictée portent sur les mots. Le soir, dictez-lui 5 mots sur papier en écriture attachée : la dictée en classe se fait au stylo, pas au clavier.</p>
+      <p><b>Faire dire la règle :</b> après une bonne réponse, demandez « comment tu as su ? ». Les trois phrases à ancrer : « avait → a », « nous → ons, ils → ent », « grande → le d muet de grand ».</p>
+      <p><b>Une consigne à la fois :</b> le jeu lit chaque question à voix haute. Téléphone posé sur la table, pas d'écran allumé autour.</p>
+      <p><b>Valoriser l'effort :</b> une erreur revient en fin de mission, c'est prévu. Félicitez le fait d'avoir réessayé plus que le score.</p></div>
+    <div class="panel"><h3>Réglages</h3>
+      <label class="toggle" for="t-sound"><span>Sons de réussite</span><input type="checkbox" id="t-sound" ${ST.sound ? "checked" : ""}></label>
+      <label class="toggle" for="t-voice"><span>Lire chaque question à voix haute</span><input type="checkbox" id="t-voice" ${ST.voice ? "checked" : ""}></label>
+      <button class="btn ghost" id="t-reset" style="margin-top:8px;width:100%;min-height:48px;font-size:17px">Remettre la progression à zéro</button><div id="t-confirm"></div></div>`;
+  $("pp-back").onclick = renderHome;
+  $("colo-btn").onclick = () => {
+    $("colo").innerHTML = `<p>Se colorient avec <b>à</b> (jaune) :</p><p class="key-list">${COLO_A_ACCENT.join(", ")}</p><p>Toutes les autres phrases prennent <b>a</b> (gris), dont 26 (« On a reçu de leurs nouvelles »). La phrase 1 est coupée sur la photo ; Carlo l'a déjà coloriée en jaune.</p>`;
+    $("colo-btn").hidden = true;
+  };
+  $("t-sound").onchange = e => { ST.sound = e.target.checked; save(); };
+  $("t-voice").onchange = e => { ST.voice = e.target.checked; save(); };
+  $("t-reset").onclick = () => {
+    $("t-confirm").innerHTML = `<div class="confirm"><span>Toute la progression, les étoiles, les provisions et les cases cochées seront effacées sur ce téléphone.</span><div class="row"><button class="btn ghost" id="c-no" style="flex:1;min-height:46px;font-size:17px">Annuler</button><button class="btn rousse" id="c-yes" style="flex:1;min-height:46px;font-size:17px">Effacer</button></div></div>`;
+    $("c-no").onclick = () => $("t-confirm").innerHTML = "";
+    $("c-yes").onclick = () => { ST = fresh(); save(); renderParent(); };
+  };
+  show("parent");
+}
+
+renderHome();
+</script>
+</body>
+</html>

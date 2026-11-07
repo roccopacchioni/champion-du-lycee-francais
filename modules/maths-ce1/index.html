@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Maths CE1 avec Carlo 🚀🎉</title>
+  <meta name="theme-color" content="#f59e0b" />
+  <style>
+    :root{
+      --bg:#fefce8; --bg2:#fef9c3; --card:#ffffff; --ink:#0f172a; --muted:#475569;
+      --accent:#f59e0b; --accent-2:#3b82f6; --good:#16a34a; --bad:#ef4444;
+      --shadow:0 8px 24px rgba(2,6,23,.10); --radius:22px; --gap:16px;
+    }
+    html,body{height:100%}
+    body{margin:0; -webkit-tap-highlight-color:transparent; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,Apple Color Emoji,Segoe UI Emoji; background:linear-gradient(180deg,var(--bg),var(--bg2)); color:var(--ink)}
+    header{position:sticky; top:0; z-index:10; background:#fff8; backdrop-filter:blur(8px); border-bottom:2px dashed #fde047; padding:14px 12px}
+    .wrap{max-width:1040px; margin:0 auto; padding:10px 14px}
+    h1{margin:0; font-size:clamp(22px,4vw,34px)}
+    .sub{color:var(--muted); font-size:14px}
+
+    .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:var(--gap); margin-top:12px}
+    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:10px; transition:transform .15s ease}
+    .card:hover{transform:translateY(-2px) rotate(-0.5deg)}
+    .card h2{margin:0; font-size:clamp(18px,2.6vw,22px)}
+    .card p{margin:0; color:var(--muted); font-size:14px}
+
+    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px}
+    .select,.btn{border:none; border-radius:14px; padding:10px 14px; font-size:16px; box-shadow:var(--shadow); background:var(--card)}
+    .btn{cursor:pointer}
+    .btn.primary{background:var(--accent); color:#fff}
+    .btn.alt{background:var(--accent-2); color:#fff}
+    .btn.warn{background:var(--bad); color:#fff}
+    .btn.ghost{background:#fff; border:1px dashed #e5e7eb}
+    .btn.toggle.on{outline:3px solid #22c55e}
+
+    .exercise{display:none}
+    .visible{display:block}
+
+    .topbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0}
+    .pill{background:#fff; border:1px solid #e5e7eb; padding:6px 10px; border-radius:999px; font-size:13px; color:var(--muted)}
+
+    .arena{background:var(--card); border:1px solid #e5e7eb; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:14px}
+    .equation{font-size:clamp(28px,7vw,56px); font-weight:800; text-align:center}
+
+    .answer{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center}
+    .answer input{font-size:clamp(24px,6vw,36px); width:min(280px,72vw); text-align:center; padding:10px 14px; border:2px solid #e5e7eb; border-radius:16px}
+
+    .choice{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+    .choice .btn{font-size:20px; padding:10px 14px}
+
+    .keypad{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+    .keypad .btn{font-size:22px; width:64px; height:56px}
+    .keypad.full .btn{width:calc(25vw - 18px); height:72px; font-size:28px}
+
+    .feedback{min-height:34px; text-align:center; font-size:22px}
+    .feedback.ok{color:var(--good); animation:bounce .6s ease}
+    .feedback.no{color:var(--bad); animation:shake .35s ease}
+
+    .progress{height:12px; border-radius:999px; background:#e5e7eb; overflow:hidden}
+    .bar{height:100%; width:0%; background:linear-gradient(90deg,var(--accent),#22c55e); transition:width .25s ease}
+
+    .stars{font-size:22px; text-align:center}
+
+    .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50}
+    .confetti span{position:absolute; font-size:20px; animation:fall 1.2s ease forwards}
+    @keyframes fall{0%{transform:translateY(-20px) scale(.6) rotate(0); opacity:0}100%{transform:translateY(46vh) rotate(180deg) scale(1); opacity:1}}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+    footer{text-align:center; color:var(--muted); font-size:13px; padding:22px 10px}
+    .clock{width:min(260px,70vw); aspect-ratio:1; margin:0 auto}
+
+    .results{text-align:center; display:none}
+    .results h3{font-size:clamp(20px,4vw,28px); margin:10px 0}
+    .badges{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+    .badge{background:#fff; border:1px solid #e5e7eb; padding:6px 10px; border-radius:999px}
+
+    .highscores{margin-top:20px; text-align:center}
+    .highscores table{margin:0 auto; border-collapse:collapse}
+    .highscores th,.highscores td{border:1px solid #e5e7eb; padding:6px 12px; font-size:14px}
+    .highscores th{background:#fef9c3}
+
+    @media print{header,.menu,.controls,.topbar,.keypad,.confetti,#install,#share{display:none!important}}
+  </style>
+<script src="../../assets/catalogue.js"></script>
+<script src="../../assets/commun.js"></script>
+<script src="../../assets/module-bridge.js" data-module="maths-ce1"></script>
+</head>
+<body>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <h1 aria-live="polite">✨ Bienvenue Carlo ✨ – Maths CE1 🎮⚡</h1>
+      <div class="sub">Entraîne‑toi sur mobile ou ordinateur. Fonctionne hors‑ligne après la 1ʳᵉ visite. Appuie sur <b>Entrée</b> pour valider.</div>
+      <div class="controls" role="group" aria-label="Réglages">
+        <label for="level">Difficulté :</label>
+        <select id="level" class="select" aria-label="Choisir la difficulté">
+          <option value="10">0–10</option>
+          <option value="20" selected>0–20</option>
+          <option value="50">0–50</option>
+          <option value="100">0–100</option>
+        </select>
+        <button class="btn" id="btn-worksheet" aria-label="Imprimer une feuille d'exercices">🖨️ Feuille</button>
+        <button class="btn ghost" id="install" title="Installer en appli">📲 Installer</button>
+        <button class="btn ghost" id="share" title="Partager le lien">🔗 Partager</button>
+        <button class="btn toggle" id="sound-toggle" aria-pressed="false" title="Activer / couper le son">🔊 Son</button>
+        <button class="btn toggle" id="pad-toggle" aria-pressed="false" title="Clavier large">📱 Clavier</button>
+        <button class="btn toggle" id="timer-toggle" aria-pressed="false" title="Mode chrono (60s)">⏱️ 60s</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="menu" class="menu visible" aria-label="Menu des exercices">
+      <div class="grid">
+        <article class="card"><h2>➕ Additions ⚡</h2><p>Calcule vite et bien.</p><button class="btn primary" data-start="addition">Jouer !</button></article>
+        <article class="card"><h2>➖ Soustractions 🔥</h2><p>Pas de nombres négatifs.</p><button class="btn primary" data-start="subtraction">Jouer !</button></article>
+        <article class="card"><h2>🔢 Comparer &lt; = &gt; 🎯</h2><p>Choisis le bon signe.</p><button class="btn primary" data-start="compare">Jouer !</button></article>
+        <article class="card"><h2>🧩 Nombre manquant 🧠</h2><p>Complète l’équation.</p><button class="btn primary" data-start="missing">Jouer !</button></article>
+        <article class="card"><h2>🫶 Doubles &amp; moitiés</h2><p>Automatismes utiles.</p><button class="btn primary" data-start="doublehalf">Jouer !</button></article>
+        <article class="card"><h2>✖️ Tables 2 • 5 • 10</h2><p>Découverte guidée.</p>
+          <div class="controls"><label class="sub" for="table-select">Table</label><select id="table-select" class="select"><option value="2">×2</option><option value="5" selected>×5</option><option value="10">×10</option></select></div>
+          <button class="btn primary" data-start="tables">Jouer !</button>
+        </article>
+        <article class="card"><h2>⏰ Lire l’heure</h2><p>Lis une horloge analogique.</p><button class="btn primary" data-start="clock">Jouer !</button></article>
+        <article class="card"><h2>💶 Euros – Pokémon/Beyblade</h2><p>Payer &amp; rendre la monnaie.</p><button class="btn primary" data-start="euros">Jouer !</button></article>
+        <article class="card"><h2>🛒 Problèmes concrets</h2><p>Histoires de la vie de Carlo.</p><button class="btn primary" data-start="concrete">Jouer !</button></article>
+        <article class="card"><h2>🧪 Révision complète (20)</h2><p>Mélange de tous les exercices.</p><button class="btn alt" data-start="mix">Lancer la révision</button></article>
+      </div>
+    </section>
+
+    <section id="exercise" class="exercise" aria-live="polite" aria-label="Zone d'exercice">
+      <div class="topbar">
+        <span class="pill" id="stat-kind">—</span>
+        <span class="pill">✅ <b id="ok">0</b></span>
+        <span class="pill">❌ <b id="ko">0</b></span>
+        <span class="pill">🔥 Série <b id="streak">0</b></span>
+        <span class="pill">🏁 Restant <b id="left">∞</b></span>
+        <span class="pill" id="timer-pill" style="display:none">⏱️ <b id="time">60</b>s</span>
+        <button class="btn" id="back">⬅️ Menu</button>
+      </div>
+
+      <div class="arena">
+        <div class="equation" id="equation">—</div>
+        <svg class="clock" id="clock" viewBox="0 0 100 100" aria-hidden="true" style="display:none">
+          <circle cx="50" cy="50" r="48" fill="#fff" stroke="#e5e7eb" stroke-width="2"/>
+          <g id="ticks"></g>
+          <line id="h-hand" x1="50" y1="50" x2="50" y2="30" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+          <line id="m-hand" x1="50" y1="50" x2="50" y2="18" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="2" fill="#0f172a"/>
+        </svg>
+        <div class="answer" id="answer-area"></div>
+        <div class="choice" id="choices" aria-label="Choix de réponse" style="display:none"></div>
+        <div class="keypad" id="keypad" aria-label="Clavier numérique" style="display:none"></div>
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div class="stars" id="stars" aria-hidden="true">☆☆☆☆☆</div>
+        <div class="controls">
+          <button class="btn alt" id="validate">Valider ✅</button>
+          <button class="btn" id="skip">Passer ↪️</button>
+          <button class="btn warn" id="reset">Remise à zéro</button>
+        </div>
+        <div class="sub" id="tip"></div>
+      </div>
+
+      <div class="results" id="results">
+        <h3>🏁 Terminé, bravo Carlo !</h3>
+        <div id="results-stars" style="font-size:28px">☆☆☆☆☆</div>
+        <p id="results-msg">—</p>
+        <div class="badges" id="badges"></div>
+        <div class="controls" style="justify-content:center">
+          <button class="btn primary" id="again">Rejouer 🔁</button>
+          <button class="btn" id="menu-back">Menu ⬅️</button>
+        </div>
+        <div class="highscores" id="highscores"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Fait avec 💚 pour Carlo — PWA hors‑ligne. Aucun suivi, aucune pub.
+  </footer>
+
+  <script>
+    /* ===== Utilitaires ===== */
+    const $ = s => document.querySelector(s); const $$ = s => Array.from(document.querySelectorAll(s));
+    const rand=(min,max)=>Math.floor(Math.random()*(max-min+1))+min; const pick=arr=>arr[rand(0,arr.length-1)];
+
+    // Horloge: repères
+    (function buildTicks(){ const g=document.getElementById('ticks'); for(let i=0;i<60;i++){ const a=(i/60)*2*Math.PI; const r1=i%5===0?44:46, r2=48; const x1=50+r1*Math.sin(a), y1=50-r1*Math.cos(a); const x2=50+r2*Math.sin(a), y2=50-r2*Math.cos(a); const line=document.createElementNS('http://www.w3.org/2000/svg','line'); line.setAttribute('x1',x1); line.setAttribute('y1',y1); line.setAttribute('x2',x2); line.setAttribute('y2',y2); line.setAttribute('stroke',i%5===0?'#0f172a':'#94a3b8'); line.setAttribute('stroke-width',i%5===0?'1.8':'1'); g.appendChild(line);} })();
+
+    /* ===== État ===== */
+    const state={ kind:null, modeCount:Infinity, left:Infinity, max:20, table:5, a:0,b:0,c:0, answer:null, ok:0,ko:0,streak:0, timerOn:false, time:60, tick:null, soundOn:false };
+    function label(kind){ return {addition:'➕ Addition', subtraction:'➖ Soustraction', compare:'🔢 Comparaison', missing:'🧩 Nombre manquant', doublehalf:'🫶 Doubles & moitiés', tables:'✖️ Tables', clock:'⏰ Heure', euros:'💶 Euros', concrete:'🛒 Problèmes concrets', mix:'🧪 Révision (mix)'}[kind]||'—'; }
+
+    /* ===== Audio (WebAudio) ===== */
+    let audioCtx; function beep(freq=880,dur=120,type='sine'){ if(!state.soundOn) return; audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type=type; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination); g.gain.setValueAtTime(0.001,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.2,audioCtx.currentTime+0.01); o.start(); setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.05); o.stop(audioCtx.currentTime+0.06); },dur); }
+
+    /* ===== Confetti ===== */
+    function celebrate(){ const palettes=[["🎉","🌟","🔥","💥","🚀"],["💎","🏅","⚡","🧩","🥳"],["🧸","🏎️","🌀","🧱","🃏"]]; const emojis=pick(palettes); const root=$('#confetti'); for(let i=0;i<28;i++){ const s=document.createElement('span'); s.textContent=pick(emojis); s.style.left=Math.random()*100+'%'; s.style.top='-10px'; s.style.fontSize=(18+Math.random()*20)+'px'; s.style.animationDuration=(0.7+Math.random()*1.1)+'s'; s.style.transform=`rotate(${rand(-90,90)}deg)`; root.appendChild(s); setTimeout(()=>s.remove(),1500);} }
+    function feedback(text,ok=false){ const node=$('#feedback'); node.textContent=text; node.className='feedback '+(ok?'ok':'no'); if(ok){ celebrate(); beep(1000,120,'triangle'); } else { beep(220,160,'sawtooth'); } }
+
+    /* ===== UI helpers ===== */
+    function showMenu(){ $('#menu').classList.add('visible'); $('#exercise').classList.remove('visible'); $('#results').style.display='none'; $('#feedback').textContent=''; $('#choices').style.display='none'; $('#keypad').style.display='none'; $('#clock').style.display='none'; clearTimer(); }
+    function showExercise(){ $('#menu').classList.remove('visible'); $('#exercise').classList.add('visible'); $('#results').style.display='none'; }
+    function showResults(){ $('#results').style.display='block'; $('.arena').style.display='none'; }
+    function hideResults(){ $('#results').style.display='none'; $('.arena').style.display='flex'; }
+    function focusInput(){ $('#reply')?.focus(); $('#reply')?.select?.(); }
+    function tip(text){ $('#tip').textContent=text; }
+
+    function updateStats(){ $('#ok').textContent=state.ok; $('#ko').textContent=state.ko; $('#streak').textContent=state.streak; $('#left').textContent=state.left===Infinity?'∞':state.left; $('#stat-kind').textContent=label(state.kind); const total=(state.modeCount===Infinity)?(state.ok+state.ko||1):state.modeCount; const done=(state.modeCount===Infinity)?(state.ok+state.ko):(state.modeCount-state.left); const pct=Math.max(0,Math.min(100,Math.round((done/total)*100))); $('#bar').style.width=pct+'%'; $('#stars').textContent='★★★★★'.slice(0,Math.min(5,Math.floor((state.streak/3))+1)).padEnd(5,'☆'); }
+
+    /* ===== Chrono ===== */
+    function startTimer(){ if(!state.timerOn) return; clearTimer(); state.time=60; $('#timer-pill').style.display='inline-flex'; $('#time').textContent=state.time; state.tick=setInterval(()=>{ state.time--; $('#time').textContent=state.time; if(state.time<=0){ clearTimer(); finishSession(true); } },1000); }
+    function clearTimer(){ if(state.tick){ clearInterval(state.tick); state.tick=null; } $('#timer-pill').style.display=state.timerOn?'inline-flex':'none'; }
+
+    /* ===== Génération de problèmes ===== */
+    function nextProblem(){ const kinds=['addition','subtraction','compare','missing','doublehalf','tables','clock','euros','concrete']; $('#feedback').textContent=''; $('#choices').style.display='none'; $('#keypad').style.display='none'; $('#clock').style.display='none'; $('#equation').style.display='block'; const k=state.kind==='mix'?pick(kinds):state.kind; const max=state.max;
+      if(k==='addition'){ const a=rand(0,max), b=rand(0,max); state.answer=a+b; $('#equation').textContent=`${a} + ${b} = ?`; renderNumber(); tip('Astuce : complète à 10 (7→3, 8→2).'); }
+      else if(k==='subtraction'){ let a=rand(0,max), b=rand(0,max); if(b>a)[a,b]=[b,a]; state.answer=a-b; $('#equation').textContent=`${a} − ${b} = ?`; renderNumber(); tip('Pense à la différence : 14−9 = 5.'); }
+      else if(k==='compare'){ const a=rand(0,max), b=rand(0,max); state.answer=a===b?'=':(a>b?'>':'<'); $('#equation').textContent=`${a} ? ${b}`; renderChoices(['<','=', '>']); tip('< plus petit, > plus grand.'); }
+      else if(k==='missing'){ const mode=rand(0,1)?'add':'sub'; if(mode==='add'){ const b=rand(0,max); const c=rand(b,max+b); const a=c-b; state.answer=a; $('#equation').textContent=`__ + ${b} = ${c}`; } else { const a=rand(0,max); const c=rand(0,a); const b=a-c; state.answer=b; $('#equation').textContent=`${a} − __ = ${c}`; } renderNumber(); tip('Essaie et remplace pour vérifier.'); }
+      else if(k==='doublehalf'){ if(rand(0,1)){ const a=rand(0,Math.floor(max/2)); state.answer=a*2; $('#equation').textContent=`Double de ${a} = ?`; } else { const e=rand(0,Math.floor(max/2))*2; state.answer=e/2; $('#equation').textContent=`Moitié de ${e} = ?`; } renderNumber(); tip('Doubles connus : 6→12, 7→14, 8→16.'); }
+      else if(k==='tables'){ const t=state.table; const a=rand(0,10); state.answer=a*t; $('#equation').textContent=`${a} × ${t} = ?`; renderNumber(); tip('×2 = double, ×5 se termine par 0 ou 5, ×10 ajoute 0.'); }
+      else if(k==='clock'){ const h=rand(1,12), m=[0,5,10,15,20,25,30,35,40,45,50,55][rand(0,11)]; state.answer=`${h}h${String(m).padStart(2,'0')}`; renderClock(h,m); renderClockChoices(h,m); tip('Lis d’abord les minutes (grands traits).'); }
+      else if(k==='euros'){ const items=[{name:'Booster Pokémon',price:pick([4,5,6]),emoji:'🃏'},{name:'Toupie Beyblade',price:pick([9,10,12]),emoji:'🌀'},{name:'Hot Wheels',price:pick([2,3,4]),emoji:'🏎️'},{name:'Mini LEGO',price:pick([7,8]),emoji:'🧱'},{name:'Pikachu peluche',price:pick([12,14,15]),emoji:'🐭'}]; const it=pick(items); const pay=pick([5,10,20]); state.answer=pay-it.price; $('#equation').textContent=`Carlo achète ${it.emoji} ${it.name} à ${it.price}€ et paie avec ${pay}€ → monnaie ?`; renderNumber(); tip('Rends jusqu’à 10 puis au billet.'); }
+      else if(k==='concrete'){ const p=makeConcrete(); state.answer=p.ans; $('#equation').textContent=p.text; if(p.choices) renderChoices(p.choices); else renderNumber(); tip(p.tip); }
+      focusInput(); updateStats(); }
+
+    // Problèmes concrets (simples, 1 étape)
+    function makeConcrete(){
+      const templates=[
+        ()=>{ const packs=rand(2,5); const cards=rand(3,8); return {text:`Au magasin Pokémon, Carlo achète ${packs} paquets avec ${cards} cartes chacun. Combien de cartes au total ?`, ans:packs*cards, tip:'Addition répétée (×).'}; },
+        ()=>{ const tops=rand(3,9); const give=rand(1,3); return {text:`Carlo a ${tops} toupies Beyblade 🌀. Il en donne ${give} à son ami. Combien lui en reste ?`, ans:tops-give, tip:'Soustraction d’objets.'}; },
+        ()=>{ const price=pick([3,4,5,6,7]); const coins=pick([5,10,20]); return {text:`Une mini-voiture Hot Wheels 🏎️ coûte ${price}€. Carlo paie avec ${coins}€. Quelle est la monnaie ?`, ans:coins-price, tip:'Rends jusqu’à 10 puis au billet.'}; },
+        ()=>{ const p1=pick([4,5,6]); const p2=pick([2,3,4]); return {text:`Carlo gagne ${p1} points au 1er duel Beyblade et ${p2} au 2e. Combien de points au total ?`, ans:p1+p2, tip:'Addition simple.'}; },
+        ()=>{ const s=rand(6,9); const c=rand(1,4); return {text:`Carlo a ${s} stickers Pokémon. Il en colle ${c} sur son cahier. Combien reste-t-il d’autocollants ?`, ans:s-c, tip:'Soustraction.'}; },
+        ()=>{ const friends=rand(2,5); const candies=rand(1,4); return {text:`Carlo partage ${friends*candies} bonbons entre ${friends} amis (parts égales). Combien par ami ?`, ans:candies, tip:'Partage équitable (division simple).'}; },
+        ()=>{ const h=rand(1,12); const m=pick([0,15,30,45]); const add=pick([5,10,15]); const newm=(m+add)%60; const addh=Math.floor((m+add)/60); const nh=((h+addh-1)%12)+1; return {text:`Il est ${h}h${String(m).padStart(2,'0')}. Dans ${add} minutes, quelle heure sera-t-il ?`, ans:`${nh}h${String(newm).padStart(2,'0')}`, tip:'Ajouter des minutes (quart d’heure).', choices:shuffleUnique([`${nh}h${String(newm).padStart(2,'0')}`, `${h}h${String(m).padStart(2,'0')}`, `${h}h${String((m+30)%60).padStart(2,'0')}`, `${((h%12)+1)}h${String(m).padStart(2,'0')}`])}; },
+      ];
+      return pick(templates)();
+    }
+
+    function shuffleUnique(arr){ return arr.slice().sort(()=>Math.random()-0.5); }
+
+    /* Rendu des types */
+    function renderNumber(){ $('#choices').style.display='none'; $('#clock').style.display='none'; const area=$('#answer-area'); area.innerHTML='<input type="tel" inputmode="numeric" id="reply" autocomplete="off" aria-label="Réponse" />'; buildKeypad(); }
+    function renderChoices(list){ const area=$('#choices'); area.innerHTML=''; list.forEach(v=>{ const b=document.createElement('button'); b.className='btn'; b.textContent=v; b.onclick=()=>check(v); area.appendChild(b); }); area.style.display='flex'; $('#answer-area').innerHTML=''; }
+    function renderClock(h,m){ const clock=$('#clock'); clock.style.display='block'; const hDeg=(h%12)*30+(m/60)*30; const mDeg=m*6; $('#h-hand').setAttribute('transform',`rotate(${hDeg} 50 50)`); $('#m-hand').setAttribute('transform',`rotate(${mDeg} 50 50)`); $('#equation').style.display='none'; }
+    function renderClockChoices(h,m){ const correct=`${h}h${String(m).padStart(2,'0')}`; const opts=new Set([correct]); while(opts.size<4){ const hh=((h+rand(-2,2)+12-1)%12)+1; const mm=(m+pick([-10,-5,5,10,15,20])+60)%60; opts.add(`${hh}h${String(mm).padStart(2,'0')}`); } renderChoices(Array.from(opts).sort(()=>Math.random()-0.5)); }
+
+    function buildKeypad(){ const pad=$('#keypad'); pad.innerHTML=''; const keys=['7','8','9','4','5','6','1','2','3','0','⌫']; keys.forEach(k=>{ const b=document.createElement('button'); b.className='btn'; b.textContent=k; b.onclick=()=>{ const inp=$('#reply'); if(k==='⌫'){ inp.value=(inp.value||'').slice(0,-1); } else { inp.value=(inp.value||'')+k; } inp.focus(); }; pad.appendChild(b); }); pad.style.display='flex'; pad.classList.toggle('full',$('#pad-toggle').classList.contains('on')); }
+
+    /* Vérification */
+    function check(forced){ let got; if(typeof forced!=='undefined'){ got=forced; } else if(state.kind==='clock'){ got=$('#reply')?.value.trim(); } else if(state.kind==='concrete' && typeof state.answer==='string'){ got=$('#reply')?.value.trim(); } else { const v=$('#reply')?.value.trim(); got=(v===''?null:Number(v)); }
+      if(got===null||got===undefined|| (typeof state.answer==='number' && isNaN(got))){ feedback('Entre une réponse 😊'); return; }
+      const expected=state.answer; const ok=(''+got === ''+expected);
+      if(ok){ state.ok++; state.streak++; feedback(`Bravo Carlo 🎉🔥 Réponse : ${expected}`, true); } else { state.ko++; state.streak=0; feedback(`Oups 😅 réponse : ${expected}`, false); }
+      if(state.left!==Infinity){ state.left--; }
+      updateStats();
+      if(state.left===0){ setTimeout(()=>finishSession(false),700); } else { setTimeout(nextProblem,650); }
+    }
+
+    /* Résultats + High Scores */
+    const HS_KEY='ce1-carlo-highscores';
+    function loadHS(){ return JSON.parse(localStorage.getItem(HS_KEY)||'{}'); }
+    function saveHS(obj){ localStorage.setItem(HS_KEY, JSON.stringify(obj)); }
+    function updateHighScores(kind, score){ const hs=loadHS(); const key=(kind==='mix')?'Révision':kind; hs[key]=Math.max(hs[key]||0, score); saveHS(hs); }
+    function renderHighScores(){ const hs=loadHS(); const keys=Object.keys(hs); if(!keys.length){ $('#highscores').innerHTML=''; return; } let html='<h4>🏆 Meilleurs scores</h4><table><tr><th>Exercice</th><th>Score</th></tr>'; keys.forEach(k=>{ html+=`<tr><td>${label(k)}</td><td>${hs[k]}</td></tr>`; }); html+='</table>'; $('#highscores').innerHTML=html; }
+
+    function finishSession(isTimeUp){ $('#choices').style.display='none'; $('#keypad').style.display='none'; $('#clock').style.display='none'; $('#equation').style.display='block'; clearTimer(); const total = state.modeCount===Infinity ? (state.ok+state.ko) : state.modeCount; const score=state.ok; const ratio= total? score/total:0; $('#results-stars').textContent='★★★★★'.slice(0,Math.max(1,Math.round(ratio*5))).padEnd(5,'☆'); $('#results-msg').textContent= isTimeUp?`⏱️ Temps écoulé ! Score ${score}/${total}`:`🏁 Terminé ! Score ${score}/${total}`; const badges=$('#badges'); badges.innerHTML=''; if(score>=16) badges.innerHTML+=`<span class="badge">⭐ As des chiffres</span>`; if(state.streak>=5) badges.innerHTML+=`<span class="badge">🔥 Série ${state.streak}</span>`; if(state.ko===0 && total>0) badges.innerHTML+=`<span class="badge">🛡️ Sans faute</span>`; updateHighScores(state.kind, score); renderHighScores(); showResults(); }
+
+    /* Session / navigation */
+    function start(kind){ state.kind=kind; state.max=Number($('#level').value); state.table=Number($('#table-select')?.value||5); state.ok=state.ko=state.streak=0; hideResults(); $('.arena').style.display='flex'; state.timerOn=$('#timer-toggle').classList.contains('on'); if(kind==='mix'){ state.modeCount=20; state.left=20; } else { state.modeCount=Infinity; state.left=Infinity; } $('#stars').textContent='☆☆☆☆☆'; updateStats(); showExercise(); nextProblem(); startTimer(); const tips={ addition:'Compléments à 10 (8→2).', subtraction:'Compte à rebours/différence.', compare:'< plus petit, > plus grand.', missing:'Teste et remplace.', doublehalf:'6→12, 7→14, 8→16, 9→18.', tables:'×2 double, ×5 0/5, ×10 +0.', clock:'Regarde d’abord les minutes.', euros:'Rends jusqu’à 10 puis au billet.', concrete:'Lis bien l’histoire et repère l’opération.' }; $('#tip').textContent=tips[kind]||''; }
+
+    /* Feuille imprimable */
+    function printWorksheet(){ const kind=state.kind||'addition'; const max=Number($('#level').value); const table=Number($('#table-select')?.value||5); const problems=[]; const make={ addition(){ const a=rand(0,max),b=rand(0,max); return `${a} + ${b} = ____`; }, subtraction(){ let a=rand(0,max),b=rand(0,max); if(b>a)[a,b]=[b,a]; return `${a} − ${b} = ____`; }, compare(){ const a=rand(0,max),b=rand(0,max); return `${a} __ ${b}`; }, missing(){ if(rand(0,1)){ const b=rand(0,max); const c=rand(b,max+b); return `__ + ${b} = ${c}`; } else { const a=rand(0,max); const c=rand(0,a); return `${a} − __ = ${c}`; } }, doublehalf(){ if(rand(0,1)){ const a=rand(0,Math.floor(max/2)); return `Double de ${a} = ____`; } else { const e=rand(0,Math.floor(max/2))*2; return `Moitié de ${e} = ____`; } }, tables(){ const a=rand(0,10); return `${a} × ${table} = ____`; }, clock(){ const h=rand(1,12),m=[0,15,30,45][rand(0,3)]; return `Heure: ${h}h${String(m).padStart(2,'0')} = ____`; }, euros(){ const p=pick([2,3,4,5,7,8,9,10,12,15]); const pay=pick([5,10,20]); return `Prix ${p}€ payé ${pay}€ → monnaie ____€`; }, concrete(){ const c=makeConcrete(); return c.text + ' Réponse: ____'; } }; for(let i=0;i<24;i++){ problems.push(make[kind]()); } const w=window.open('', '_blank'); w.document.write(`<!doctype html><html lang=\"fr\"><head><meta charset=\"utf-8\"><title>Feuille – ${label(kind)}</title><style> body{font-family:system-ui,Segoe UI,Roboto; margin:36px;} h1{margin:0 0 10px} .meta{color:#475569;margin-bottom:16px} .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px} .cell{border:1px solid #e5e7eb; padding:12px; border-radius:10px; font-size:18px; min-height:40px; white-space:pre-wrap} @media print{ .cell{min-height:28px} } </style></head><body>`); w.document.write(`<h1>${label(kind)} — CE1</h1><div class="meta">Niveau : 0–${max}${kind==='tables'?` | Table ×${table}`:''}</div>`); w.document.write('<div class="grid">'); problems.forEach(p=> w.document.write(`<div class="cell">${p}</div>`)); w.document.write('</div></body></html>'); w.document.close(); w.focus(); w.print(); }
+
+    /* Listeners */
+    $$('#menu [data-start]').forEach(btn=> btn.addEventListener('click', e=> start(e.currentTarget.dataset.start)) );
+    $('#back').addEventListener('click', showMenu);
+    $('#menu-back').addEventListener('click', showMenu);
+    $('#again').addEventListener('click', ()=>{ hideResults(); start(state.kind); });
+    $('#validate').addEventListener('click', ()=> check());
+    $('#skip').addEventListener('click', ()=> nextProblem());
+    $('#reset').addEventListener('click', ()=>{ state.ok=state.ko=state.streak=0; updateStats(); $('#stars').textContent='☆☆☆☆☆'; $('#feedback').textContent=''; focusInput(); });
+    $('#level').addEventListener('change', ()=>{ state.max=Number($('#level').value); });
+    $('#table-select')?.addEventListener('change', ()=>{ state.table=Number($('#table-select').value); if(state.kind==='tables'){ nextProblem(); } });
+    $('#btn-worksheet').addEventListener('click', printWorksheet);
+    document.addEventListener('keydown', e=>{ if(e.key==='Enter' && $('#exercise').classList.contains('visible')){ e.preventDefault(); check(); }});
+
+    $('#share').addEventListener('click', async ()=>{ try{ await navigator.share({ title:'Maths CE1 – Carlo', text:"Viens t'entraîner avec Carlo !", url: location.href }); } catch(e){ navigator.clipboard.writeText(location.href); alert('Lien copié 👍'); } });
+    $('#sound-toggle').addEventListener('click', e=>{ e.currentTarget.classList.toggle('on'); state.soundOn=e.currentTarget.classList.contains('on'); e.currentTarget.setAttribute('aria-pressed', state.soundOn); });
+    $('#pad-toggle').addEventListener('click', e=>{ e.currentTarget.classList.toggle('on'); e.currentTarget.setAttribute('aria-pressed', e.currentTarget.classList.contains('on')); buildKeypad(); });
+    $('#timer-toggle').addEventListener('click', e=>{ e.currentTarget.classList.toggle('on'); state.timerOn=e.currentTarget.classList.contains('on'); e.currentTarget.setAttribute('aria-pressed', state.timerOn); if(state.timerOn){ startTimer(); } else { clearTimer(); } });
+
+    // PWA: manifest & service worker (offline)
+    (function setupPWA(){ const manifest={ name:'Maths CE1 avec Carlo', short_name:'Maths CE1', start_url:'.', display:'standalone', background_color:'#fefce8', theme_color:'#f59e0b', icons:[{ src:'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="100%" height="100%" fill="#f59e0b"/><text x="50%" y="56%" font-size="300" text-anchor="middle" dominant-baseline="middle" fill="white">⚡</text></svg>`), sizes:'512x512', type:'image/svg+xml' }] }; const link=document.createElement('link'); link.rel='manifest'; link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifest)); if(false){ const swCode=`const CACHE='ce1-carlo-v3';const CORE=['./'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))))});self.addEventListener('fetch',e=>{const req=e.request;if(req.method!=='GET') return; e.respondWith(caches.match(req).then(r=>r||fetch(req).then(res=>{const copy=res.clone(); caches.open(CACHE).then(c=>c.put(req,copy)); return res}).catch(()=>caches.match('./'))))});`; const blob=new Blob([swCode],{type:'text/javascript'}); const url=URL.createObjectURL(blob); navigator.serviceWorker.register(url); }
+      let deferred; window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferred=e; $('#install').style.display='inline-block'; }); $('#install').addEventListener('click', async ()=>{ if(!deferred) return alert("Si le bouton n'apparaît pas, utilise “Ajouter à l'écran d'accueil”."); deferred.prompt(); await deferred.userChoice; deferred=null; }); })();
+  </script>
+</body>
+</html>
