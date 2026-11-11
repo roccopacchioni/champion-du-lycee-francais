@@ -15,6 +15,7 @@
     francais: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26 L14 6 h4 l8 20 h-4.6 l-1.8-4.8 h-7.2 L10.6 26 Z M13.8 17.4 h4.4 L16 11.2 Z" fill="currentColor"/></svg>',
     maths: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 8 l16 16 M24 8 L8 24" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
     qlm: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 4 h14 v3 c0 5-5 7-5 9 s5 4 5 9 v3 H9 v-3 c0-5 5-7 5-9 s-5-4-5-9 Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M12 25 c1-3 3-4 4-4 s3 1 4 4 Z" fill="currentColor"/></svg>',
+    langues: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6 h22 a3 3 0 0 1 3 3 v11 a3 3 0 0 1 -3 3 H14 l-6 5 v-5 H5 a3 3 0 0 1 -3 -3 V9 a3 3 0 0 1 3 -3z" fill="currentColor"/><path d="M10 18 l3 -8 l3 8 M11.2 15 h3.6 M19 10 v8 h4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     defaut: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 l3.6 7.6 8.2 1 -6 5.7 1.6 8.1 -7.4-4 -7.4 4 1.6-8.1 -6-5.7 8.2-1z" fill="currentColor"/></svg>'
   };
   var FLECHE = '<svg class="fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';

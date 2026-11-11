@@ -36,6 +36,34 @@
 
   var MODULES = [
     {
+      id: "london-express",
+      titre: "London Express",
+      accroche: "Anglais : apostrophes de possession et adjectifs dans le bon ordre",
+      niveau: "CE2",
+      domaine: "langues",
+      sousDomaine: "Anglais",
+      competences: [
+        "Écrire le possessif : Anna's ball, the girls' hats, the children's keys",
+        "Distinguer simple pluriel et possession (dogs / dog's)",
+        "Transformer « belongs to » en phrase : It is… / They are…",
+        "Ranger les adjectifs (opinion, size, shape, age, colour, origin, material, purpose), virgules, a / an"
+      ],
+      echeance: null,
+      echeanceLabel: "Cahier d'anglais : leçon 4 (adjectifs) et leçon 6 (apostrophes)",
+      creation: "2026-11-11",
+      chemin: "modules/london-express/",
+      cleProgression: "london-express-carlo-v1",
+      missions: 9,
+      epreuve: "Le Test de Wembley",
+      fichiers: [],
+      progression: function () {
+        var s = lire(this.cleProgression);
+        var c = compterEtoiles(s && s.stars);
+        return { faites: c.faites, total: this.missions, etoiles: c.etoiles, etoilesMax: this.missions * 3,
+          epreuve: s && s.boss && s.boss.length ? Math.max.apply(null, s.boss.map(function (b) { return b.score; })) + " / 14" : null };
+      }
+    },
+    {
       id: "ecureuil-agile",
       titre: "L'Écureuil Agile",
       accroche: "Dictée « L'écureuil », a ou à, verbes en -er au présent",

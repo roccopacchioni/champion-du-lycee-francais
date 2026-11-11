@@ -11,6 +11,7 @@ Il fonctionne sur téléphone, tablette et ordinateur (Safari, Chrome, Edge, Fir
 | L'Écureuil Agile | CE2 | Français | Dictée « L'écureuil », a / à, présent des verbes en -er |
 | Champions des Tables | CE2 | Mathématiques | Tables de 0 à 5, calcul mental, problèmes |
 | Gardien du Temps | CE2 | Questionner le monde | Mesure du temps, calendrier, chiffres romains, siècles, frise |
+| London Express | CE2 | Langues vivantes (anglais) | Apostrophes de possession, It is / They are, ordre des adjectifs, a / an |
 | Foot & Maths (archive) | CE1 | Mathématiques | Révision CE1 → CE2 sur le thème du foot |
 | Maths CE1 avec Carlo (archive) | CE1 | Mathématiques | Calculs, tables de 2, 5 et 10, heure, monnaie |
 | Champions du CP (archive) | CP | Plusieurs matières | Compter, lire, écrire : les quatre premiers mois du CP |

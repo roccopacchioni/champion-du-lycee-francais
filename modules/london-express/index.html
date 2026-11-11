@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>London Express · Champion du Lycée Français</title>
+<meta name="theme-color" content="#1F3A7A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Lilita+One&display=swap">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!-- Lien avec le site : prénom, retour aux cahiers, temps de jeu, hors ligne -->
+<script src="../../assets/catalogue.js"></script>
+<script src="../../assets/commun.js"></script>
+<script src="../../assets/module-bridge.js" data-module="london-express"></script>
+</head>
+<body>
+<script nomodule>window.onload=function(){document.body.innerHTML='<p style="font:18px sans-serif;margin:24px">Ce navigateur est trop ancien pour ce jeu. Ouvrez le site avec Edge, Chrome, Safari ou Firefox.</p>';};</script>
+<style>
+/* Mise en page : une colonne type application mobile ; la ligne du bus mène de la gare jusqu'au stade de Wembley. */
+:root{
+  --bg:#EEF1F7; --surface:#FFFFFF; --surface-2:#E2E7F1; --ink:#16213A; --muted:#57627A; --line:#C9D1E1;
+  --main:#1F3A7A; --on-main:#FFFFFF; --red:#C8202F; --red-soft:#FBDADC; --gold:#D99A1E;
+  --good:#1F8556; --good-soft:#DCF2E5; --bad:#C2432E; --bad-soft:#FADFD8;
+  --plate:#F7F4EC; --plate-line:#E3DCCB;
+  --s-pos:#C8202F; --s-adj:#7647AE;
+  --f-display:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;
+  --f-body:"Andika","Trebuchet MS",system-ui,sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1424; --surface:#18203A; --surface-2:#222C4A; --ink:#EAF0FA; --muted:#A7B1C8; --line:#33405F;
+    --main:#8FB1FF; --on-main:#0B1430; --red:#FF6B74; --red-soft:#42202A; --gold:#F2C25B;
+    --good:#4DCB8C; --good-soft:#153A2B; --bad:#FF7D66; --bad-soft:#43221C;
+    --plate:#F4EFE3; --plate-line:#CFC5AE;
+    --s-pos:#FF8A92; --s-adj:#B795EE; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1424; --surface:#18203A; --surface-2:#222C4A; --ink:#EAF0FA; --muted:#A7B1C8; --line:#33405F;
+  --main:#8FB1FF; --on-main:#0B1430; --red:#FF6B74; --red-soft:#42202A; --gold:#F2C25B;
+  --good:#4DCB8C; --good-soft:#153A2B; --bad:#FF7D66; --bad-soft:#43221C;
+  --plate:#F4EFE3; --plate-line:#CFC5AE;
+  --s-pos:#FF8A92; --s-adj:#B795EE; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 40px;
+  -webkit-tap-highlight-color:transparent}
+.app{max-width:560px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,label:focus-within{outline:3px solid var(--main);outline-offset:2px}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* Boutons */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:12px 20px;border-radius:16px;border:0;
+  font-family:var(--f-display);font-size:20px;background:var(--main);color:var(--on-main);box-shadow:0 4px 0 rgba(0,0,0,.22);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.22)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.red{background:var(--red);color:#fff}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;border:2px solid var(--line);background:var(--surface);flex:none}
+.icon-btn svg{width:22px;height:22px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.chip svg{width:22px;height:22px}
+.subj{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:2px solid currentColor}
+.subj.pos{color:var(--s-pos)} .subj.adj{color:var(--s-adj)}
+
+/* Accueil */
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hello{margin:6px 0 2px}
+.hello .eyebrow{font-size:14px;color:var(--muted);font-weight:700}
+.hello .who{font-family:var(--f-display);font-size:34px;line-height:1.05}
+.hello .who span{color:var(--red)}
+.countdown{display:flex;gap:12px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:12px 14px;margin:12px 0}
+.countdown .big{font-family:var(--f-display);font-size:34px;color:var(--red);font-variant-numeric:tabular-nums;min-width:64px;text-align:center;white-space:nowrap}
+.garage{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;margin:8px 0 16px}
+.garage svg{width:150px;height:auto}
+.garage .pax-new{animation:drop .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes drop{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
+.today{background:var(--main);color:var(--on-main);border-radius:var(--r);padding:14px;display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;border:0;width:100%;text-align:left;box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.today .lab{font-size:13px;text-transform:uppercase;letter-spacing:.08em;opacity:.85;font-weight:700}
+.today h3{font-size:22px}
+.plate{background:var(--plate);border:2px solid var(--plate-line);border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.plate svg{width:100%;height:100%;display:block}
+.plate.sm{width:60px;height:60px;padding:5px}
+.plate.md{width:76px;height:76px;padding:6px}
+.plate.big{width:min(200px,60vw);aspect-ratio:1;padding:12px;margin:0 auto;max-width:100%}
+.section-title{display:flex;align-items:baseline;gap:8px;margin:24px 0 10px;flex-wrap:wrap}
+.section-title h2{font-size:24px}
+.map{position:relative;display:grid;gap:12px;padding-left:34px}
+.map::before{content:"";position:absolute;left:12px;top:6px;bottom:6px;width:10px;border-radius:6px;background:linear-gradient(var(--red),var(--main))}
+.mission{position:relative;display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;
+  background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.mission::before{content:"";position:absolute;left:-30px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--surface);border:4px solid var(--ink)}
+.mission.done::before{background:var(--red);border-color:var(--red)}
+.mission h3{font-size:19px;line-height:1.15;margin:2px 0}
+.mission .sub{font-size:14px;color:var(--muted)}
+.mission.next{border-color:var(--main);box-shadow:0 0 0 3px color-mix(in srgb,var(--main) 25%,transparent)}
+.stars{display:flex;gap:2px}
+.stars svg{width:20px;height:20px}
+.extra{display:grid;gap:12px;margin-top:22px}
+.card-btn{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;text-align:left;width:100%;background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:12px}
+.card-btn h3{font-size:20px}
+.card-btn .sub{font-size:14px;color:var(--muted)}
+.card-btn.boss{background:var(--red-soft);border-color:var(--red)}
+.ico{width:64px;height:64px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--surface-2)}
+.ico svg{width:40px;height:40px}
+.ico.art{background:var(--plate);padding:6px}
+.ico.art svg{width:100%;height:100%}
+
+/* Jeu */
+.playbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dots{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+.dot{height:10px;flex:1;min-width:8px;border-radius:6px;background:var(--line)}
+.dot.ok{background:var(--good)} .dot.ko{background:var(--bad)} .dot.cur{background:var(--main)}
+.combo{font-family:var(--f-display);color:var(--red);font-size:18px;white-space:nowrap}
+.combo.pop{animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.prompt{font-family:var(--f-display);font-size:24px;line-height:1.25;margin:4px 0 12px;text-wrap:balance}
+.ctx{font-family:var(--f-body);font-weight:700;font-size:25px;line-height:1.35;background:var(--plate);color:#22263A;border:2px solid var(--plate-line);border-radius:16px;padding:14px 16px;margin:10px 0 4px;text-wrap:pretty}
+.ctx[lang="en"]{}
+.ctx b{color:#B3202D}
+.ctx .src{display:block;font-size:18px;font-weight:400;color:#6A6152;margin-bottom:6px}
+.ctx .gap{display:inline-block;min-width:3.2em;border-bottom:3px solid #B3202D;color:#B3202D;text-align:center;line-height:1.1}
+.ctx .gap.cur{background:#FFE3E5;border-radius:6px 6px 0 0;padding:0 6px;min-width:4em}
+.ctx .gap.done{border-bottom-color:transparent;color:#1A6B45}
+.ctx .fr{font-weight:400;font-style:italic;color:#6A6152}
+.ctx mark{background:#FFE08A;color:#22263A;border-radius:5px;padding:0 3px}
+.caret{display:inline-block;width:2px;height:1em;background:#B3202D;vertical-align:-2px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.choices{display:grid;gap:10px}
+.choices.two{grid-template-columns:1fr 1fr}
+.choices.two .choice{justify-content:center;text-align:center;min-height:72px}
+.choices.two.big .choice{font-size:30px}
+.choice{min-height:58px;padding:12px 16px;border-radius:16px;border:2px solid var(--line);background:var(--surface);text-align:left;font-size:21px;font-weight:700;display:flex;align-items:center;gap:10px}
+.choice:active{transform:scale(.99)}
+.choice.ok{background:var(--good-soft);border-color:var(--good)}
+.choice.ko{background:var(--bad-soft);border-color:var(--bad)}
+.choice:disabled{cursor:default}
+.hint-row{display:flex;gap:10px;margin-top:14px}
+.hint{margin-top:12px;background:var(--red-soft);border:2px dashed var(--red);border-radius:14px;padding:12px 14px;font-size:17px}
+.hint p{margin:4px 0}
+.rule{display:grid;gap:6px;font-size:16px;margin-top:6px}
+.rule div{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:baseline}
+.rule b{color:var(--red);font-size:18px;white-space:nowrap}
+.order{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.order span{display:inline-flex;flex-direction:column;align-items:center;padding:4px 8px;border-radius:10px;color:#fff;font-weight:700;font-size:15px;line-height:1.1}
+.order span small{font-weight:400;font-size:11px;opacity:.9}
+
+/* Flash */
+.flashbar{height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden;margin:10px 0}
+.flashbar i{display:block;height:100%;background:var(--red);width:100%;transform-origin:left;animation:shrink linear forwards}
+@keyframes shrink{to{transform:scaleX(0)}}
+.flashword{font-size:36px;text-align:center;padding:22px 12px}
+.eyehint{display:flex;align-items:center;gap:8px;justify-content:center;font-weight:700;color:var(--muted);font-size:15px}
+
+/* Construction */
+.build-out{min-height:72px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;
+  background:var(--plate);color:#22263A;border:2px solid var(--plate-line);border-radius:16px;margin:10px 0 12px;padding:8px 12px;text-align:center;line-height:1.25}
+.build-out.empty{font-size:16px;color:#7A6E55;font-weight:400}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.tile{min-width:52px;min-height:52px;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:22px}
+.tile:disabled{opacity:.22}
+.tile.apo{min-width:64px;font-size:34px;line-height:1;background:var(--red-soft);border-color:var(--red)}
+
+/* Clavier */
+.kb{display:grid;gap:6px;user-select:none;-webkit-user-select:none;margin-top:10px}
+.kb .r{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.key{min-height:46px;border-radius:10px;background:var(--surface);box-shadow:0 2px 0 var(--line);font-size:20px;font-weight:700;padding:0;min-width:0;border:1px solid var(--line)}
+.key:active{background:var(--surface-2);transform:translateY(1px)}
+.key.apo{background:var(--red-soft);font-size:28px;border-color:var(--red)}
+.key.shift.on{background:var(--main);color:var(--on-main)}
+.key.w2{grid-column:span 2} .key.w5{grid-column:span 5}
+.key.go{background:var(--main);color:var(--on-main);font-family:var(--f-display);font-size:19px;font-weight:400;border:0}
+.key svg{width:22px;height:22px;vertical-align:middle}
+
+/* Feuille de réponse */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:4px solid var(--good);border-radius:22px 22px 0 0;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  box-shadow:0 -10px 30px rgba(0,0,0,.18);animation:up .22s ease-out;max-height:80vh;overflow:auto}
+.sheet.ko{border-top-color:var(--bad)}
+.sheet .in{max-width:560px;margin:0 auto;display:grid;gap:10px}
+.sheet h3{font-size:26px;color:var(--good)}
+.sheet.ko h3{color:var(--bad)}
+.sheet p{margin:0;font-size:17px}
+.sheet .fix{font-size:24px;font-weight:700}
+.sheet .fix mark{background:var(--bad-soft);color:var(--bad);border-bottom:3px solid var(--bad);border-radius:3px;padding:0 1px}
+.sheet .yours{text-decoration:line-through;color:var(--muted);font-weight:700}
+.gain{font-family:var(--f-display);color:var(--red);font-size:20px}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.pad-bottom{height:260px}
+
+/* Résultats, pause, album */
+.center{text-align:center}
+.bigstars{display:flex;justify-content:center;gap:8px;margin:12px 0}
+.bigstars svg{width:62px;height:62px}
+.bigstars svg.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.result-card{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0;display:grid;gap:10px}
+.unlocked{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.unlocked .plate{animation:pop .5s .2s cubic-bezier(.3,1.6,.5,1) both}
+.objlist{display:grid;gap:8px;text-align:left}
+.objrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:15px}
+.ring{width:170px;height:170px;margin:10px auto;display:block}
+.album{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.acard{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:8px;text-align:left;display:grid;gap:6px;min-width:0}
+.acard .plate{width:100%;aspect-ratio:1;padding:12px}
+.acard.locked .plate svg{filter:grayscale(1) brightness(.2);opacity:.25}
+.acard h3{font-size:16px;line-height:1.15}
+.acard .when{font-size:13px;color:var(--muted)}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(10,14,30,.55);display:flex;align-items:flex-end;justify-content:center;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal .box{background:var(--surface);border-radius:22px;padding:18px;max-width:520px;width:100%;display:grid;gap:12px;max-height:90vh;overflow:auto;animation:up .22s ease-out}
+.modal .box b{color:var(--red)}
+
+/* Parents */
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.panel h3{font-size:20px;margin-bottom:8px}
+.panel p{margin:8px 0;font-size:16px}
+.obj{display:grid;gap:4px;padding:8px 0;border-bottom:1px solid var(--line)}
+.obj:last-child{border-bottom:0}
+.obj .top2{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:15px}
+.bar{height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--good);border-radius:6px}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.a{background:var(--good-soft);color:var(--good)} .pill.b{background:var(--red-soft);color:var(--red)} .pill.c{background:var(--bad-soft);color:var(--bad)} .pill.n{background:var(--surface-2);color:var(--muted)}
+.plan{display:grid;gap:6px}
+.plan .d{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2);font-size:15px}
+.plan .d.now{outline:3px solid var(--main)}
+.plan .dt{font-weight:700;font-variant-numeric:tabular-nums}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;font-size:16px}
+.toggle input[type=checkbox]{width:24px;height:24px;accent-color:var(--main)}
+.toggle input[type=date]{font:inherit;font-size:16px;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-height:44px}
+.confirm{display:grid;gap:8px;margin-top:10px;background:var(--bad-soft);border-radius:12px;padding:10px;font-size:15px}
+</style>
+
+<div class="app">
+  <section id="home"></section>
+  <section id="play" hidden></section>
+  <section id="result" hidden></section>
+  <section id="pause" hidden></section>
+  <section id="album" hidden></section>
+  <section id="parent" hidden></section>
+</div>
+<div id="sheet" class="sheet" hidden></div>
+<div id="modal" hidden></div>
+
+<script>
+/* =========================================================
+   London Express — anglais, CE2 (cahier d'anglais, leçons 4 et 6)
+   Apostrophes for possession · Expanded noun phrases (adjectives)
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const one = a => a[Math.floor(Math.random() * a.length)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const norm = s => String(s).replace(/[’`´‘]/g, "'").replace(/\s+/g, " ").replace(/\s*'\s*/g, "'").replace(/[.!]+$/, "").trim().toLowerCase();
+const normNC = s => norm(String(s).replace(/,/g, " "));
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+/* ---------- Dessins ---------- */
+const V = (inner, vb = "0 0 100 100") => `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
+const ART = {
+  bus: V(`<rect x="8" y="20" width="84" height="60" rx="9" fill="#C8202F"/><rect x="8" y="48" width="84" height="5" fill="#8E1520"/>
+    <rect x="12" y="16" width="76" height="6" rx="3" fill="#C8202F"/><rect x="62" y="24" width="24" height="6" rx="2" fill="#1E1E1E"/><rect x="64" y="25.5" width="20" height="3" rx="1" fill="#FFD25A"/>
+    ${[14, 29, 44].map(x => `<rect x="${x}" y="26" width="12" height="17" rx="2.5" fill="#BFE0F5"/>`).join("")}<rect x="59" y="33" width="27" height="10" rx="2.5" fill="#BFE0F5"/>
+    ${[30, 45, 60].map(x => `<rect x="${x}" y="57" width="12" height="13" rx="2.5" fill="#BFE0F5"/>`).join("")}<rect x="75" y="57" width="12" height="13" rx="2.5" fill="#BFE0F5"/>
+    <rect x="13" y="56" width="13" height="22" rx="2" fill="#2E3440"/><path d="M19.5 56 V78" stroke="#4C5566" stroke-width="1.5"/>
+    <circle cx="27" cy="82" r="9" fill="#222"/><circle cx="27" cy="82" r="3.5" fill="#A9B2BF"/><circle cx="74" cy="82" r="9" fill="#222"/><circle cx="74" cy="82" r="3.5" fill="#A9B2BF"/>
+    <rect x="88" y="66" width="4" height="6" rx="1" fill="#FFD25A"/>`),
+  bigben: V(`<rect x="39" y="34" width="22" height="58" fill="#D9B26A"/><path d="M36 34 h28 l-2 -8 h-24z" fill="#B78E46"/>
+    <path d="M40 26 L50 4 L60 26z" fill="#4D5B6B"/><path d="M50 4 V0" stroke="#4D5B6B" stroke-width="2"/>
+    <circle cx="50" cy="44" r="9" fill="#FFFDF4" stroke="#3A3A3A" stroke-width="2"/><path d="M50 44 V38 M50 44 L55 46" stroke="#222" stroke-width="2" stroke-linecap="round"/>
+    ${[60, 70, 80].map(y => `<rect x="44" y="${y}" width="4" height="7" rx="1" fill="#8C6A2E"/><rect x="52" y="${y}" width="4" height="7" rx="1" fill="#8C6A2E"/>`).join("")}
+    <path d="M39 56 h22 M39 92 h22" stroke="#B78E46" stroke-width="2"/><rect x="20" y="92" width="60" height="5" rx="2" fill="#8C9AAC"/>`),
+  phonebox: V(`<rect x="31" y="10" width="38" height="8" rx="4" fill="#A3192A"/><rect x="33" y="16" width="34" height="78" rx="3" fill="#C8202F"/>
+    <rect x="36" y="20" width="28" height="6" rx="1" fill="#F4F4F4"/><path d="M40 23 h20" stroke="#222" stroke-width="1.6"/>
+    <rect x="37" y="31" width="26" height="46" rx="1" fill="#BFE0F5"/>${[39, 47, 55, 63, 71].map(y => `<path d="M37 ${y} h26" stroke="#C8202F" stroke-width="2"/>`).join("")}
+    <path d="M45.7 31 V77 M54.3 31 V77" stroke="#C8202F" stroke-width="2"/><rect x="58" y="80" width="3" height="8" rx="1" fill="#7E1220"/><rect x="29" y="92" width="42" height="5" rx="2" fill="#8C9AAC"/>`),
+  towerbridge: V(`<rect x="0" y="76" width="100" height="24" fill="#5B9BD5"/><path d="M0 84 q6 -3 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0" stroke="#8EC1EA" stroke-width="2" fill="none"/>
+    <rect x="18" y="26" width="16" height="54" fill="#C9B79C"/><rect x="66" y="26" width="16" height="54" fill="#C9B79C"/>
+    <path d="M16 26 L26 10 L36 26z M64 26 L74 10 L84 26z" fill="#5E6E80"/><rect x="18" y="28" width="64" height="5" fill="#3E6DB0"/>
+    <path d="M34 58 L48 46 M66 58 L52 46" stroke="#3E6DB0" stroke-width="5" stroke-linecap="round"/><path d="M0 52 Q10 40 18 34 M82 34 Q90 40 100 52" stroke="#3E6DB0" stroke-width="3" fill="none"/>
+    <rect x="23" y="40" width="6" height="9" rx="2" fill="#7A6A52"/><rect x="71" y="40" width="6" height="9" rx="2" fill="#7A6A52"/>`),
+  londoneye: V(`<rect x="0" y="82" width="100" height="18" fill="#5B9BD5"/><circle cx="50" cy="44" r="34" fill="none" stroke="#9AA6B8" stroke-width="3"/>
+    ${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6, x = 50 + 34 * Math.cos(a), y = 44 + 34 * Math.sin(a); return `<path d="M50 44 L${x.toFixed(1)} ${y.toFixed(1)}" stroke="#C3CBD8" stroke-width="1.2"/><ellipse cx="${x.toFixed(1)}" cy="${(y + 2).toFixed(1)}" rx="4.5" ry="3.2" fill="#E8F2FA" stroke="#5E6E80" stroke-width="1.2"/>`; }).join("")}
+    <circle cx="50" cy="44" r="4" fill="#5E6E80"/><path d="M50 44 L36 86 M50 44 L64 86" stroke="#5E6E80" stroke-width="3"/>`),
+  cab: V(`<path d="M10 70 C10 60 16 56 24 55 L32 40 C34 36 38 34 44 34 H62 C68 34 72 37 74 41 L80 55 C88 56 92 60 92 70 V76 H10Z" fill="#1E2229"/>
+    <path d="M36 54 L41 42 H53 V54Z M57 42 H63 C66 42 68 44 69 46 L73 54 H57Z" fill="#BFE0F5"/><rect x="45" y="28" width="12" height="6" rx="2" fill="#FFD25A"/>
+    <rect x="12" y="62" width="6" height="4" rx="1" fill="#FFE9A8"/><rect x="85" y="62" width="5" height="4" rx="1" fill="#E5484D"/>
+    <circle cx="28" cy="77" r="9" fill="#111"/><circle cx="28" cy="77" r="3.5" fill="#A9B2BF"/><circle cx="74" cy="77" r="9" fill="#111"/><circle cx="74" cy="77" r="3.5" fill="#A9B2BF"/>`),
+  guard: V(`<ellipse cx="50" cy="22" rx="15" ry="20" fill="#141414"/><circle cx="50" cy="42" r="10" fill="#F2C9A0"/>
+    <circle cx="46.5" cy="41" r="1.5" fill="#222"/><circle cx="53.5" cy="41" r="1.5" fill="#222"/><path d="M46 46 h8" stroke="#8A4B2A" stroke-width="1.6" stroke-linecap="round"/><path d="M40 44 Q50 52 60 44" stroke="#D9A82E" stroke-width="1.6" fill="none"/>
+    <rect x="36" y="52" width="28" height="28" rx="6" fill="#C8202F"/><rect x="36" y="70" width="28" height="4" fill="#F4F4F4"/>
+    ${[57, 63, 69].map(y => `<circle cx="50" cy="${y}" r="1.6" fill="#E2B33A"/>`).join("")}<rect x="40" y="80" width="8" height="15" fill="#141414"/><rect x="52" y="80" width="8" height="15" fill="#141414"/>
+    <rect x="30" y="54" width="6" height="22" rx="3" fill="#C8202F"/><rect x="64" y="54" width="6" height="22" rx="3" fill="#C8202F"/>`),
+  teapot: V(`<ellipse cx="44" cy="58" rx="26" ry="22" fill="#2F6FB5"/><path d="M68 52 C80 46 84 38 88 34 L90 38 C86 44 82 56 70 64Z" fill="#2F6FB5"/>
+    <path d="M20 48 C8 48 8 70 22 68" stroke="#2F6FB5" stroke-width="6" fill="none"/><ellipse cx="44" cy="37" rx="14" ry="5" fill="#245A94"/><circle cx="44" cy="31" r="4" fill="#245A94"/>
+    <path d="M26 56 q18 8 36 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".8"/><ellipse cx="44" cy="80" rx="26" ry="4" fill="#C3CBD8"/>
+    <path d="M70 76 h20 v6 q0 8 -10 8 q-10 0 -10 -8z" fill="#FFFFFF" stroke="#2F6FB5" stroke-width="2"/>`),
+  wembley: V(`<path d="M10 74 Q50 2 90 74" stroke="#F4F4F4" stroke-width="6" fill="none"/><path d="M10 74 Q50 2 90 74" stroke="#AEB8C6" stroke-width="1.5" fill="none"/>
+    <ellipse cx="50" cy="74" rx="44" ry="16" fill="#8C9AAC"/><ellipse cx="50" cy="72" rx="36" ry="11" fill="#D7DEE8"/><ellipse cx="50" cy="73" rx="26" ry="7" fill="#3E9B4F"/>
+    <path d="M50 66 V80" stroke="#fff" stroke-width="1.2"/><circle cx="50" cy="73" r="3" fill="none" stroke="#fff" stroke-width="1.2"/>`),
+  trophy: V(`<path d="M30 14 h40 v18 a20 20 0 0 1 -40 0z" fill="#E2AE2E"/><path d="M30 18 h-10 a10 12 0 0 0 12 18 M70 18 h10 a10 12 0 0 1 -12 18" stroke="#E2AE2E" stroke-width="5" fill="none"/>
+    <rect x="45" y="50" width="10" height="16" fill="#C9951F"/><rect x="34" y="66" width="32" height="8" rx="2" fill="#E2AE2E"/><rect x="28" y="74" width="44" height="12" rx="3" fill="#2E3440"/>
+    <ellipse cx="42" cy="26" rx="4" ry="9" fill="#F7D978" opacity=".9"/>
+    <g fill="#E2AE2E"><path d="M14 52 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5z"/><path d="M86 46 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/></g>`)
+};
+const art = k => ART[k] || "";
+
+/* ---------- Icônes ---------- */
+const IC = {
+  mile: `<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="3" fill="var(--red)"/><rect x="5" y="7.5" width="4" height="4" rx="1" fill="#fff"/><rect x="10" y="7.5" width="4" height="4" rx="1" fill="#fff"/><rect x="15" y="7.5" width="4" height="4" rx="1" fill="#fff"/><circle cx="8" cy="18.5" r="2.4" fill="var(--ink)"/><circle cx="16" cy="18.5" r="2.4" fill="var(--ink)"/></svg>`,
+  star: on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2 6.1 20.4l1.3-6.5L2.5 9.3l6.6-.8z" fill="${on ? "var(--gold)" : "var(--line)"}"/></svg>`,
+  speak: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>`,
+  close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  bulb: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>`,
+  eye: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>`,
+  back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`,
+  del: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M12 9l6 6M18 9l-6 6"/></svg>`,
+  shift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3l8 9h-4.5v8h-7v-8H4z"/></svg>`,
+  retry: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>`,
+  album: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="8" height="16" rx="2" fill="currentColor" opacity=".25"/><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/></svg>`,
+  parent: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="10" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 20c0-2.5 1.2-4.5 4-4.5s3 1.5 3 4"/></svg>`
+};
+const icon = (svg, w = 22) => svg.replace("<svg", `<svg width="${w}" height="${w}"`);
+
+/* ---------- Objectifs ---------- */
+const OBJ = {
+  P1: "Un seul possesseur : 's (Anna's ball)",
+  P2: "Plusieurs possesseurs en -s : ' seule (the girls' hats)",
+  P3: "Pluriels irréguliers : 's (the children's keys)",
+  P4: "Écrire la phrase : It is… / They are…",
+  P5: "Distinguer pluriel et possession (dogs / dog's)",
+  N1: "Ranger les adjectifs : opinion, size, shape, age, colour, origin, material, purpose",
+  N2: "Enrichir un nom : choix des adjectifs, virgules, a / an"
+};
+const SUBJ = { pos: "Possession", adj: "Adjectives" };
+
+/* ---------- Les règles (indices) ---------- */
+const RULE_POSS = `<div class="rule">
+  <div><b>Anna's</b><span>un seul propriétaire → <b>'s</b></span></div>
+  <div><b>the girls'</b><span>plusieurs, le mot finit déjà par s → <b>'</b> seule</span></div>
+  <div><b>the children's</b><span>plusieurs, mais pas de s à la fin → <b>'s</b></span></div></div>`;
+const FAM = [["Opinion", "avis", "#C8202F"], ["Size", "taille", "#D9731E"], ["Shape", "forme", "#B58A00"], ["Age", "âge", "#3E8E41"], ["Colour", "couleur", "#1F7FA8"], ["Origin", "origine", "#2F4FB5"], ["Material", "matière", "#7647AE"], ["Purpose", "usage", "#A23D86"]];
+const RULE_ORDER = `<p>L'ordre des adjectifs, de gauche à droite :</p><div class="order">${FAM.map(([e, f, c], i) => `<span style="background:${c}">${i + 1}. ${e}<small>${f}</small></span>`).join("")}</div>`;
+
+/* ---------- Possession : les phrases ---------- */
+/* [propriétaire, déterminant, type (s = un seul, p = pluriel en -s, i = pluriel irrégulier), objet, objet au pluriel ?] */
+const ITEMS = [
+  ["Anna", "", "s", "ball", false], ["Ben", "", "s", "book", false], ["Clara", "", "s", "cat", false], ["David", "", "s", "dog", false],
+  ["Emma", "", "s", "clothes", true], ["Frank", "", "s", "toys", true],
+  ["girls", "the ", "p", "hats", true], ["boys", "the ", "p", "pens", true], ["men", "the ", "i", "cups", true], ["children", "the ", "i", "keys", true],
+  ["rabbits", "the ", "p", "tails", true], ["elephants", "the ", "p", "ears", true],
+  ["Harry", "", "s", "kite", false], ["Lucy", "", "s", "pencils", true], ["Sam", "", "s", "football", false], ["Mia", "", "s", "trainers", true],
+  ["brother", "my ", "s", "bike", false], ["sister", "my ", "s", "bag", false], ["teacher", "the ", "s", "desk", false], ["goalkeeper", "the ", "s", "gloves", true],
+  ["coach", "the ", "s", "whistle", false], ["dog", "the ", "s", "bone", false], ["cat", "the ", "s", "bowl", false],
+  ["players", "the ", "p", "boots", true], ["birds", "the ", "p", "nests", true], ["twins", "the ", "p", "bikes", true], ["fans", "the ", "p", "scarves", true],
+  ["dogs", "the ", "p", "bones", true], ["girls", "the ", "p", "ball", false],
+  ["women", "the ", "i", "bags", true], ["people", "the ", "i", "coats", true], ["mice", "the ", "i", "cheese", false], ["geese", "the ", "i", "eggs", true],
+  ["children", "the ", "i", "football", false], ["men", "the ", "i", "hats", true]
+];
+const poss = (o, k) => k === "p" ? o + "'" : o + "'s";
+const pron = pl => pl ? "They are" : "It is";
+const sentence = ([o, det, , obj, pl]) => `The ${obj} ${pl ? "belong" : "belongs"} to ${det}${o}.`;
+const answerOf = ([o, det, k, obj, pl]) => `${pron(pl)} ${det}${poss(o, k)} ${obj}`;
+const objOf = k => ({ s: "P1", p: "P2", i: "P3" })[k];
+function why([o, det, k]) {
+  if (k === "s") return `Un seul propriétaire (<b>${det}${o}</b>) : on ajoute <b>'s</b> → ${det}<b>${o}'s</b>.`;
+  if (k === "p") return `Plusieurs propriétaires, et <b>${o}</b> finit déjà par s : on ajoute seulement <b>'</b> → the <b>${o}'</b>.`;
+  return `<b>${o}</b> est un pluriel qui ne finit pas par s : on ajoute <b>'s</b>, comme pour un seul → the <b>${o}'s</b>.`;
+}
+const whyPron = pl => pl ? "Plusieurs choses → <b>They are</b>." : "Une seule chose → <b>It is</b>.";
+const sing = o => o.replace(/s$/, "");
+const gap = (s, inner = "……") => s.replace("{_}", `<span class="gap">${inner}</span>`);
+const fill = (s, w) => s.replace("{_}", w);
+function mcq(o) { return Object.assign({ type: "mcq" }, o); }
+const FR = t => ["fr", t], EN = t => ["en", t];
+
+/* Mission 1 : un seul propriétaire */
+const FRB = [["le ballon de mon frère", "brother", "my ", "ball"], ["le livre de Ben", "Ben", "", "book"], ["le chat de Clara", "Clara", "", "cat"],
+  ["le sifflet de l'entraîneur", "coach", "the ", "whistle"], ["les gants du gardien", "goalkeeper", "the ", "gloves"], ["le vélo de ma sœur", "sister", "my ", "bike"],
+  ["l'os du chien", "dog", "the ", "bone"], ["la queue du chat", "cat", "the ", "tail"], ["le cerf-volant de Harry", "Harry", "", "kite"], ["le bureau de la maîtresse", "teacher", "the ", "desk"]];
+function genM1() {
+  const a = ITEMS.filter(it => it[2] === "s").map(it => {
+    const [o, det, , obj, pl] = it; const right = `${det}${o}'s ${obj}`;
+    const opts = shuffle([right, `${det}${o}s ${obj}`, `${det}${o}s' ${obj}`, `the ${obj} of ${det}${o}`]);
+    return mcq({ obj: "P1", prompt: "Quelle est la bonne réponse ?", ctx: `<span class="src">${sentence(it)}</span>${pron(pl)} <span class="gap">……</span>`, choices: opts, answer: opts.indexOf(right), correct: right,
+      hintHtml: RULE_POSS, explain: why(it) + ` En anglais, on ne dit pas « the ${obj} of ${det}${o} ».`, say: [FR("Quelle est la bonne réponse ?"), EN(sentence(it))], sayAns: `${pron(pl)} ${right}.` });
+  });
+  const b = FRB.map(([fr, o, det, obj]) => {
+    const right = `${det}${o}'s ${obj}`;
+    const opts = shuffle([right, `the ${obj} of ${det}${o}`, `${det}${o}s ${obj}`, `${det}${o} ${obj}`]);
+    return mcq({ obj: "P1", prompt: "Comment dit-on en anglais ?", ctx: `<span class="fr">${fr}</span>`, choices: opts, answer: opts.indexOf(right), correct: right, hintHtml: RULE_POSS,
+      explain: `En anglais, le propriétaire vient <b>avant</b> l'objet, avec <b>'s</b> : <b>${right}</b>. « the ${obj} of ${det}${o} » est une traduction mot à mot du français.`, say: [FR("Comment dit-on en anglais : " + fr + " ?")], sayAns: right });
+  });
+  return [a, b];
+}
+
+/* Mission 2 : un ou plusieurs propriétaires ? */
+const NOUNS2 = [["girl", "hats", "fille", "filles"], ["boy", "pens", "garçon", "garçons"], ["dog", "bones", "chien", "chiens"], ["cat", "toys", "chat", "chats"],
+  ["player", "boots", "joueur", "joueurs"], ["bird", "nests", "oiseau", "oiseaux"], ["rabbit", "carrots", "lapin", "lapins"], ["teacher", "books", "maîtresse", "maîtresses"], ["elephant", "ears", "éléphant", "éléphants"]];
+function genM2() {
+  const a = NOUNS2.map(([s, obj, f1, fp]) => {
+    const plural = Math.random() < .5; const w = plural ? s + "s'" : s + "'s";
+    const opts = [`1 ${f1}`, `plusieurs ${fp}`];
+    return mcq({ obj: "P2", two: true, prompt: `Combien de ${fp} ?`, ctx: `the <b>${w}</b> ${obj}`, choices: opts, answer: plural ? 1 : 0, correct: opts[plural ? 1 : 0], hintHtml: RULE_POSS,
+      explain: plural ? `<b>${s}s'</b> : le mot est déjà au pluriel (${s}s) et l'apostrophe vient <b>après</b> le s → plusieurs ${fp}.` : `<b>${s}'s</b> : l'apostrophe vient <b>avant</b> le s → un seul ${f1}.`,
+      say: [FR(`Combien de ${fp} ?`), EN(`the ${w} ${obj}`)], sayAns: `the ${w} ${obj}` });
+  });
+  const b = ITEMS.filter(it => it[1] && (it[2] === "p" || it[2] === "s")).map(it => {
+    const [o, det, k, obj] = it;
+    const right = `${det}${poss(o, k)} ${obj}`;
+    const wrong = k === "p" ? [`${det}${sing(o)}'s ${obj}`, `${det}${o}'s ${obj}`] : [`${det}${o}s' ${obj}`, `${det}${o}s ${obj}`];
+    const opts = shuffle([right, ...wrong]);
+    return mcq({ obj: objOf(k), prompt: "Choisis la bonne écriture", ctx: sentence(it), choices: opts, answer: opts.indexOf(right), correct: right, hintHtml: RULE_POSS, explain: why(it),
+      say: [FR("Choisis la bonne écriture."), EN(sentence(it))], sayAns: right });
+  });
+  return [a, b];
+}
+
+/* Mission 3 : apostrophe ou pas ? */
+const P5 = [
+  ["The {_} are playing in the park.", "dogs", "dog", "Les chiens jouent : ils ne possèdent rien dans la phrase. Simple pluriel → <b>dogs</b>, sans apostrophe."],
+  ["My {_} bike is red.", "sister's", "sister", "Le vélo est à ma sœur (une seule) → <b>sister's</b>."],
+  ["I have got three {_}.", "brothers", "brother", "Trois frères, qui ne possèdent rien ici → <b>brothers</b>, sans apostrophe."],
+  ["The {_} nests are in the tree.", "birds'", "bird", "Les nids sont aux oiseaux (plusieurs) → <b>birds'</b>."],
+  ["The {_} tail is very long.", "cat's", "cat", "La queue est au chat (un seul) → <b>cat's</b>."],
+  ["The {_} score lots of goals.", "players", "player", "Les joueurs marquent : pas de possession → <b>players</b>."],
+  ["The {_} boots are muddy.", "players'", "player", "Les crampons sont aux joueurs (plusieurs) → <b>players'</b>."],
+  ["Carlo's new {_} are white.", "trainers", "trainer", "Les baskets ne possèdent rien → <b>trainers</b>."],
+  ["The {_} desk is very tidy.", "teacher's", "teacher", "Le bureau est à la maîtresse (une seule) → <b>teacher's</b>."],
+  ["Five {_} are sitting on the wall.", "cats", "cat", "Cinq chats, qui ne possèdent rien → <b>cats</b>."],
+  ["The {_} ears are very big.", "elephants'", "elephant", "Les oreilles sont aux éléphants (plusieurs) → <b>elephants'</b>."],
+  ["We eat {_} at lunch.", "apples", "apple", "Des pommes, rien à posséder → <b>apples</b>."]
+];
+const TF = [["The dog's are barking.", false, "The dogs are barking.", "Les chiens aboient : simple pluriel, <b>pas d'apostrophe</b>."],
+  ["I love banana's.", false, "I love bananas.", "Des bananes : simple pluriel, <b>pas d'apostrophe</b>."],
+  ["The boy's bike is new.", true, "", "Le vélo est au garçon : <b>boy's</b> est juste."],
+  ["My friend's are coming.", false, "My friends are coming.", "Mes amis arrivent : simple pluriel → <b>friends</b>."],
+  ["The girls' hats are pink.", true, "", "Les chapeaux sont aux filles (plusieurs) : <b>girls'</b> est juste."],
+  ["The cats are sleeping.", true, "", "Les chats dorment : simple pluriel, sans apostrophe. C'est juste."],
+  ["Tom's ball is red.", true, "", "Le ballon est à Tom : <b>Tom's</b> est juste."],
+  ["The teacher's are in the playground.", false, "The teachers are in the playground.", "Les maîtresses sont dans la cour : simple pluriel → <b>teachers</b>."]];
+function genM3() {
+  const a = P5.map(([s, ans, base, ex]) => {
+    const opts = [base + "s", base + "'s", base + "s'"];
+    return mcq({ obj: "P5", prompt: "Quel mot va dans le trou ?", ctx: gap(s), choices: opts, answer: opts.indexOf(ans), correct: ans,
+      hintHtml: `<p>Pose-toi la question : <b>est-ce que quelque chose leur appartient ?</b></p><p>Non → simple pluriel, <b>pas d'apostrophe</b> (dogs).</p>` + RULE_POSS,
+      explain: ex, say: [FR("Quel mot va dans le trou ?"), EN(fill(s, ans))], sayAns: fill(s, ans) });
+  });
+  const b = TF.map(([s, ok, fix, ex]) => {
+    const opts = ["C'est juste", "Il y a une erreur"];
+    return mcq({ obj: "P5", two: true, prompt: "L'apostrophe est-elle bien utilisée ?", ctx: s, choices: opts, answer: ok ? 0 : 1, correct: ok ? s : fix,
+      hintHtml: `<p>L'apostrophe sert seulement quand quelque chose <b>appartient</b> à quelqu'un. Pour un simple pluriel, jamais d'apostrophe.</p>`,
+      explain: ex + (ok ? "" : ` On écrit : <b>${fix}</b>`), say: [FR("L'apostrophe est-elle bien utilisée ?"), EN(s)], sayAns: ok ? s : fix });
+  });
+  return [a, b];
+}
+
+/* Mission 4 : les pluriels irréguliers */
+const PLUR = [["man", "men", "un homme", ["mans", "mens"]], ["woman", "women", "une femme", ["womans", "womens"]], ["child", "children", "un enfant", ["childs", "childrens"]],
+  ["mouse", "mice", "une souris", ["mouses", "mices"]], ["goose", "geese", "une oie", ["gooses", "geeses"]], ["foot", "feet", "un pied", ["foots", "feets"]], ["tooth", "teeth", "une dent", ["tooths", "teeths"]]];
+function genM4() {
+  const a = ITEMS.filter(it => it[2] === "i").map(it => {
+    const [o, det, , obj] = it; const right = `the ${o}'s ${obj}`;
+    const opts = shuffle([right, `the ${o}s' ${obj}`, `the ${o}s ${obj}`, `the ${o}' ${obj}`]);
+    return mcq({ obj: "P3", prompt: "Quelle est la bonne réponse ?", ctx: sentence(it), choices: opts, answer: opts.indexOf(right), correct: right, hintHtml: RULE_POSS, explain: why(it),
+      say: [FR("Quelle est la bonne réponse ?"), EN(sentence(it))], sayAns: right });
+  });
+  const owners = [["children", "toys"], ["girls", "toys"], ["men", "cups"], ["boys", "pens"], ["women", "bags"], ["players", "boots"], ["mice", "cheese"], ["dogs", "bones"], ["people", "coats"], ["rabbits", "carrots"]];
+  const b = owners.map(([o, obj]) => {
+    const irr = !/s$/.test(o); const ans = irr ? "'s" : "'";
+    return mcq({ obj: irr ? "P3" : "P2", two: true, big: true, prompt: "'s ou ' seule ?", ctx: `the <b>${o}<span class="gap">?</span></b> ${obj}`, choices: ["'s", "'"], answer: irr ? 0 : 1, correct: `the ${o}${ans} ${obj}`,
+      hintHtml: `<p>Regarde la <b>dernière lettre</b> du propriétaire : finit-il par s ?</p>` + RULE_POSS,
+      explain: irr ? `<b>${o}</b> ne finit pas par s (pluriel spécial) → on ajoute <b>'s</b> : the ${o}'s ${obj}.` : `<b>${o}</b> finit déjà par s → on ajoute seulement <b>'</b> : the ${o}' ${obj}.`,
+      say: [FR("Apostrophe s, ou apostrophe seule ?"), EN(`the ${o} ${obj}`)], sayAns: `the ${o}${ans} ${obj}` });
+  });
+  const c = PLUR.map(([s, p, fr, wrong]) => {
+    const opts = shuffle([p, ...wrong]);
+    return mcq({ obj: "P3", prompt: "Quel est le pluriel ?", ctx: `one <b>${s}</b> <span class="fr">(${fr})</span> → two <span class="gap">?</span>`, choices: opts, answer: opts.indexOf(p), correct: p,
+      explain: `one ${s} → two <b>${p}</b>. C'est un pluriel spécial, sans s. Pour la possession : the <b>${p}'s</b> …`, say: [FR("Quel est le pluriel ?"), EN(`one ${s}`)], sayAns: `two ${p}` });
+  });
+  return [a, b, c];
+}
+
+/* Mission 5 : construire la phrase */
+const smartJoin = arr => arr.reduce((s, t) => s ? (t.startsWith("'") ? s + t : s + " " + t) : t, "");
+function genM5() {
+  const a = ITEMS.map(it => {
+    const [o, det, k, obj, pl] = it;
+    const tiles = [pron(pl)].concat(det ? [det.trim()] : [], [o, k === "p" ? "'" : "'s", obj]);
+    const extra = [pron(!pl), k === "p" ? "'s" : "'"];
+    return { type: "build", obj: "P4", prompt: "Construis la phrase réponse", ctx: sentence(it), word: answerOf(it), tiles: shuffle(tiles.concat(extra)), hintHtml: `<p>${whyPron(pl)}</p>` + RULE_POSS,
+      explain: whyPron(pl) + " " + why(it), say: [FR("Construis la phrase réponse."), EN(sentence(it))], sayAns: answerOf(it) + ".", correct: answerOf(it) + "." };
+  });
+  const b = shuffle(ITEMS).slice(0, 12).map(it => {
+    const [o, det, k, obj, pl] = it;
+    const rest = `${det}${poss(o, k)} ${obj}.`;
+    return mcq({ obj: "P4", two: true, prompt: "It is ou They are ?", ctx: `<span class="gap">?</span> ${rest}`, choices: ["It is", "They are"], answer: pl ? 1 : 0, correct: `${pron(pl)} ${rest}`,
+      hintHtml: `<p>Ce n'est pas le propriétaire qui compte, c'est <b>l'objet</b> : <b>${obj}</b>. Une seule chose → It is. Plusieurs → They are.</p>`,
+      explain: `<b>${obj}</b> : ${pl ? "plusieurs choses" : "une seule chose"} → <b>${pron(pl)}</b>.${obj === "clothes" ? " clothes (les vêtements) est toujours au pluriel." : ""}${!pl && k !== "s" ? " Même s'il y a plusieurs propriétaires, il n'y a qu'un objet." : ""}`,
+      say: [FR("It is, ou They are ?"), EN(rest)], sayAns: `${pron(pl)} ${rest}` });
+  });
+  return [a, b];
+}
+
+/* Mission 6 : écrire l'apostrophe au clavier */
+function genM6() {
+  const a = ITEMS.map(it => {
+    const [o, det, k, obj, pl] = it;
+    return { type: "type", obj: objOf(k), prompt: "Écris le propriétaire avec son apostrophe", ctx: `<span class="src">${sentence(it)}</span>${pron(pl)} ${det}{_} ${obj}.`, answer: poss(o, k),
+      hintHtml: RULE_POSS, explain: why(it), say: [FR("Écris le propriétaire avec son apostrophe."), EN(sentence(it))], sayAns: answerOf(it) + ".", correct: poss(o, k) };
+  });
+  const b = ITEMS.filter(it => it[2] !== "s" || it[1]).map(it => {
+    const [o, det, k, obj] = it; const full = `${det}${poss(o, k)} ${obj}`;
+    return { type: "type", obj: objOf(k), prompt: "Regarde bien, puis écris le mot qui disparaît", flash: `<div class="ctx flashword" style="margin:0">${full}</div>`, flashMs: 3200,
+      ctx: `${det}{_} ${obj}`, answer: poss(o, k), explain: why(it), say: [EN(full)], sayAns: full, correct: poss(o, k) };
+  });
+  return [a, b];
+}
+
+/* ---------- Adjectifs ---------- */
+const ADJ = {
+  lovely: [0, "adorable"], cute: [0, "mignon"], nice: [0, "gentil, joli"], beautiful: [0, "beau"], funny: [0, "drôle"], horrible: [0, "horrible"], amazing: [0, "incroyable"], interesting: [0, "intéressant"], ugly: [0, "moche"], brilliant: [0, "génial"],
+  big: [1, "grand, gros"], small: [1, "petit"], little: [1, "petit"], tiny: [1, "minuscule"], huge: [1, "énorme"], tall: [1, "grand"], long: [1, "long"], enormous: [1, "énorme"],
+  round: [2, "rond"], square: [2, "carré"], flat: [2, "plat"], oval: [2, "ovale"],
+  old: [3, "vieux"], new: [3, "neuf"], young: [3, "jeune"], ancient: [3, "très ancien"],
+  red: [4, "rouge"], blue: [4, "bleu"], green: [4, "vert"], brown: [4, "marron"], black: [4, "noir"], white: [4, "blanc"], yellow: [4, "jaune"], grey: [4, "gris"], orange: [4, "orange"],
+  English: [5, "anglais"], French: [5, "français"], Italian: [5, "italien"], Chinese: [5, "chinois"], Spanish: [5, "espagnol"],
+  wooden: [6, "en bois"], plastic: [6, "en plastique"], cardboard: [6, "en carton"], metal: [6, "en métal"], woollen: [6, "en laine"], leather: [6, "en cuir"], glass: [6, "en verre"], paper: [6, "en papier"],
+  football: [7, "de foot"], swimming: [7, "de natation"], sleeping: [7, "pour dormir"], running: [7, "de course"], tennis: [7, "de tennis"], school: [7, "d'école"]
+};
+const fam = a => ADJ[a][0];
+const famLab = a => `${a} (${FAM[fam(a)][0]})`;
+const NP = [
+  ["my", ["cute", "little", "brown"], "dog"], ["an", ["interesting", "small"], "book"], ["three", ["big", "cardboard"], "boxes"], ["the", ["big", "round", "green"], "football"],
+  ["a", ["lovely", "old", "wooden"], "table"], ["two", ["funny", "little", "white"], "rabbits"], ["a", ["beautiful", "long", "red"], "scarf"], ["my", ["new", "blue", "football"], "boots"],
+  ["a", ["tiny", "round", "glass"], "bottle"], ["an", ["ugly", "old", "plastic"], "chair"], ["a", ["big", "square", "metal"], "box"], ["the", ["tall", "young", "English"], "player"],
+  ["an", ["amazing", "new", "red"], "bus"], ["three", ["small", "white", "paper"], "cups"], ["a", ["little", "old", "wooden"], "boat"], ["her", ["lovely", "yellow", "sleeping"], "bag"],
+  ["his", ["brilliant", "red", "Italian"], "car"], ["our", ["nice", "huge", "Chinese"], "kite"], ["a", ["horrible", "flat", "grey"], "stone"], ["my", ["small", "black", "leather"], "ball"]
+];
+const npText = ([d, a, n]) => `${d} ${a.join(", ")} ${n}`;
+const npWhy = adjs => adjs.map(famLab).join(" → ");
+function genM7() {
+  const keys = Object.keys(ADJ);
+  const a = shuffle(keys).slice(0, 14).map(w => {
+    const f = fam(w); const others = shuffle(FAM.map((_, i) => i).filter(i => i !== f)).slice(0, 3);
+    const opts = shuffle([f, ...others]); const labels = opts.map(i => `${FAM[i][0]} (${FAM[i][1]})`);
+    return mcq({ obj: "N1", prompt: "De quelle famille est cet adjectif ?", ctx: `<b>${w}</b> <span class="fr">(${ADJ[w][1]})</span>`, choices: labels, answer: opts.indexOf(f), correct: labels[opts.indexOf(f)], hintHtml: RULE_ORDER,
+      explain: `<b>${w}</b> veut dire « ${ADJ[w][1]} » : c'est un adjectif de <b>${FAM[f][0]}</b> (${FAM[f][1]}).`, say: [FR("De quelle famille est cet adjectif ?"), EN(w)], sayAns: w });
+  });
+  const b = NP.map(np => {
+    const [d, adjs, n] = np; const right = npText(np);
+    const perms = []; const tryP = p => { const t = npText([d, p, n]); if (t !== right && !perms.includes(t)) perms.push(t); };
+    for (let k = 0; k < 12 && perms.length < 2; k++) tryP(shuffle(adjs));
+    if (!perms.length) tryP(adjs.slice().reverse());
+    const opts = shuffle([right, ...perms.slice(0, adjs.length > 2 ? 2 : 1)]);
+    return mcq({ obj: "N1", two: opts.length === 2, prompt: "Quel ordre est correct ?", choices: opts, answer: opts.indexOf(right), correct: right, hintHtml: RULE_ORDER,
+      explain: `On suit l'ordre des familles : ${npWhy(adjs)}.`, say: [FR("Quel ordre est correct ?")], sayAns: right });
+  });
+  const c = NP.map(([d, adjs, n]) => {
+    const pair = shuffle(adjs).slice(0, 2).sort((x, y) => fam(x) - fam(y));
+    const opts = shuffle(pair.slice());
+    return mcq({ obj: "N1", two: true, prompt: "Lequel vient en premier ?", ctx: `${d} <span class="gap">?</span>, <span class="gap">?</span> ${n}`, choices: opts, answer: opts.indexOf(pair[0]), correct: `${d} ${pair[0]}, ${pair[1]} ${n}`, hintHtml: RULE_ORDER,
+      explain: `<b>${famLab(pair[0])}</b> vient avant <b>${famLab(pair[1])}</b>.`, say: [FR("Lequel vient en premier ?"), EN(`${pair[0]}, or ${pair[1]}`)], sayAns: `${d} ${pair[0]}, ${pair[1]} ${n}` });
+  });
+  return [a, b, c];
+}
+const AAN = [["old, red", "bus", "an"], ["interesting, small", "book", "an"], ["small, orange", "football", "a"], ["amazing, new", "bike", "an"], ["big, old", "house", "a"],
+  ["ugly, green", "monster", "an"], ["enormous, grey", "elephant", "an"], ["little, English", "dog", "a"], ["orange, plastic", "ball", "an"], ["lovely, round", "cake", "a"], ["old, wooden", "boat", "an"], ["funny, little", "cat", "a"]];
+function genM8() {
+  const a = NP.map(np => {
+    const [d, adjs, n] = np;
+    return { type: "build", cmp: "nocomma", obj: "N1", prompt: "Range les mots dans le bon ordre", word: `${d} ${adjs.join(" ")} ${n}`, tiles: shuffle([d, ...adjs, n]), hintHtml: RULE_ORDER,
+      explain: `On suit l'ordre des familles : ${npWhy(adjs)}. Les virgules séparent les adjectifs.`, say: [FR("Range les mots dans le bon ordre.")], sayAns: npText(np), correct: npText(np) };
+  });
+  const b = AAN.map(([adjs, n, ans]) => {
+    const first = adjs.split(",")[0];
+    return mcq({ obj: "N2", two: true, big: true, prompt: "a ou an ?", ctx: `<span class="gap">?</span> ${adjs} ${n}`, choices: ["a", "an"], answer: ans === "a" ? 0 : 1, correct: `${ans} ${adjs} ${n}`,
+      hintHtml: `<p>Regarde le <b>premier mot</b> juste après : commence-t-il par une voyelle (a, e, i, o, u) ?</p><p>Oui → <b>an</b>. Non → <b>a</b>.</p>`,
+      explain: ans === "an" ? `<b>${first}</b> commence par une voyelle → <b>an</b>. C'est le premier adjectif qui compte, pas le nom.` : `<b>${first}</b> commence par une consonne → <b>a</b>. C'est le premier adjectif qui compte, pas le nom.`,
+      say: [FR("a, ou an ?"), EN(`${adjs} ${n}`)], sayAns: `${ans} ${adjs} ${n}` });
+  });
+  const c = NP.filter(x => x[1].length === 3).map(np => {
+    const [d, [x, y, z], n] = np; const right = npText(np);
+    const opts = shuffle([right, `${d}, ${x}, ${y}, ${z} ${n}`, `${d} ${x}, ${y}, ${z}, ${n}`, `${d} ${x} ${y}, ${z}, ${n}`]);
+    return mcq({ obj: "N2", prompt: "Où vont les virgules ?", choices: opts, answer: opts.indexOf(right), correct: right,
+      hintHtml: `<p>Une virgule <b>entre deux adjectifs</b>. Jamais après le petit mot du début (${d}), jamais avant le nom (${n}).</p>`,
+      explain: `Les virgules vont seulement <b>entre les adjectifs</b> : ${right}.`, say: [FR("Où vont les virgules ?")], sayAns: right });
+  });
+  return [a, b, c];
+}
+const NPX = [["my", "dog", ["cute", "big", "old", "brown", "French"]], ["the", "ball", ["amazing", "small", "round", "new", "red", "plastic"]], ["our", "house", ["lovely", "big", "square", "old", "white", "wooden"]],
+  ["three", "boxes", ["funny", "tiny", "square", "blue", "cardboard"]], ["his", "boots", ["brilliant", "big", "new", "black", "leather", "football"]], ["her", "bag", ["beautiful", "small", "old", "green", "leather", "school"]],
+  ["the", "teacher", ["nice", "tall", "young", "English"]], ["my", "bike", ["amazing", "little", "old", "red", "Italian", "metal"]], ["two", "cats", ["funny", "little", "young", "black", "Spanish"]], ["the", "table", ["ugly", "huge", "round", "ancient", "brown", "wooden"]]];
+function genM9() {
+  return [NPX.map(([d, n, adjs]) => ({ type: "np", obj: "N2", prompt: "Choisis 2 ou 3 adjectifs, dans le bon ordre", det: d, noun: n, chips: shuffle(adjs), hintHtml: RULE_ORDER,
+    say: [FR("Grossis le nom ! Choisis deux ou trois adjectifs, dans le bon ordre."), EN(`${d} ${n}`)] }))];
+}
+
+/* ---------- Le Test de Wembley (épreuve finale) ---------- */
+const BOSS_TYPE = [["Harry", "", "s", "kite", false], ["twins", "the ", "p", "bikes", true], ["children", "the ", "i", "toys", true], ["coach", "the ", "s", "whistle", false],
+  ["players", "the ", "p", "boots", true], ["women", "the ", "i", "bags", true], ["sister", "my ", "s", "scarf", false], ["birds", "the ", "p", "nests", true]];
+const BOSS_BUILD = [["Zoe", "", "s", "pencils", true], ["mice", "the ", "i", "cheese", false], ["guards", "the ", "p", "hats", true]];
+function buildBoss() {
+  const q = [];
+  BOSS_TYPE.forEach((it, i) => {
+    const [o, det, k, obj, pl] = it;
+    q.push({ type: "type", boss: true, obj: objOf(k), prompt: `Partie 1 · phrase ${i + 1} sur ${BOSS_TYPE.length} : écris le propriétaire`, ctx: `<span class="src">${sentence(it)}</span>${pron(pl)} ${det}{_} ${obj}.`,
+      answer: poss(o, k), explain: why(it), say: [EN(sentence(it))], sayAns: answerOf(it) + ".", correct: poss(o, k) });
+  });
+  BOSS_BUILD.forEach((it, i) => {
+    const [o, det, k, obj, pl] = it;
+    const tiles = [pron(pl)].concat(det ? [det.trim()] : [], [o, k === "p" ? "'" : "'s", obj, pron(!pl), k === "p" ? "'s" : "'"]);
+    q.push({ type: "build", boss: true, obj: "P4", prompt: `Partie 2 · phrase ${i + 1} sur ${BOSS_BUILD.length} : construis la réponse`, ctx: sentence(it), word: answerOf(it), tiles: shuffle(tiles),
+      explain: whyPron(pl) + " " + why(it), say: [EN(sentence(it))], sayAns: answerOf(it) + ".", correct: answerOf(it) + "." });
+  });
+  shuffle(NP.filter(x => x[1].length === 3)).slice(0, 3).forEach((np, i) => {
+    const [d, adjs, n] = np;
+    q.push({ type: "build", boss: true, cmp: "nocomma", obj: "N1", prompt: `Partie 3 · groupe ${i + 1} sur 3 : range les mots`, word: `${d} ${adjs.join(" ")} ${n}`, tiles: shuffle([d, ...adjs, n]),
+      explain: `Ordre des familles : ${npWhy(adjs)}.`, say: [FR("Range les mots dans le bon ordre.")], sayAns: npText(np), correct: npText(np) });
+  });
+  return q;
+}
+const BOSS_TOTAL = BOSS_TYPE.length + BOSS_BUILD.length + 3;
+
+/* ---------- Missions ---------- */
+const MISSIONS = [
+  { id: "m1", subj: "pos", obj: "P1", title: "À qui est-ce ?", sub: "Un seul propriétaire : Anna's ball", art: "bus", gen: genM1 },
+  { id: "m2", subj: "pos", obj: "P2", title: "Un ou plusieurs ?", sub: "the girl's ou the girls' ?", art: "bigben", gen: genM2 },
+  { id: "m3", subj: "pos", obj: "P5", title: "Apostrophe ou pas ?", sub: "Le s du pluriel ou le s de possession", art: "phonebox", gen: genM3 },
+  { id: "m4", subj: "pos", obj: "P3", title: "Les pluriels rebelles", sub: "children's, men's, women's", art: "towerbridge", gen: genM4 },
+  { id: "m5", subj: "pos", obj: "P4", title: "Le bus des phrases", sub: "It is… / They are… : construis la réponse", art: "londoneye", gen: genM5 },
+  { id: "m6", subj: "pos", obj: "P1", title: "L'apostrophe au clavier", sub: "Écris-la au bon endroit", art: "cab", gen: genM6 },
+  { id: "m7", subj: "adj", obj: "N1", title: "Les familles d'adjectifs", sub: "Opinion, Size, Shape, Age, Colour…", art: "guard", gen: genM7 },
+  { id: "m8", subj: "adj", obj: "N1", title: "Le rangement des adjectifs", sub: "Le bon ordre, a ou an, les virgules", art: "teapot", gen: genM8 },
+  { id: "m9", subj: "adj", obj: "N2", title: "Grossis le nom !", sub: "Choisis tes adjectifs, dans l'ordre", art: "wembley", gen: genM9 }
+];
+function fromGroups(groups, n) {
+  const gs = shuffle(groups.map(g => shuffle(g))); const out = []; let k = 0;
+  while (out.length < n && gs.some(g => g.length)) { const g = gs[k % gs.length]; if (g.length) out.push(g.pop()); k++; }
+  return out;
+}
+
+/* ---------- Cartes postales à collectionner ---------- */
+const CARDS = [
+  { k: "bus", m: "m1", t: "Le bus à impériale", txt: "Le bus rouge à deux étages s'appelle un <i>double-decker</i>. La meilleure place : tout devant, à l'étage. Le chauffeur, lui, reste en bas : <b>the driver's seat</b>." },
+  { k: "bigben", m: "m2", t: "Big Ben", txt: "Big Ben est le surnom de la grosse cloche, pas de la tour ! La tour s'appelle Elizabeth Tower. <b>The tower's bell</b> sonne toutes les heures." },
+  { k: "phonebox", m: "m3", t: "La cabine rouge", txt: "Les cabines téléphoniques rouges sont un symbole de l'Angleterre. Dans certains villages, elles sont devenues de minuscules bibliothèques : <b>the village's library</b> !" },
+  { k: "towerbridge", m: "m4", t: "Tower Bridge", txt: "Ce pont traverse la Tamise. Son tablier se lève pour laisser passer les grands bateaux. <b>The bridge's towers</b> sont reliées par une passerelle tout en haut." },
+  { k: "londoneye", m: "m5", t: "Le London Eye", txt: "Cette grande roue mesure 135 mètres. Un tour dure environ 30 minutes : on voit <b>the city's roofs</b> de très haut." },
+  { k: "cab", m: "m6", t: "Le taxi noir", txt: "Pour conduire un taxi noir, il faut connaître par cœur des milliers de rues de Londres. <b>The drivers' exam</b> demande des années d'entraînement !" },
+  { k: "guard", m: "m7", t: "Le garde du roi", txt: "Devant le palais de Buckingham, les gardes portent un grand bonnet en fourrure noire, le <i>bearskin</i>. <b>The guards' hats</b> sont très hauts !" },
+  { k: "teapot", m: "m8", t: "La théière", txt: "L'après-midi, les Anglais aiment prendre le thé avec des petits gâteaux, les <i>scones</i>. <b>Granny's teapot</b> est toujours prête." },
+  { k: "wembley", m: "m9", t: "Le stade de Wembley", txt: "Wembley est le stade national de l'Angleterre : 90 000 places et une immense arche blanche. <b>The players' dream</b> : y marquer un but !" },
+  { k: "trophy", m: "boss", t: "Le trophée d'or", txt: "Réservé aux champions du Test de Wembley : <b>the champion's trophy</b>. Bravo, tu parles comme un vrai Londonien !" }
+];
+
+/* ---------- Pauses cerveau ---------- */
+const PAUSES = [
+  ["Le garde du roi", "Tiens-toi tout droit comme un garde de Buckingham, sans bouger et sans sourire, pendant 15 secondes. Interdit de rire !"],
+  ["Les aiguilles de Big Ben", "Tes bras sont les aiguilles d'une horloge. Montre 3 heures, 6 heures, 9 heures, puis midi. Deux tours !"],
+  ["Monte à l'étage du bus", "Monte l'escalier du bus à impériale : lève les genoux bien haut, 20 fois."],
+  ["Tower Bridge s'ouvre", "Joins les mains au-dessus de la tête, puis ouvre grand les bras, comme le pont qui se lève. 10 fois."],
+  ["Penalty à Wembley", "Fais 10 tirs au but dans le vide : 5 du pied droit, 5 du pied gauche."],
+  ["La chanson des adjectifs", "Tape dans tes mains à chaque mot : Opinion, Size, Shape, Age, Colour, Origin, Material, Purpose. Deux fois, de plus en plus vite !"],
+  ["Le saut des apostrophes", "Saute à droite en disant « Anna's », puis à gauche en disant « the girls' ». 10 sauts."],
+  ["La grande roue", "Fais de grands cercles avec les bras, très lentement, comme le London Eye. 5 vers l'avant, 5 vers l'arrière."]
+];
+
+/* ---------- État (sauvegardé sur cet appareil) ---------- */
+const KEY = "london-express-carlo-v1";
+const fresh = () => ({ xp: 0, stars: {}, cards: [], missed: [], mastery: {}, boss: [], sound: true, voice: true, sessions: 0, lastPax: 0, evalDate: "", planStart: "" });
+let ST = fresh();
+try { const raw = localStorage.getItem(KEY); if (raw) ST = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) {} }
+
+/* ---------- Son et voix (consignes en français, anglais lu par une voix anglaise) ---------- */
+let AC = null;
+function tone(seq) {
+  if (!ST.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    let t = AC.currentTime;
+    seq.forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "triangle"; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + 0.02); t += d * 0.85; });
+  } catch (e) {}
+}
+const sndOk = () => tone([[660, .12], [880, .12], [1175, .22]]);
+const sndKo = () => tone([[300, .18], [240, .26]]);
+const sndWin = () => tone([[523, .14], [659, .14], [784, .14], [1047, .35]]);
+const sndKey = () => tone([[1400, .03]]);
+function plain(html) { const d = document.createElement("div"); d.innerHTML = html; return d.textContent; }
+let VOICES = [];
+function loadVoices() { try { VOICES = speechSynthesis.getVoices() || []; } catch (e) {} }
+try { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } catch (e) {}
+function pickVoice(lang) {
+  const L = lang.toLowerCase(), base = L.slice(0, 2);
+  const ok = v => v.lang && v.lang.replace("_", "-").toLowerCase();
+  return VOICES.find(v => ok(v) === L) || VOICES.find(v => ok(v) && ok(v).startsWith(base)) || null;
+}
+function speak(parts) {
+  try {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    if (typeof parts === "string") parts = [FR(parts)];
+    parts.forEach(([lang, txt]) => {
+      if (!txt) return;
+      const u = new SpeechSynthesisUtterance(plain(txt));
+      u.lang = lang === "en" ? "en-GB" : "fr-FR";
+      const v = pickVoice(u.lang); if (v) u.voice = v;
+      u.rate = lang === "en" ? 0.8 : 0.9;
+      speechSynthesis.speak(u);
+    });
+  } catch (e) {}
+}
+
+/* ---------- Navigation ---------- */
+const SCREENS = ["home", "play", "result", "pause", "album", "parent"];
+let flashTimer = null;
+function show(id) { SCREENS.forEach(s => $(s).hidden = s !== id); $("sheet").hidden = true; window.scrollTo(0, 0); try { speechSynthesis.cancel(); } catch (e) {} if (id !== "play") { clearTimeout(flashTimer); KB = null; } }
+
+/* ---------- Accueil ---------- */
+function isoToday() { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`; }
+function daysTo(iso) { if (!iso) return null; const t = new Date(); t.setHours(0, 0, 0, 0); const [y, m, d] = iso.split("-").map(Number); return Math.round((new Date(y, m - 1, d) - t) / 864e5); }
+const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+const JOURS = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+const JOURS_L = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+const dateOf = iso => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d, 12); };
+const fmtLong = iso => { const d = dateOf(iso); return `${JOURS_L[d.getDay()]} ${d.getDate()} ${MOIS[d.getMonth()]}`; };
+const MOIS_C = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+const fmtDay = iso => { const d = dateOf(iso); return `${JOURS[d.getDay()]} ${d.getDate()} ${MOIS_C[d.getMonth()]}`; };
+const addDays = (iso, n) => { const d = dateOf(iso); d.setDate(d.getDate() + n); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+function nextMission() { return MISSIONS.find(m => !ST.stars[m.id]); }
+function busSvg() {
+  const done = MISSIONS.filter(m => ST.stars[m.id]).length;
+  const W = [[46, 98], [72, 98], [98, 98], [124, 98], [24, 42], [50, 42], [76, 42], [102, 42], [128, 42]];
+  const SKIN = ["#F2C9A0", "#C98D5E", "#8D5A3B", "#F5D6B8", "#B87A4B", "#E8B78E", "#6E4329", "#F2C9A0", "#D9A27A"];
+  const HAIR = ["#3B2416", "#141414", "#E0B04A", "#7A3E1D", "#141414", "#B5651D", "#141414", "#5A3A22", "#2B1A10"];
+  const wins = W.map(([x, y], i) => {
+    const glass = `<rect x="${x}" y="${y}" width="22" height="26" rx="4" fill="#BFE0F5"/>`;
+    if (i >= done) return glass;
+    const cx = x + 11, cy = y + 13;
+    return glass + `<g class="${i === done - 1 && ST.lastPax === done ? "pax-new" : ""}"><path d="M${x + 3} ${y + 26} q8 -10 16 0z" fill="${["#2F6FB5", "#3E9B4F", "#E2AE2E", "#7647AE", "#C8202F"][i % 5]}"/>
+      <circle cx="${cx}" cy="${cy}" r="6.5" fill="${SKIN[i]}"/><path d="M${cx - 6.5} ${cy - 1} a6.5 6.5 0 0 1 13 0 q-6.5 -4 -13 0z" fill="${HAIR[i]}"/>
+      <circle cx="${cx - 2.3}" cy="${cy + .5}" r="1" fill="#222"/><circle cx="${cx + 2.3}" cy="${cy + .5}" r="1" fill="#222"/><path d="M${cx - 2.5} ${cy + 3} q2.5 2.2 5 0" stroke="#222" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+  }).join("");
+  return `<svg viewBox="0 0 170 160" role="img" aria-label="${done} passagers sur 9 dans le bus">
+    <rect x="8" y="26" width="154" height="114" rx="14" fill="#C8202F"/><rect x="8" y="80" width="154" height="8" fill="#8E1520"/><rect x="14" y="20" width="142" height="10" rx="5" fill="#C8202F"/>
+    <rect x="112" y="30" width="44" height="8" rx="2" fill="#1E1E1E"/><text x="134" y="36.5" text-anchor="middle" font-family="Andika,sans-serif" font-size="6.5" font-weight="700" fill="#FFD25A">WEMBLEY</text>
+    <rect x="16" y="94" width="24" height="42" rx="3" fill="#2E3440"/><path d="M28 94 V136" stroke="#4C5566" stroke-width="2"/>
+    ${wins}
+    <circle cx="44" cy="142" r="15" fill="#222"/><circle cx="44" cy="142" r="6" fill="#A9B2BF"/><circle cx="128" cy="142" r="15" fill="#222"/><circle cx="128" cy="142" r="6" fill="#A9B2BF"/></svg>`;
+}
+const starsHtml = n => `<span class="stars" aria-label="${n} étoiles sur 3">${[1, 2, 3].map(i => IC.star(i <= n)).join("")}</span>`;
+function renderHome() {
+  const nm = nextMission(), done = MISSIONS.filter(m => ST.stars[m.id]).length, d = daysTo(ST.evalDate);
+  const tgt = nm ? { id: nm.id, t: nm.title, s: nm.sub, a: nm.art }
+    : ST.missed.length ? { id: "revanche", t: "Mission revanche", s: `${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} à réussir`, a: "bus" }
+    : { id: "boss", t: "Le Test de Wembley", s: `${BOSS_TOTAL} questions comme en classe`, a: "trophy" };
+  const cd = d !== null && d > 0 ? ["J-" + d, `avant le <b>contrôle d'anglais</b> du ${fmtLong(ST.evalDate)} : apostrophes et adjectifs.`]
+    : d === 0 ? ["J", "C'est le jour du contrôle ! Un Test de Wembley pour s'échauffer ?"]
+    : done < 9 ? [String(9 - done), `arrêt${9 - done > 1 ? "s" : ""} avant <b>Wembley</b>. Leçon 4 (adjectifs) et leçon 6 (apostrophes) du cahier d'anglais.`]
+    : ["✓", "Tous les arrêts sont faits. Rejoue le Test de Wembley pour garder le niveau."];
+  const bestBoss = ST.boss.length ? Math.max(...ST.boss.map(b => b.score)) : null;
+  $("home").innerHTML = `
+    <div class="top"><span class="chip">${IC.mile}<span>${ST.xp} miles</span></span><span class="spacer"></span>
+      <button class="icon-btn" id="b-album" aria-label="Mes cartes postales">${IC.album}</button><button class="icon-btn" id="b-parent" aria-label="Espace parent">${IC.parent}</button></div>
+    <div class="hello"><div class="eyebrow">English · apostrophes · adjectives</div><div class="who">Carlo et le <span>London Express</span></div></div>
+    <div class="countdown"><div class="big">${cd[0]}</div><div>${cd[1]}</div></div>
+    <div class="garage">${busSvg()}<div><h2 style="font-size:22px">${done === 9 ? "Le bus est plein : direction Wembley !" : "Remplis le bus pour Wembley"}</h2>
+      <p class="muted" style="margin:6px 0 0;font-size:15px">Chaque mission réussie fait monter un passager. <b style="color:var(--ink)">${done} sur 9</b>.</p></div></div>
+    <button class="today" id="b-today"><div class="plate md">${art(tgt.a)}</div><div><div class="lab">À jouer maintenant</div><h3>${tgt.t}</h3><div style="font-size:15px;opacity:.9">${tgt.s}</div></div></button>
+    <div class="section-title"><h2>La ligne du London Express</h2><span class="muted" style="font-size:14px">environ 4 minutes par arrêt</span></div>
+    <div class="map">${MISSIONS.map((m, i) => `<button class="mission ${ST.stars[m.id] ? "done" : ""} ${nm && nm.id === m.id ? "next" : ""}" data-m="${m.id}">
+      <div class="plate sm">${art(m.art)}</div><div style="min-width:0"><span class="subj ${m.subj}">${SUBJ[m.subj]}</span><h3>${i + 1}. ${m.title}</h3><div class="sub">${m.sub}</div></div>${starsHtml(ST.stars[m.id] || 0)}</button>`).join("")}</div>
+    <div class="extra">
+      <button class="card-btn boss" data-m="boss"><div class="ico art">${art("trophy")}</div><div><span class="subj pos">Épreuve finale</span><h3>Le Test de Wembley</h3><div class="sub">Comme la fiche de la classe, ${BOSS_TOTAL} questions${bestBoss !== null ? ` · record ${bestBoss}/${BOSS_TOTAL}` : ""}</div></div></button>
+      <button class="card-btn" data-m="revanche" ${ST.missed.length ? "" : "disabled style=\"opacity:.55\""}><div class="ico" style="color:var(--bad)">${IC.retry}</div><div><h3>Mission revanche</h3><div class="sub">${ST.missed.length ? `${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} ratée${ST.missed.length > 1 ? "s" : ""} à réussir` : "Les questions ratées viendront ici"}</div></div></button>
+    </div>`;
+  ST.lastPax = 0; save();
+  $("b-today").onclick = () => start(tgt.id);
+  $("b-album").onclick = renderAlbum; $("b-parent").onclick = renderParent;
+  $("home").querySelectorAll("[data-m]").forEach(b => b.onclick = () => start(b.dataset.m));
+  show("home");
+}
+
+/* ---------- Partie ---------- */
+let S = null, KB = null;
+function start(id) {
+  let queue, title;
+  if (id === "boss") { queue = buildBoss(); title = "Le Test de Wembley"; }
+  else if (id === "revanche") { if (!ST.missed.length) return; queue = shuffle(ST.missed).slice(0, 8).map(q => JSON.parse(JSON.stringify(q))); title = "Mission revanche"; }
+  else { const m = MISSIONS.find(x => x.id === id); queue = fromGroups(m.gen(), 6); title = m.title; }
+  queue.forEach(q => { delete q._retry; delete q._hint; q.key = q.key || keyOf(q); });
+  S = { id, title, queue, i: 0, errors: 0, gain: 0, combo: 0, res: [], dots: [] };
+  ST.sessions++; save();
+  showQ();
+}
+function keyOf(q) { return [q.type, q.prompt, q.ctx || "", q.answer, q.word || "", q.noun || ""].join("#"); }
+function playbar() {
+  const total = S.queue.length;
+  const dots = Array.from({ length: total }, (_, i) => `<span class="dot ${S.dots[i] || (i === S.i ? "cur" : "")}"></span>`).join("");
+  return `<div class="playbar"><button class="icon-btn" id="p-quit" aria-label="Quitter la mission">${IC.close}</button><div class="dots">${dots}</div>${S.combo >= 2 ? `<span class="combo" id="combo">Série ×${S.combo}</span>` : ""}</div>`;
+}
+function head(q) {
+  const m = MISSIONS.find(x => x.id === S.id);
+  const sj = m ? m.subj : (q.obj && q.obj[0] === "N" ? "adj" : "pos");
+  return `<div class="qhead"><span class="tag">${S.title}${q._retry ? " · deuxième chance" : ""}</span><span class="subj ${sj}">${SUBJ[sj]}</span></div>`;
+}
+function bindCommon(q) {
+  $("p-quit").onclick = () => { clearTimeout(flashTimer); renderHome(); };
+  const sp = $("q-say"); if (sp) sp.onclick = () => speak(q.say || q.prompt);
+}
+function showQ() {
+  clearTimeout(flashTimer); KB = null;
+  const q = S.queue[S.i]; q._hint = false;
+  if (q.type === "type" && q.flash) return showFlash(q);
+  renderQ(q);
+}
+function renderQ(q) {
+  let body = "", ctx = "";
+  if (q.type === "mcq") {
+    body = `<div class="choices ${q.two ? "two" : ""} ${q.big ? "big" : ""}" lang="en">${q.choices.map((c, i) => `<button class="choice" data-i="${i}">${esc(c)}</button>`).join("")}</div>`;
+  } else if (q.type === "build") {
+    body = `<div class="build-out empty" id="bo" lang="en">Touche les étiquettes dans l'ordre</div><div class="tiles" lang="en">${q.tiles.map((t, i) => `<button class="tile ${t.startsWith("'") ? "apo" : ""}" data-i="${i}">${esc(t)}</button>`).join("")}</div>
+      <div class="row"><button class="btn ghost" id="b-del" style="flex:1">Effacer</button><button class="btn" id="b-ok" style="flex:1.4" disabled>Valider</button></div>`;
+  } else if (q.type === "np") {
+    ctx = `<div class="ctx" lang="en">${q.det} <span id="npout"></span> ${q.noun}</div>`;
+    body = `<div class="tiles" lang="en" style="margin-top:12px">${q.chips.map((c, i) => `<button class="tile" data-i="${i}">${c}<br><span style="font-size:12px;font-weight:400;color:var(--muted)">${ADJ[c][1]}</span></button>`).join("")}</div>
+      <div class="row"><button class="btn ghost" id="b-del" style="flex:1">Effacer</button><button class="btn" id="b-ok" style="flex:1.4" disabled>Valider</button></div>`;
+  } else if (q.type === "type") {
+    body = kbHtml();
+  }
+  if (q.ctx && q.type !== "np") ctx = `<div class="ctx" lang="en">${q.type === "type" ? q.ctx.replace("{_}", `<span class="gap cur"><span id="typed"></span><span class="caret"></span></span>`) : q.ctx}</div>`;
+  const hintBtn = q.hintHtml && !q.boss ? `<button class="btn ghost" id="q-hint" style="flex:1;min-height:48px;font-size:17px">${icon(IC.bulb)} Un indice</button>`
+    : q.flash ? `<button class="btn ghost" id="q-peek" style="flex:1;min-height:48px;font-size:17px">${icon(IC.eye)} Revoir 2 secondes</button>` : "";
+  $("play").innerHTML = `${playbar()}${head(q)}<div class="prompt">${q.prompt}</div>${ctx}${body}
+    <div class="hint-row"><button class="icon-btn" id="q-say" aria-label="Écouter">${IC.speak}</button>${hintBtn}</div><div id="hint-box"></div><div class="pad-bottom"></div>`;
+  show("play"); bindCommon(q);
+  if (S.combo >= 3 && $("combo")) $("combo").classList.add("pop");
+  const hb = $("q-hint");
+  if (hb) hb.onclick = () => { q._hint = true; hb.disabled = true; $("hint-box").innerHTML = `<div class="hint">${q.hintHtml}</div>`; };
+  const pk = $("q-peek");
+  if (pk) pk.onclick = () => { q._hint = true; pk.disabled = true; peek(q); };
+  if (q.type === "mcq") $("play").querySelectorAll(".choice").forEach(b => b.onclick = () => answerMcq(q, +b.dataset.i));
+  if (q.type === "build") setupBuild(q);
+  if (q.type === "np") setupNp(q);
+  if (q.type === "type") setupType(q);
+  if (ST.voice && !q.flash) speak(q.say || q.prompt);
+}
+function showFlash(q) {
+  $("play").innerHTML = `${playbar()}${head(q)}<div class="prompt">${q.prompt}</div>
+    <div class="eyehint">${icon(IC.eye)} Photographie avec tes yeux…</div>
+    <div class="flashbar"><i style="animation-duration:${q.flashMs}ms"></i></div><div lang="en">${q.flash}</div>
+    <div class="hint-row"><button class="icon-btn" id="q-say" aria-label="Écouter">${IC.speak}</button></div>`;
+  show("play"); bindCommon(q);
+  if (ST.voice) speak([FR("Regarde bien."), ...q.say]);
+  flashTimer = setTimeout(() => renderQ(q), q.flashMs);
+}
+function peek(q) {
+  const box = $("hint-box");
+  box.innerHTML = `<div class="hint" lang="en">${q.flash}</div>`;
+  clearTimeout(flashTimer); flashTimer = setTimeout(() => { if (box.isConnected) box.innerHTML = ""; }, 2000);
+}
+function lock() { $("play").querySelectorAll("button:not(#p-quit):not(#q-say)").forEach(b => b.disabled = true); KB = null; }
+function answerMcq(q, i) {
+  lock();
+  const btns = $("play").querySelectorAll(".choice"); const ok = i === q.answer;
+  btns[q.answer].classList.add("ok"); if (!ok) btns[i].classList.add("ko");
+  feedback(q, ok, `<b>${esc(q.correct || q.choices[q.answer])}</b>`);
+}
+
+/* Construction (phrase ou groupe nominal) */
+function setupBuild(q) {
+  const stack = []; const out = $("bo"), okb = $("b-ok");
+  const draw = () => { const s = smartJoin(stack.map(i => q.tiles[i])); out.textContent = s || "Touche les étiquettes dans l'ordre"; out.classList.toggle("empty", !s); okb.disabled = !s; };
+  $("play").querySelectorAll(".tile").forEach(b => b.onclick = () => { stack.push(+b.dataset.i); b.disabled = true; sndKey(); draw(); });
+  $("b-del").onclick = () => { const i = stack.pop(); if (i !== undefined) $("play").querySelector(`.tile[data-i="${i}"]`).disabled = false; draw(); };
+  okb.onclick = () => {
+    const s = smartJoin(stack.map(i => q.tiles[i])); lock();
+    const ok = q.cmp === "nocomma" ? normNC(s) === normNC(q.word) : norm(s) === norm(q.word);
+    feedback(q, ok, esc(q.correct), s);
+  };
+}
+
+/* Grossis le nom : 2 ou 3 adjectifs, dans l'ordre */
+function setupNp(q) {
+  const pick = []; const out = $("npout"), okb = $("b-ok");
+  const draw = () => {
+    const w = pick.map(i => `<b>${q.chips[i]}</b>`);
+    while (w.length < 2) w.push(`<span class="gap">……</span>`);
+    out.innerHTML = w.join(", ");
+    okb.disabled = pick.length < 2;
+    $("play").querySelectorAll(".tile").forEach(b => { b.disabled = pick.includes(+b.dataset.i) || pick.length >= 3; });
+  };
+  $("play").querySelectorAll(".tile").forEach(b => b.onclick = () => { if (pick.length >= 3) return; pick.push(+b.dataset.i); sndKey(); draw(); });
+  $("b-del").onclick = () => { pick.pop(); draw(); };
+  okb.onclick = () => {
+    const ch = pick.map(i => q.chips[i]); lock();
+    const ok = ch.every((a, k) => k === 0 || fam(ch[k - 1]) < fam(a));
+    const sorted = ch.slice().sort((a, b) => fam(a) - fam(b));
+    const good = `${q.det} ${sorted.join(", ")} ${q.noun}`;
+    q.correct = good; q.sayAns = good;
+    q.explain = `${npWhy(sorted)}. ${ok ? "Belle phrase, et dans le bon ordre !" : "On range toujours les familles dans cet ordre."}`;
+    feedback(q, ok, `<b>${esc(good)}</b>`, `${q.det} ${ch.join(", ")} ${q.noun}`);
+  };
+  draw();
+}
+
+/* Clavier : AZERTY, touche majuscule et grosse touche apostrophe */
+function kbHtml() {
+  const k = (c, cls = "") => `<button class="key ${cls}" data-k="${c}">${c}</button>`;
+  return `<div class="kb" id="kb" lang="en">
+    <div class="r">${[..."azertyuiop"].map(c => k(c)).join("")}</div>
+    <div class="r">${[..."qsdfghjklm"].map(c => k(c)).join("")}</div>
+    <div class="r"><button class="key shift" data-k="SHIFT" id="kb-shift" aria-label="Majuscule">${IC.shift}</button>${[..."wxcvbn"].map(c => k(c)).join("")}<button class="key apo" data-k="'" aria-label="Apostrophe">'</button><button class="key w2" data-k="DEL" aria-label="Effacer">${IC.del}</button></div>
+    <div class="r"><button class="key w5" data-k=" ">espace</button><button class="key w5 go" data-k="OK" id="kb-ok">Valider</button></div></div>`;
+}
+function setupType(q) {
+  let val = "", shift = false;
+  const out = $("typed"), sh = $("kb-shift");
+  const draw = () => { out.textContent = val; sh.classList.toggle("on", shift); $("kb").querySelectorAll(".key[data-k]").forEach(b => { const c = b.dataset.k; if (c.length === 1 && /[a-z]/.test(c)) b.textContent = shift ? c.toUpperCase() : c; }); };
+  const press = (c, fromKb) => {
+    if (!KB) return;
+    if (c === "OK") {
+      if (!val.trim()) return; const v = val; lock();
+      const ok = [q.answer, ...(q.alt || [])].some(a => norm(a) === norm(v));
+      let note = "";
+      if (ok && /^[A-Z]/.test(q.answer) && !/^[A-Z]/.test(v.trim())) note = `N'oublie pas la majuscule au prénom : <b>${esc(q.answer)}</b>.`;
+      feedback(q, ok, fixHtml(v, q.answer), v, note); return;
+    }
+    if (c === "SHIFT") { shift = !shift; draw(); return; }
+    if (c === "DEL") val = val.slice(0, -1);
+    else if (val.length < 30) { val += fromKb && shift ? c.toUpperCase() : c; if (fromKb) shift = false; }
+    sndKey(); draw();
+  };
+  KB = press;
+  $("kb").querySelectorAll(".key").forEach(b => b.addEventListener("click", () => press(b.dataset.k, true)));
+  draw();
+}
+document.addEventListener("keydown", e => {
+  if (!KB || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Enter") { e.preventDefault(); KB("OK"); }
+  else if (e.key === "Backspace") { e.preventDefault(); KB("DEL"); }
+  else if (e.key.length === 1 && /[a-z' ’‘]/i.test(e.key)) { e.preventDefault(); KB(/[’‘]/.test(e.key) ? "'" : e.key, false); }
+});
+
+/* Mise en évidence des lettres à corriger */
+function fixHtml(ans, correct) {
+  const a = norm(ans), b = correct; const bn = b.toLowerCase();
+  const n = a.length, m = bn.length; const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = a[i] === bn[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const keep = new Array(m).fill(false); let i = 0, j = 0;
+  while (i < n && j < m) { if (a[i] === bn[j]) { keep[j] = true; i++; j++; } else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++; }
+  return [...b].map((c, k) => keep[k] ? esc(c) : `<mark>${esc(c)}</mark>`).join("");
+}
+
+/* Réponse */
+function feedback(q, ok, correctHtml, yours, note) {
+  const first = !q._retry;
+  if (first) { S.res.push({ obj: q.obj, ok }); const m = ST.mastery[q.obj] || []; m.push(ok ? 1 : 0); ST.mastery[q.obj] = m.slice(-14); }
+  let gain = 0, extra = "";
+  if (ok) {
+    gain = q._retry ? 4 : q._hint ? 6 : 10; S.combo++;
+    if (S.combo % 3 === 0) { gain += 5; extra = `Série de ${S.combo} sans faute : +5 miles bonus !`; }
+    if (S.id === "revanche") ST.missed = ST.missed.filter(x => x.key !== q.key);
+    sndOk();
+  } else {
+    S.combo = 0; if (first) S.errors++;
+    if (first && S.id !== "boss") S.queue.push(Object.assign(JSON.parse(JSON.stringify(q)), { _retry: true }));
+    const clean = JSON.parse(JSON.stringify(q)); delete clean._retry; delete clean._hint;
+    if (q.type === "np") { delete clean.correct; delete clean.explain; delete clean.sayAns; }
+    if (!ST.missed.some(x => x.key === q.key)) ST.missed.push(clean);
+    ST.missed = ST.missed.slice(-30);
+    sndKo();
+  }
+  if (q.type === "type" && $("typed")) { const g = $("typed").parentElement; g.classList.remove("cur"); g.style.color = ok ? "#1A6B45" : "#B42A1A"; g.querySelector(".caret")?.remove(); }
+  S.dots[S.i] = ok ? "ok" : "ko";
+  S.gain += gain; ST.xp += gain; save();
+  const PRAISE = ["Well done!", "Brilliant!", "Great job!", "Perfect!", "Spot on!", "Fantastic!", "Bravo !", "Top class!"];
+  const showFix = q.type === "type" || q.type === "build" || q.type === "np";
+  const sh = $("sheet");
+  sh.className = "sheet" + (ok ? "" : " ko");
+  sh.innerHTML = `<div class="in">
+    <div class="row"><h3>${ok ? one(PRAISE) : "Almost… Presque !"}</h3><span class="spacer"></span>${gain ? `<span class="gain">+${gain} miles</span>` : ""}</div>
+    ${ok ? (showFix ? `<p class="fix" lang="en">${esc(q.correct || q.answer)}</p>` : "") : showFix
+      ? `<p>Ta réponse : <span class="yours" lang="en">${esc(yours || "")}</span></p><p>La bonne réponse : <span class="fix" lang="en">${correctHtml}</span></p>`
+      : `<p><b>La bonne réponse :</b> <span lang="en">${correctHtml}</span></p>`}
+    ${q.explain ? `<p>${q.explain}</p>` : ""}${note ? `<p>${note}</p>` : ""}${extra ? `<p class="gain" style="font-size:17px">${extra}</p>` : ""}
+    ${!ok && S.id !== "boss" && first ? `<p class="muted" style="font-size:15px">Pas grave : cette question reviendra à la fin pour une deuxième chance.</p>` : ""}
+    <div class="row"><button class="icon-btn" id="s-say" aria-label="Écouter l'explication">${IC.speak}</button><button class="btn" id="s-next" style="flex:1">Continuer</button></div></div>`;
+  sh.hidden = false;
+  $("s-say").onclick = () => speak([EN(q.sayAns || q.correct || q.answer), FR(q.explain || "")]);
+  $("s-next").onclick = next; $("s-next").focus({ preventScroll: true });
+}
+function next() { $("sheet").hidden = true; S.i++; if (S.i < S.queue.length) showQ(); else finish(); }
+document.addEventListener("keydown", e => { if (e.key === "Enter" && !$("sheet").hidden && !KB) { e.preventDefault(); $("s-next")?.click(); } });
+
+/* ---------- Fin de mission ---------- */
+function finish() {
+  const firstRes = S.res, score = firstRes.filter(r => r.ok).length, total = firstRes.length;
+  let stars;
+  if (S.id === "boss") stars = score >= BOSS_TOTAL - 1 ? 3 : score >= BOSS_TOTAL - 4 ? 2 : 1; else stars = S.errors === 0 ? 3 : S.errors <= 2 ? 2 : 1;
+  let newCards = [];
+  if (MISSIONS.some(m => m.id === S.id)) {
+    const before = MISSIONS.filter(m => ST.stars[m.id]).length;
+    ST.stars[S.id] = Math.max(ST.stars[S.id] || 0, stars);
+    const after = MISSIONS.filter(m => ST.stars[m.id]).length;
+    if (after > before) ST.lastPax = after;
+    newCards = CARDS.filter(c => c.m === S.id && !ST.cards.includes(c.k));
+  }
+  if (S.id === "boss") {
+    ST.boss.push({ date: isoToday(), score });
+    if (score >= BOSS_TOTAL - 1 && !ST.cards.includes("trophy")) newCards = CARDS.filter(c => c.k === "trophy");
+  }
+  newCards.forEach(c => ST.cards.push(c.k));
+  save(); sndWin();
+  let detail = "";
+  if (S.id === "boss") {
+    const by = {}; firstRes.forEach(r => { by[r.obj] = by[r.obj] || [0, 0]; by[r.obj][1]++; if (r.ok) by[r.obj][0]++; });
+    const LAB = { P1: "Un seul propriétaire ('s)", P2: "Pluriels en -s (')", P3: "Pluriels irréguliers ('s)", P4: "Phrases It is / They are", N1: "Ordre des adjectifs" };
+    detail = `<div class="result-card"><h3 style="font-size:20px">Détail de ton test</h3><div class="objlist">${Object.keys(LAB).map(k => { const v = by[k] || [0, 0]; return `<div class="objrow"><span>${LAB[k]}</span><span class="pill ${v[0] === v[1] ? "a" : v[0] >= v[1] / 2 ? "b" : "c"}">${v[0]} / ${v[1]}</span></div>`; }).join("")}</div></div>`;
+  }
+  const msg = S.id === "boss" ? (score >= BOSS_TOTAL - 1 ? "Prêt pour le contrôle !" : score >= BOSS_TOTAL - 4 ? "Presque prêt !" : "On continue l'entraînement !") : stars === 3 ? "Mission parfaite !" : stars === 2 ? "Très belle mission !" : "Mission accomplie !";
+  $("result").innerHTML = `<div class="center">
+    <div class="tag" style="margin-top:12px">${S.title}</div><h1 style="font-size:36px;margin-top:6px">${msg}</h1>
+    <div class="bigstars">${[1, 2, 3].map(i => IC.star(i <= stars).replace("<svg", `<svg class="pop" style="animation-delay:${i * .15}s"`)).join("")}</div>
+    <p style="font-size:19px;margin:0">${score} bonne${score > 1 ? "s" : ""} réponse${score > 1 ? "s" : ""} sur ${total} du premier coup · <span class="gain">+${S.gain} miles</span></p>
+    ${newCards.length ? `<div class="result-card"><h3 style="font-size:20px">Nouvelle carte postale de Londres</h3><div class="unlocked">${newCards.map(c => `<div style="display:grid;gap:6px;justify-items:center"><div class="plate md">${art(c.k)}</div><b>${c.t}</b></div>`).join("")}</div></div>` : ""}
+    ${detail}
+    <div style="display:grid;gap:10px;margin-top:16px"><button class="btn red" id="r-pause">Pause cerveau (30 secondes)</button><button class="btn ghost" id="r-home">Retour à la ligne du bus</button></div></div>`;
+  $("r-pause").onclick = renderPause; $("r-home").onclick = renderHome;
+  show("result");
+}
+
+/* ---------- Pause cerveau ---------- */
+let pauseTimer = null;
+function renderPause() {
+  const [t, d] = one(PAUSES); let left = 30;
+  $("pause").innerHTML = `<div class="center"><div class="tag" style="margin-top:12px">Pause cerveau</div><div class="plate big" style="margin-top:10px">${art("bus")}</div><h1 style="font-size:32px;margin-top:10px">${t}</h1>
+    <p style="font-size:20px;max-width:30ch;margin:10px auto">${d}</p>
+    <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="pr" cx="60" cy="60" r="50" fill="none" stroke="var(--red)" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="0" transform="rotate(-90 60 60)"/><text id="pt" x="60" y="72" text-anchor="middle" font-family="Lilita One,sans-serif" font-size="36" fill="var(--ink)">30</text></svg>
+    <div style="display:grid;gap:10px"><button class="btn" id="pa-ok" disabled>J'ai fini !</button><button class="btn ghost" id="pa-say">${icon(IC.speak)} Écouter</button></div></div>`;
+  $("pa-say").onclick = () => speak(d);
+  $("pa-ok").onclick = () => { clearInterval(pauseTimer); renderHome(); };
+  clearInterval(pauseTimer);
+  pauseTimer = setInterval(() => {
+    left--; const pr = $("pr"), pt = $("pt"); if (!pr) { clearInterval(pauseTimer); return; }
+    pr.setAttribute("stroke-dashoffset", (314.2 * (30 - left) / 30).toFixed(1)); pt.textContent = Math.max(left, 0);
+    if (left <= 20) $("pa-ok").disabled = false;
+    if (left <= 0) { clearInterval(pauseTimer); tone([[784, .15], [1047, .3]]); }
+  }, 1000);
+  show("pause"); if (ST.voice) speak(t + ". " + d);
+}
+
+/* ---------- Album ---------- */
+function renderAlbum() {
+  const n = CARDS.filter(c => ST.cards.includes(c.k)).length;
+  $("album").innerHTML = `<div class="top"><button class="icon-btn" id="al-back" aria-label="Retour">${IC.back}</button><h1 style="font-size:28px">Mes cartes postales de Londres</h1></div>
+    <p class="muted" style="margin:0 0 14px">${n} carte${n > 1 ? "s" : ""} sur ${CARDS.length}. Chaque arrêt réussi en ajoute une. Le trophée d'or se gagne au Test de Wembley.</p>
+    <div class="album">${CARDS.map(c => { const on = ST.cards.includes(c.k); const mi = MISSIONS.findIndex(m => m.id === c.m); return `<button class="acard ${on ? "" : "locked"}" data-k="${c.k}" ${on ? "" : "disabled"}><div class="plate">${art(c.k)}</div><h3>${on ? c.t : "Carte mystère"}</h3><div class="when">${mi >= 0 ? "Arrêt " + (mi + 1) : "Test de Wembley"}</div></button>`; }).join("")}</div>`;
+  $("al-back").onclick = renderHome;
+  $("album").querySelectorAll(".acard:not(.locked)").forEach(b => b.onclick = () => openCard(CARDS.find(c => c.k === b.dataset.k)));
+  show("album");
+}
+function openCard(c) {
+  const m = $("modal");
+  m.innerHTML = `<div class="modal" id="mbg"><div class="box" role="dialog" aria-label="${c.t}"><div class="plate big">${art(c.k)}</div><h2 style="font-size:26px">${c.t}</h2><p style="margin:0;font-size:18px">${c.txt}</p>
+    <div class="row"><button class="icon-btn" id="m-say" aria-label="Écouter">${IC.speak}</button><button class="btn" id="m-close" style="flex:1">Fermer</button></div></div></div>`;
+  m.hidden = false;
+  $("m-say").onclick = () => speak(c.t + ". " + c.txt);
+  $("m-close").onclick = () => { m.hidden = true; try { speechSynthesis.cancel(); } catch (e) {} };
+  $("mbg").onclick = e => { if (e.target.id === "mbg") m.hidden = true; };
+}
+
+/* ---------- Espace parent ---------- */
+const PLAN = [["Séance 1", ["m1", "m2"]], ["Séance 2", ["m3", "m4"]], ["Séance 3", ["m5", "m6"]], ["Séance 4", ["m7", "m8"]], ["Séance 5", ["m9", "boss"]]];
+const planLabel = id => id === "boss" ? "Test de Wembley" : `${MISSIONS.findIndex(m => m.id === id) + 1}. ${MISSIONS.find(m => m.id === id).title}`;
+const isDone = id => id === "boss" ? ST.boss.length > 0 : !!ST.stars[id];
+function planDates() {
+  if (!ST.evalDate || !ST.planStart) return null;
+  const days = Math.max(1, daysTo(ST.evalDate) + Math.max(0, -daysTo(ST.planStart)));
+  const perDay = Math.max(1, Math.ceil(PLAN.length / days));
+  return PLAN.map((_, k) => addDays(ST.planStart, Math.floor(k / perDay)));
+}
+function renderParent() {
+  const today = isoToday();
+  const objRows = Object.keys(OBJ).map(k => {
+    const m = ST.mastery[k] || []; const pct = m.length ? Math.round(m.reduce((a, b) => a + b, 0) / m.length * 100) : 0;
+    const pill = m.length < 3 ? ["n", "Pas assez joué"] : pct >= 80 ? ["a", "Acquis"] : pct >= 55 ? ["b", "En progrès"] : ["c", "À retravailler"];
+    return `<div class="obj"><div class="top2"><span>${OBJ[k]}</span><span class="pill ${pill[0]}">${pill[1]}</span></div><div class="bar"><i style="width:${pct}%"></i></div><div class="muted" style="font-size:13px">${m.length ? `${pct} % de réussite du premier coup sur les ${m.length} dernières questions` : "Aucune question jouée"}</div></div>`;
+  }).join("");
+  const boss = ST.boss.length ? ST.boss.slice(-5).map(b => `${fmtDay(b.date)} : ${b.score}/${BOSS_TOTAL}`).join(" · ") : "Pas encore joué";
+  const dates = planDates();
+  $("parent").innerHTML = `<div class="top"><button class="icon-btn" id="pp-back" aria-label="Retour">${IC.back}</button><h1 style="font-size:28px">Espace parent</h1></div>
+    <div class="panel"><h3>Où en est Carlo</h3>${objRows}
+      <p class="muted" style="font-size:13px;margin:10px 0 0">Test de Wembley : ${boss}. ${ST.sessions} séance${ST.sessions > 1 ? "s" : ""} lancée${ST.sessions > 1 ? "s" : ""} · ${ST.missed.length} question${ST.missed.length > 1 ? "s" : ""} en attente de revanche.</p></div>
+    <div class="panel"><h3>Date du contrôle d'anglais</h3>
+      <label class="toggle" for="t-date"><span>Le contrôle a lieu le</span><input type="date" id="t-date" value="${ST.evalDate}"></label>
+      <p class="muted" style="font-size:13px;margin:6px 0 0">La fiche ne donne pas de date. Une fois la date saisie, l'accueil affiche le compte à rebours et le plan ci-dessous se cale jour par jour.</p></div>
+    <div class="panel"><h3>${dates ? "Plan jusqu'au contrôle" : "Plan de révision en 5 séances"}</h3><div class="plan">${PLAN.map(([s, ids], k) => `<div class="d ${dates && dates[k] === today ? "now" : ""}"><span class="dt">${dates ? fmtDay(dates[k]) + "<br>" : ""}<span class="muted" style="font-weight:400;font-size:13px">${s}</span></span><span>${ids.map(planLabel).join("<br>")}</span><span>${ids.every(isDone) ? icon(IC.star(true), 20) : ""}</span></div>`).join("")}</div>
+      <p class="muted" style="font-size:13px;margin:10px 0 0">Deux missions par séance, puis la pause cerveau. Une séance par jour suffit ; deux au maximum. Si une séance saute, l'accueil propose toujours la bonne mission. La veille du contrôle : Test de Wembley puis mission revanche.</p></div>
+    <div class="panel"><h3>Ce que travaille le module</h3>
+      <p><b>Leçon 6, Apostrophes for possession :</b> les 12 phrases de la fiche (Anna, Ben… the elephants) sont reprises, avec une vingtaine d'autres. Le module ajoute deux pièges classiques qui ne sont pas sur la fiche : l'apostrophe ajoutée à tort sur un simple pluriel (« the dog's are barking ») et le choix It is / They are.</p>
+      <p><b>Leçon 4, Expanded noun phrases :</b> les 5 groupes écrits par Carlo (my cute, little, brown dog…) sont repris, avec l'ordre des 8 familles d'adjectifs, la place des virgules et a / an devant un adjectif (an interesting, small book).</p>
+      <p>Les consignes sont lues en français, les phrases en anglais par une voix anglaise (si l'appareil en a une installée).</p></div>
+    <div class="panel"><h3>Points d'attention sur les fiches</h3>
+      <p><b>Fiche 6, très bien réussie :</b> toutes les réponses sont justes, y compris les pluriels irréguliers (the men's cups, the children's keys). Deux détails de présentation : des majuscules sur des noms communs (the Boys', the Men's, Rabbits') — en anglais comme en français, pas de majuscule aux noms communs — et « They are Rabbits' tails » sans <i>the</i>, alors que la phrase de départ dit « the rabbits ».</p>
+      <p><b>It is / They are :</b> Carlo choisit déjà bien selon l'objet (ball → It is, clothes → They are). C'est l'objet qui décide, pas le propriétaire : « It is the girls' ball » (un seul ballon pour plusieurs filles). Le module l'entraîne à l'arrêt 5.</p>
+      <p><b>L'apostrophe à la main :</b> en écriture attachée, il faut bien lever le stylo et placer l'apostrophe clairement avant ou après le s. Sur la fiche, c'est lisible ; à surveiller en contrôle, car la place de l'apostrophe est toute la réponse.</p>
+      <p><b>Fiche 4, les virgules :</b> la leçon dit de séparer les adjectifs par des virgules, et le module suit la leçon (c'est ce que la maîtresse attendra). En anglais courant, on met souvent la virgule seulement entre deux adjectifs d'opinion (a lovely, friendly dog) et pas devant une couleur ou une matière (a big red ball). Si Carlo écrit « a big red ball » sans virgule, ce n'est pas une faute d'anglais ; en classe, suivre la consigne de la fiche.</p>
+      <p><b>« our nice, little, English teacher » :</b> la phrase de Carlo est juste. Elle a même deux sens : une maîtresse anglaise, ou une maîtresse d'anglais. C'est une bonne occasion d'en rire avec lui.</p></div>
+    <div class="panel"><h3>Conseils pour un enfant qui a du mal à rester concentré</h3>
+      <p><b>Court et cadré :</b> deux missions (8 minutes), la pause cerveau, puis on arrête. Toujours au même moment de la journée. Finir sur une réussite.</p>
+      <p><b>Faire dire la règle :</b> après une bonne réponse, demandez « comment tu as su ? ». Les trois phrases à ancrer : « un seul → 's », « plusieurs avec s → ' », « children, men, women → 's ».</p>
+      <p><b>L'ordre des adjectifs en chanson :</b> la pause « chanson des adjectifs » fait réciter les 8 familles en tapant dans les mains. Refaites-la au dîner ou en voiture.</p>
+      <p><b>Repasser sur papier :</b> le contrôle se fait au stylo. Un soir sur deux, dictez-lui 3 phrases « belongs to » à transformer par écrit (The bikes belong to the twins → They are the twins' bikes).</p>
+      <p><b>Valoriser l'effort :</b> une erreur revient en fin de mission, c'est prévu. Félicitez le fait d'avoir réessayé plus que le score.</p></div>
+    <div class="panel"><h3>Réglages</h3>
+      <label class="toggle" for="t-sound"><span>Sons de réussite</span><input type="checkbox" id="t-sound" ${ST.sound ? "checked" : ""}></label>
+      <label class="toggle" for="t-voice"><span>Lire chaque question à voix haute</span><input type="checkbox" id="t-voice" ${ST.voice ? "checked" : ""}></label>
+      <button class="btn ghost" id="t-reset" style="margin-top:8px;width:100%;min-height:48px;font-size:17px">Remettre la progression à zéro</button><div id="t-confirm"></div></div>`;
+  $("pp-back").onclick = renderHome;
+  $("t-date").onchange = e => { ST.evalDate = e.target.value || ""; ST.planStart = ST.evalDate ? today : ""; save(); renderParent(); };
+  $("t-sound").onchange = e => { ST.sound = e.target.checked; save(); };
+  $("t-voice").onchange = e => { ST.voice = e.target.checked; save(); };
+  $("t-reset").onclick = () => {
+    $("t-confirm").innerHTML = `<div class="confirm"><span>Toute la progression, les étoiles et les cartes postales seront effacées sur cet appareil.</span><div class="row"><button class="btn ghost" id="c-no" style="flex:1;min-height:46px;font-size:17px">Annuler</button><button class="btn red" id="c-yes" style="flex:1;min-height:46px;font-size:17px">Effacer</button></div></div>`;
+    $("c-no").onclick = () => $("t-confirm").innerHTML = "";
+    $("c-yes").onclick = () => { ST = fresh(); save(); renderParent(); };
+  };
+  show("parent");
+}
+
+renderHome();
+</script>
+</body>
+</html>
