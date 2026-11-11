@@ -215,6 +215,9 @@
     }
   ];
 
+  /* Ordre d'affichage partout sur le site : du plus récent au plus ancien. */
+  MODULES.sort(function (a, b) { return a.creation < b.creation ? 1 : a.creation > b.creation ? -1 : 0; });
+
   window.CLF = window.CLF || {};
   window.CLF.DOMAINES = DOMAINES;
   window.CLF.NIVEAUX = NIVEAUX;

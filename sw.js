@@ -2,7 +2,7 @@
    - pages HTML : réseau d'abord (les mises à jour arrivent), copie locale si pas de réseau ;
    - autres fichiers et polices : copie locale d'abord, mise à jour en arrière-plan.
    Changer VERSION force le renouvellement de toutes les copies. */
-var VERSION = "clf-v2";
+var VERSION = "clf-v3";
 var BASE = [
   "./",
   "index.html",

@@ -112,7 +112,7 @@
     var p = b.parModule[m.id], dom = DOM[m.domaine] || { nom: "", couleur: "em" };
     var pct = Math.round(Math.min(p.faites, p.total) / p.total * 100);
     return '<a class="couv ' + dom.couleur + '" href="' + m.chemin + '">' +
-      '<div class="etiquette"><div class="ligne1"><span>' + esc(m.sousDomaine) + '</span><span class="niveau">' + esc(m.niveau) + '</span></div>' +
+      '<div class="etiquette"><div class="ligne1"><span>' + esc(dom.nom) + ' · ' + esc(m.sousDomaine) + '</span><span class="niveau">' + esc(m.niveau) + '</span></div>' +
       '<h4>' + esc(m.titre) + '</h4><p>' + esc(m.accroche) + '</p></div>' +
       '<div class="pied"><div class="avance"><div class="barre"><i style="width:' + pct + '%"></i></div><b>' + p.faites + ' / ' + p.total + ' missions</b></div>' +
       '<div class="statut">' + statut(m, p) + '</div></div></a>';
@@ -134,13 +134,9 @@
     var visibles = ACT.filter(function (m) {
       return (filtre.niveau === "tous" || m.niveau === filtre.niveau) && (filtre.domaine === "tous" || m.domaine === filtre.domaine);
     });
-    $("compte-modules").textContent = visibles.length + " cahier" + (visibles.length > 1 ? "s" : "") + " · classés par matière, comme à l'école";
-    var html = CLF.DOMAINES.map(function (d) {
-      var ms = visibles.filter(function (m) { return m.domaine === d.id; });
-      if (!ms.length) return "";
-      ms.sort(function (a, b2) { return CLF.NIVEAUX.indexOf(a.niveau) - CLF.NIVEAUX.indexOf(b2.niveau) || (b2.creation > a.creation ? 1 : -1); });
-      return '<div class="domaine"><h3><i style="--c:var(--' + d.couleur + ')"></i>' + esc(d.nom) + '</h3><div class="grille">' + ms.map(function (m) { return carte(m, b); }).join("") + '</div></div>';
-    }).join("");
+    $("compte-modules").textContent = visibles.length + " cahier" + (visibles.length > 1 ? "s" : "") + " · du plus récent au plus ancien";
+    var tri = visibles.slice().sort(function (a, b2) { return a.creation < b2.creation ? 1 : a.creation > b2.creation ? -1 : 0; });
+    var html = tri.length ? '<div class="domaine"><div class="grille">' + tri.map(function (m) { return carte(m, b); }).join("") + '</div></div>' : "";
     $("liste-modules").innerHTML = html || '<p class="vide">Aucun cahier pour ce choix. Touche « Toutes les classes ».</p>';
     var nArch = CLF.MODULES.length - ACT.length;
     $("lien-tous").innerHTML = '<a class="btn discret" href="modules.html">Voir tous les modules (' + CLF.MODULES.length + ')</a>' +

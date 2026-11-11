@@ -21,7 +21,7 @@
 
     $("liste").innerHTML = niveaux.slice().reverse().map(function (n) {
       var liste = ms.filter(function (m) { return m.niveau === n; }).sort(function (a, c) {
-        return (a.archive ? 1 : 0) - (c.archive ? 1 : 0) || CLF.DOMAINES.indexOf(DOM[a.domaine]) - CLF.DOMAINES.indexOf(DOM[c.domaine]) || (c.creation > a.creation ? 1 : -1);
+        return a.creation < c.creation ? 1 : a.creation > c.creation ? -1 : 0;
       });
       return '<section class="classe"><h2>' + n + ' <small>' + CYCLE[n] + ' · ' + liste.length + ' module' + (liste.length > 1 ? 's' : '') + '</small></h2>' +
         liste.map(function (m) {
