@@ -128,7 +128,14 @@
       if (!("serviceWorker" in navigator)) return;
       if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") return;
       var r = CLF.racine();
-      navigator.serviceWorker.register(r + "sw.js", { scope: r }).catch(function () {});
+      var avait = !!navigator.serviceWorker.controller, recharge = false;
+      /* nouvelle version du site installée : on recharge une fois pour l'afficher */
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (!avait || recharge) return; recharge = true; location.reload();
+      });
+      navigator.serviceWorker.register(r + "sw.js", { scope: r, updateViaCache: "none" }).then(function (reg) {
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) reg.update().catch(function () {}); });
+      }).catch(function () {});
     } catch (e) {}
   };
 })();

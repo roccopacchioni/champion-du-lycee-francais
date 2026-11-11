@@ -33,7 +33,7 @@ Sur Mac, le fichier `.nojekyll` est masqué dans le Finder : appuyer sur `Cmd + 
 2. Ajouter son entrée dans `assets/catalogue.js`.
 3. Envoyer les fichiers sur GitHub : l'accueil, la vitrine, l'espace parents et le mode hors ligne le prennent en compte automatiquement.
 
-Pour forcer tous les appareils à recharger les fichiers après une grosse mise à jour, changer `VERSION` en tête de `sw.js` (par exemple `clf-v2`).
+Les mises à jour arrivent automatiquement : le site va chercher la dernière version en ligne et ne se sert de la copie locale que sans connexion. Changer `VERSION` en tête de `sw.js` vide seulement les anciennes copies.
 
 ## Organisation des fichiers
 
