@@ -52,8 +52,8 @@
       echeanceLabel: "Cahier d'anglais : leçon 4 (adjectifs) et leçon 6 (apostrophes)",
       creation: "2026-11-11",
       chemin: "modules/london-express/",
-      cleProgression: "london-express-carlo-v1",
-      missions: 9,
+      cleProgression: "london-express-carlo-v2",
+      missions: 5,
       epreuve: "Le Test de Wembley",
       fichiers: [],
       progression: function () {

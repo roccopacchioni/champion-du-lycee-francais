@@ -637,16 +637,13 @@ function buildBoss() {
 const BOSS_TOTAL = BOSS_TYPE.length + BOSS_BUILD.length + 3;
 
 /* ---------- Missions ---------- */
+const cat = (...gens) => () => gens.flatMap(g => g());
 const MISSIONS = [
-  { id: "m1", subj: "pos", obj: "P1", title: "À qui est-ce ?", sub: "Un seul propriétaire : Anna's ball", art: "bus", gen: genM1 },
-  { id: "m2", subj: "pos", obj: "P2", title: "Un ou plusieurs ?", sub: "the girl's ou the girls' ?", art: "bigben", gen: genM2 },
-  { id: "m3", subj: "pos", obj: "P5", title: "Apostrophe ou pas ?", sub: "Le s du pluriel ou le s de possession", art: "phonebox", gen: genM3 },
-  { id: "m4", subj: "pos", obj: "P3", title: "Les pluriels rebelles", sub: "children's, men's, women's", art: "towerbridge", gen: genM4 },
-  { id: "m5", subj: "pos", obj: "P4", title: "Le bus des phrases", sub: "It is… / They are… : construis la réponse", art: "londoneye", gen: genM5 },
-  { id: "m6", subj: "pos", obj: "P1", title: "L'apostrophe au clavier", sub: "Écris-la au bon endroit", art: "cab", gen: genM6 },
-  { id: "m7", subj: "adj", obj: "N1", title: "Les familles d'adjectifs", sub: "Opinion, Size, Shape, Age, Colour…", art: "guard", gen: genM7 },
-  { id: "m8", subj: "adj", obj: "N1", title: "Le rangement des adjectifs", sub: "Le bon ordre, a ou an, les virgules", art: "teapot", gen: genM8 },
-  { id: "m9", subj: "adj", obj: "N2", title: "Grossis le nom !", sub: "Choisis tes adjectifs, dans l'ordre", art: "wembley", gen: genM9 }
+  { id: "m1", subj: "pos", obj: "P1", title: "À qui est-ce ?", sub: "Anna's ball ou the girls' hats ?", art: "bus", gen: cat(genM1, genM2) },
+  { id: "m2", subj: "pos", obj: "P5", title: "Les pièges de l'apostrophe", sub: "Simple pluriel, children's, men's…", art: "bigben", gen: cat(genM3, genM4) },
+  { id: "m3", subj: "pos", obj: "P4", title: "Le bus des phrases", sub: "It is… / They are… et l'apostrophe au clavier", art: "towerbridge", gen: cat(genM5, genM6) },
+  { id: "m4", subj: "adj", obj: "N1", title: "Les adjectifs en rang", sub: "Opinion, Size, Shape, Age, Colour…", art: "guard", gen: () => { const [a, b, c] = genM7(), [d] = genM8(); return [a, b, c, d]; } },
+  { id: "m5", subj: "adj", obj: "N2", title: "Grossis le nom !", sub: "Tes adjectifs, a ou an, les virgules", art: "wembley", gen: () => { const [, b, c] = genM8(); return [...genM9(), b, c]; } }
 ];
 function fromGroups(groups, n) {
   const gs = shuffle(groups.map(g => shuffle(g))); const out = []; let k = 0;
@@ -658,13 +655,9 @@ function fromGroups(groups, n) {
 const CARDS = [
   { k: "bus", m: "m1", t: "Le bus à impériale", txt: "Le bus rouge à deux étages s'appelle un <i>double-decker</i>. La meilleure place : tout devant, à l'étage. Le chauffeur, lui, reste en bas : <b>the driver's seat</b>." },
   { k: "bigben", m: "m2", t: "Big Ben", txt: "Big Ben est le surnom de la grosse cloche, pas de la tour ! La tour s'appelle Elizabeth Tower. <b>The tower's bell</b> sonne toutes les heures." },
-  { k: "phonebox", m: "m3", t: "La cabine rouge", txt: "Les cabines téléphoniques rouges sont un symbole de l'Angleterre. Dans certains villages, elles sont devenues de minuscules bibliothèques : <b>the village's library</b> !" },
-  { k: "towerbridge", m: "m4", t: "Tower Bridge", txt: "Ce pont traverse la Tamise. Son tablier se lève pour laisser passer les grands bateaux. <b>The bridge's towers</b> sont reliées par une passerelle tout en haut." },
-  { k: "londoneye", m: "m5", t: "Le London Eye", txt: "Cette grande roue mesure 135 mètres. Un tour dure environ 30 minutes : on voit <b>the city's roofs</b> de très haut." },
-  { k: "cab", m: "m6", t: "Le taxi noir", txt: "Pour conduire un taxi noir, il faut connaître par cœur des milliers de rues de Londres. <b>The drivers' exam</b> demande des années d'entraînement !" },
-  { k: "guard", m: "m7", t: "Le garde du roi", txt: "Devant le palais de Buckingham, les gardes portent un grand bonnet en fourrure noire, le <i>bearskin</i>. <b>The guards' hats</b> sont très hauts !" },
-  { k: "teapot", m: "m8", t: "La théière", txt: "L'après-midi, les Anglais aiment prendre le thé avec des petits gâteaux, les <i>scones</i>. <b>Granny's teapot</b> est toujours prête." },
-  { k: "wembley", m: "m9", t: "Le stade de Wembley", txt: "Wembley est le stade national de l'Angleterre : 90 000 places et une immense arche blanche. <b>The players' dream</b> : y marquer un but !" },
+  { k: "towerbridge", m: "m3", t: "Tower Bridge", txt: "Ce pont traverse la Tamise. Son tablier se lève pour laisser passer les grands bateaux. <b>The bridge's towers</b> sont reliées par une passerelle tout en haut." },
+  { k: "guard", m: "m4", t: "Le garde du roi", txt: "Devant le palais de Buckingham, les gardes portent un grand bonnet en fourrure noire, le <i>bearskin</i>. <b>The guards' hats</b> sont très hauts !" },
+  { k: "wembley", m: "m5", t: "Le stade de Wembley", txt: "Wembley est le stade national de l'Angleterre : 90 000 places et une immense arche blanche. <b>The players' dream</b> : y marquer un but !" },
   { k: "trophy", m: "boss", t: "Le trophée d'or", txt: "Réservé aux champions du Test de Wembley : <b>the champion's trophy</b>. Bravo, tu parles comme un vrai Londonien !" }
 ];
 
@@ -681,7 +674,7 @@ const PAUSES = [
 ];
 
 /* ---------- État (sauvegardé sur cet appareil) ---------- */
-const KEY = "london-express-carlo-v1";
+const KEY = "london-express-carlo-v2";
 const fresh = () => ({ xp: 0, stars: {}, cards: [], missed: [], mastery: {}, boss: [], sound: true, voice: true, sessions: 0, lastPax: 0, evalDate: "", planStart: "" });
 let ST = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) ST = Object.assign(fresh(), JSON.parse(raw)); } catch (e) {}
@@ -745,7 +738,7 @@ const addDays = (iso, n) => { const d = dateOf(iso); d.setDate(d.getDate() + n);
 function nextMission() { return MISSIONS.find(m => !ST.stars[m.id]); }
 function busSvg() {
   const done = MISSIONS.filter(m => ST.stars[m.id]).length;
-  const W = [[46, 98], [72, 98], [98, 98], [124, 98], [24, 42], [50, 42], [76, 42], [102, 42], [128, 42]];
+  const W = [[62, 98], [108, 98], [36, 42], [74, 42], [112, 42]];
   const SKIN = ["#F2C9A0", "#C98D5E", "#8D5A3B", "#F5D6B8", "#B87A4B", "#E8B78E", "#6E4329", "#F2C9A0", "#D9A27A"];
   const HAIR = ["#3B2416", "#141414", "#E0B04A", "#7A3E1D", "#141414", "#B5651D", "#141414", "#5A3A22", "#2B1A10"];
   const wins = W.map(([x, y], i) => {
@@ -756,7 +749,7 @@ function busSvg() {
       <circle cx="${cx}" cy="${cy}" r="6.5" fill="${SKIN[i]}"/><path d="M${cx - 6.5} ${cy - 1} a6.5 6.5 0 0 1 13 0 q-6.5 -4 -13 0z" fill="${HAIR[i]}"/>
       <circle cx="${cx - 2.3}" cy="${cy + .5}" r="1" fill="#222"/><circle cx="${cx + 2.3}" cy="${cy + .5}" r="1" fill="#222"/><path d="M${cx - 2.5} ${cy + 3} q2.5 2.2 5 0" stroke="#222" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
   }).join("");
-  return `<svg viewBox="0 0 170 160" role="img" aria-label="${done} passagers sur 9 dans le bus">
+  return `<svg viewBox="0 0 170 160" role="img" aria-label="${done} passagers sur ${MISSIONS.length} dans le bus">
     <rect x="8" y="26" width="154" height="114" rx="14" fill="#C8202F"/><rect x="8" y="80" width="154" height="8" fill="#8E1520"/><rect x="14" y="20" width="142" height="10" rx="5" fill="#C8202F"/>
     <rect x="112" y="30" width="44" height="8" rx="2" fill="#1E1E1E"/><text x="134" y="36.5" text-anchor="middle" font-family="Andika,sans-serif" font-size="6.5" font-weight="700" fill="#FFD25A">WEMBLEY</text>
     <rect x="16" y="94" width="24" height="42" rx="3" fill="#2E3440"/><path d="M28 94 V136" stroke="#4C5566" stroke-width="2"/>
@@ -771,7 +764,7 @@ function renderHome() {
     : { id: "boss", t: "Le Test de Wembley", s: `${BOSS_TOTAL} questions comme en classe`, a: "trophy" };
   const cd = d !== null && d > 0 ? ["J-" + d, `avant le <b>contrôle d'anglais</b> du ${fmtLong(ST.evalDate)} : apostrophes et adjectifs.`]
     : d === 0 ? ["J", "C'est le jour du contrôle ! Un Test de Wembley pour s'échauffer ?"]
-    : done < 9 ? [String(9 - done), `arrêt${9 - done > 1 ? "s" : ""} avant <b>Wembley</b>. Leçon 4 (adjectifs) et leçon 6 (apostrophes) du cahier d'anglais.`]
+      : done < MISSIONS.length ? [String(MISSIONS.length - done), `arrêt${MISSIONS.length - done > 1 ? "s" : ""} avant <b>Wembley</b>. Leçon 4 (adjectifs) et leçon 6 (apostrophes) du cahier d'anglais.`]
     : ["✓", "Tous les arrêts sont faits. Rejoue le Test de Wembley pour garder le niveau."];
   const bestBoss = ST.boss.length ? Math.max(...ST.boss.map(b => b.score)) : null;
   $("home").innerHTML = `
@@ -779,8 +772,8 @@ function renderHome() {
       <button class="icon-btn" id="b-album" aria-label="Mes cartes postales">${IC.album}</button><button class="icon-btn" id="b-parent" aria-label="Espace parent">${IC.parent}</button></div>
     <div class="hello"><div class="eyebrow">English · apostrophes · adjectives</div><div class="who">Carlo et le <span>London Express</span></div></div>
     <div class="countdown"><div class="big">${cd[0]}</div><div>${cd[1]}</div></div>
-    <div class="garage">${busSvg()}<div><h2 style="font-size:22px">${done === 9 ? "Le bus est plein : direction Wembley !" : "Remplis le bus pour Wembley"}</h2>
-      <p class="muted" style="margin:6px 0 0;font-size:15px">Chaque mission réussie fait monter un passager. <b style="color:var(--ink)">${done} sur 9</b>.</p></div></div>
+    <div class="garage">${busSvg()}<div><h2 style="font-size:22px">${done === MISSIONS.length ? "Le bus est plein : direction Wembley !" : "Remplis le bus pour Wembley"}</h2>
+      <p class="muted" style="margin:6px 0 0;font-size:15px">Chaque mission réussie fait monter un passager. <b style="color:var(--ink)">${done} sur ${MISSIONS.length}</b>.</p></div></div>
     <button class="today" id="b-today"><div class="plate md">${art(tgt.a)}</div><div><div class="lab">À jouer maintenant</div><h3>${tgt.t}</h3><div style="font-size:15px;opacity:.9">${tgt.s}</div></div></button>
     <div class="section-title"><h2>La ligne du London Express</h2><span class="muted" style="font-size:14px">environ 4 minutes par arrêt</span></div>
     <div class="map">${MISSIONS.map((m, i) => `<button class="mission ${ST.stars[m.id] ? "done" : ""} ${nm && nm.id === m.id ? "next" : ""}" data-m="${m.id}">
@@ -1086,7 +1079,7 @@ function openCard(c) {
 }
 
 /* ---------- Espace parent ---------- */
-const PLAN = [["Séance 1", ["m1", "m2"]], ["Séance 2", ["m3", "m4"]], ["Séance 3", ["m5", "m6"]], ["Séance 4", ["m7", "m8"]], ["Séance 5", ["m9", "boss"]]];
+const PLAN = [["Séance 1", ["m1", "m2"]], ["Séance 2", ["m3", "m4"]], ["Séance 3", ["m5", "boss"]]];
 const planLabel = id => id === "boss" ? "Test de Wembley" : `${MISSIONS.findIndex(m => m.id === id) + 1}. ${MISSIONS.find(m => m.id === id).title}`;
 const isDone = id => id === "boss" ? ST.boss.length > 0 : !!ST.stars[id];
 function planDates() {
@@ -1110,15 +1103,15 @@ function renderParent() {
     <div class="panel"><h3>Date du contrôle d'anglais</h3>
       <label class="toggle" for="t-date"><span>Le contrôle a lieu le</span><input type="date" id="t-date" value="${ST.evalDate}"></label>
       <p class="muted" style="font-size:13px;margin:6px 0 0">La fiche ne donne pas de date. Une fois la date saisie, l'accueil affiche le compte à rebours et le plan ci-dessous se cale jour par jour.</p></div>
-    <div class="panel"><h3>${dates ? "Plan jusqu'au contrôle" : "Plan de révision en 5 séances"}</h3><div class="plan">${PLAN.map(([s, ids], k) => `<div class="d ${dates && dates[k] === today ? "now" : ""}"><span class="dt">${dates ? fmtDay(dates[k]) + "<br>" : ""}<span class="muted" style="font-weight:400;font-size:13px">${s}</span></span><span>${ids.map(planLabel).join("<br>")}</span><span>${ids.every(isDone) ? icon(IC.star(true), 20) : ""}</span></div>`).join("")}</div>
-      <p class="muted" style="font-size:13px;margin:10px 0 0">Deux missions par séance, puis la pause cerveau. Une séance par jour suffit ; deux au maximum. Si une séance saute, l'accueil propose toujours la bonne mission. La veille du contrôle : Test de Wembley puis mission revanche.</p></div>
+    <div class="panel"><h3>${dates ? "Plan jusqu'au contrôle" : "Plan de révision en 3 séances"}</h3><div class="plan">${PLAN.map(([s, ids], k) => `<div class="d ${dates && dates[k] === today ? "now" : ""}"><span class="dt">${dates ? fmtDay(dates[k]) + "<br>" : ""}<span class="muted" style="font-weight:400;font-size:13px">${s}</span></span><span>${ids.map(planLabel).join("<br>")}</span><span>${ids.every(isDone) ? icon(IC.star(true), 20) : ""}</span></div>`).join("")}</div>
+      <p class="muted" style="font-size:13px;margin:10px 0 0">Deux missions par séance, puis la pause cerveau. Une séance par jour suffit. Si une séance saute, l'accueil propose toujours la bonne mission. La veille du contrôle : Test de Wembley puis mission revanche.</p></div>
     <div class="panel"><h3>Ce que travaille le module</h3>
       <p><b>Leçon 6, Apostrophes for possession :</b> les 12 phrases de la fiche (Anna, Ben… the elephants) sont reprises, avec une vingtaine d'autres. Le module ajoute deux pièges classiques qui ne sont pas sur la fiche : l'apostrophe ajoutée à tort sur un simple pluriel (« the dog's are barking ») et le choix It is / They are.</p>
       <p><b>Leçon 4, Expanded noun phrases :</b> les 5 groupes écrits par Carlo (my cute, little, brown dog…) sont repris, avec l'ordre des 8 familles d'adjectifs, la place des virgules et a / an devant un adjectif (an interesting, small book).</p>
       <p>Les consignes sont lues en français, les phrases en anglais par une voix anglaise (si l'appareil en a une installée).</p></div>
     <div class="panel"><h3>Points d'attention sur les fiches</h3>
       <p><b>Fiche 6, très bien réussie :</b> toutes les réponses sont justes, y compris les pluriels irréguliers (the men's cups, the children's keys). Deux détails de présentation : des majuscules sur des noms communs (the Boys', the Men's, Rabbits') — en anglais comme en français, pas de majuscule aux noms communs — et « They are Rabbits' tails » sans <i>the</i>, alors que la phrase de départ dit « the rabbits ».</p>
-      <p><b>It is / They are :</b> Carlo choisit déjà bien selon l'objet (ball → It is, clothes → They are). C'est l'objet qui décide, pas le propriétaire : « It is the girls' ball » (un seul ballon pour plusieurs filles). Le module l'entraîne à l'arrêt 5.</p>
+      <p><b>It is / They are :</b> Carlo choisit déjà bien selon l'objet (ball → It is, clothes → They are). C'est l'objet qui décide, pas le propriétaire : « It is the girls' ball » (un seul ballon pour plusieurs filles). Le module l'entraîne à l'arrêt 3.</p>
       <p><b>L'apostrophe à la main :</b> en écriture attachée, il faut bien lever le stylo et placer l'apostrophe clairement avant ou après le s. Sur la fiche, c'est lisible ; à surveiller en contrôle, car la place de l'apostrophe est toute la réponse.</p>
       <p><b>Fiche 4, les virgules :</b> la leçon dit de séparer les adjectifs par des virgules, et le module suit la leçon (c'est ce que la maîtresse attendra). En anglais courant, on met souvent la virgule seulement entre deux adjectifs d'opinion (a lovely, friendly dog) et pas devant une couleur ou une matière (a big red ball). Si Carlo écrit « a big red ball » sans virgule, ce n'est pas une faute d'anglais ; en classe, suivre la consigne de la fiche.</p>
       <p><b>« our nice, little, English teacher » :</b> la phrase de Carlo est juste. Elle a même deux sens : une maîtresse anglaise, ou une maîtresse d'anglais. C'est une bonne occasion d'en rire avec lui.</p></div>
